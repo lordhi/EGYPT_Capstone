@@ -89,9 +89,15 @@ def drawGridSimulation(canvas,simulation):
 	
 	for row in range(0,rows):
 		for col in range(0,columns):
-			fertility = overallterrain[col][row].fertility/30.0
+			block = overallterrain[col][row]
+			if block.river:
+				color = 'blue'
+			else:
+				color = greeness(int(fertility*255))
+
+			fertility = block.fertility
 			#print("Fertility was: " + str(overallterrain[columns][rows].fertility))
-			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=greeness(int(fertility*255)),outline="")
+			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 
 	settlements = simulation.settlements
 	for settlement in settlements:
