@@ -56,30 +56,24 @@ class Simulation:
 	def setupSettlements(self, starting_settlements):
 		count = 0
 		while count < starting_settlements:
-			x_coord = random.randint(0, self.x_size)
-			y_coord = random.randint(0, self.y_size)
+			x_coord = random.randint(0, self.x_size-1)
+			y_coord = random.randint(0, self.y_size-1)
 			terrain_patch = self.terrain[x_coord][y_coord] 
 			if not terrain_patch.settlement and not terrain_patch.river:
 				self.settlements.append(Settlement(terrain_patch))
-
-				neighbour_x = x_coord - 1
-				neighbour_y = y_coord - 1
-				is_valid = True
 				
-				for i in range(3):
-					for j in range(3):
-						neighbour_x += i
-						neighbour_y += j
+				for x in range(x_coord-1, x_coord+2):
+					for y in range(y_coord-1, y_coord+2):
+						is_valid = True
 
-						if neighbour_x < 0 or neighbour_x >= 300:
+						if x < 0 or x >= 300:
 							is_valid = False
 
-						if neighbour_y < 0 or neighbour_y >= 300:
+						if y < 0 or y >= 300:
 							is_valid = False
 
 						if is_valid:
-							self.terrain[neighbour_x][neighbour_y].setSettlementTerritory() 
-
+							self.terrain[x][y].setSettlementTerritory() 
 
 				count += 1
 		pass
@@ -89,8 +83,8 @@ class Simulation:
 			for i in range(starting_households):
 				grain = starting_grain
 				workers = starting_household_size
-				ambition = min_ambition + (random.random(1 - min_ambition))
-				competency = min_competency + (random.random(1 - min_competency))
+				ambition = min_ambition + (random.random()*(1 - min_ambition))
+				competency = min_competency + (random.random()*(1 - min_competency))
 				generation_countdown = random.randint(0, 5) + 10
 				new_household = Household(grain, workers, ambition, competency, generation_countdown, distance_cost, settlement.getX(), settlement.getY(), self.terrain)
 				settlement.households.append(new_household)

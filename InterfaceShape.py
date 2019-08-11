@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
 from Simulation import Simulation
 
 
@@ -94,12 +94,12 @@ def drawGridSimulation(canvas,simulation):
 			if block.river:
 				color = 'blue'
 			elif block.settlement:
+				print(1)
 				color = 'red'
 			else:
 				color = greeness(int(100+fertility*155))
 
 			
-			print(str(fertility))
 			#print("Fertility was: " + str(overallterrain[columns][rows].fertility))
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 
@@ -279,7 +279,6 @@ xpos = 0
 graphcount = 0
 #
 
-
 slider_values = [x.get()*1.0 for x in sliders]
 slider_values = slider_values[0:7]
 sim = Simulation(*slider_values)
@@ -296,6 +295,8 @@ def button_reset():
 
 def button_go():
 	pass
+
+sim = Simulation(5,5,0,0,0,0,0)
 
 #Mainloop:
 #############################################################################
