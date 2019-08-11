@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
 from Simulation import Simulation
 
 
@@ -90,8 +90,9 @@ def drawGridSimulation(canvas,simulation):
 	
 	for row in range(0,rows):
 		for col in range(0,columns):
-			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=greeness(round(overallterrain[columns][rows].fertility*255)),outline="")
-
+			fertility = overallterrain[col][row].fertility
+			#print("Fertility was: " + str(overallterrain[columns][rows].fertility))
+			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=greeness(int(fertilty*255)),outline="")
 
 	settlements = simulation.settlements
 	for settlement in settlements:
@@ -288,8 +289,8 @@ while 1:
 	if (graphcount >= graphEvery):
 		#show the plots
 		plotData(xpos)
-		graph1.draw()
-		graph2.draw()
+		graph1.show()
+		graph2.show()
 		graphcount=0
 
 	xpos += 1
