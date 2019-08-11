@@ -73,6 +73,37 @@ def drawGrid(canvas,rows,columns):
 		for col in range(0,columns):
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=random_color(),outline="")
 
+def drawGridSimulation(canvas,simulation):
+	width, height = canvas.winfo_width(),canvas.winfo_height()
+	overallterrain = simulation.terrain
+
+	rows,columns = len(overallterrain),len(overallterrain[0])
+	xstep = width/columns
+	ystep = height/rows
+	canvas.delete('all')
+
+	
+	for row in range(0,rows):
+		for col in range(0,columns):
+			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=greeness(round(overallterrain[rows][columns].fertility*255)),outline="")
+
+
+	settlements = simulation.settlements
+	for settlement in settlements:
+		terrain = settlement.terrain
+
+		for block in terrain:
+			row = block.x
+			col = block.y
+			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill='red',outline="")
+
+	for row in range(0,rows):
+		for col in range(0,columns):
+			parent = overallterrain[row][col].owner
+			if parent != null:
+				target = parent.location
+				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep)
+
 
 #GUI setup frames:
 ############################################################################
