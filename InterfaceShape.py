@@ -89,13 +89,15 @@ def drawGridSimulation(canvas,simulation):
 	
 	for row in range(0,rows):
 		for col in range(0,columns):
-			block = overallterrain[col][row]
+			block = overallterrain[row][col]
+			fertility = block.fertility/2
 			if block.river:
 				color = 'blue'
 			else:
-				color = greeness(int(fertility*255))
+				color = greeness(int(100+fertility*155))
 
-			fertility = block.fertility
+			
+			print(str(fertility))
 			#print("Fertility was: " + str(overallterrain[columns][rows].fertility))
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 
