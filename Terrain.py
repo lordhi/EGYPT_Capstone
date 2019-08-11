@@ -22,6 +22,7 @@ class Terrain:
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
+		self.nile_distance = x
 
 	def setRiver(self):
 		self.river = True
@@ -36,7 +37,7 @@ class Terrain:
 	def setFertility(self, beta, alpha, mu):
 		self.harvested = False
 		self.years_not_harvested += 1
-		self.fertility = 17*(beta*(np.exp((mu - self.nile_distance)**2 / alpha)))
+		self.fertility = 17*(beta*(np.exp(-(mu - self.nile_distance)**2 / alpha)))
 		if self.owner != None:
 			self.harvest = self.fertility*self.max_yield*self.owner.competency - self.house_distance*self.owner.distance_cost
 
