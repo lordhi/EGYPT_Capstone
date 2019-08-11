@@ -6,9 +6,6 @@ import random
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
 from Simulation import Simulation
 
-class info:
-	paused = True
-
 ############################################################################
 #Colors
 bg_slider_color = '#82bcb7'
@@ -287,8 +284,8 @@ paused = False
 
 #Button functions
 #############################################################################
-def button_pause(info):
-	info.paused = True
+def button_pause():
+	pass
 
 def button_reset():
 	pass
@@ -297,7 +294,7 @@ def button_go():
 	pass
 
 sim = Simulation(0,0,0,0,0,0,0)
-info = Info()
+#info = Info()
 
 #Mainloop:
 #############################################################################
