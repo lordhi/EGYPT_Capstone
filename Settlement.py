@@ -13,7 +13,8 @@ class Settlement:
 
 	def __init__(self, terrain):
 		self.terrain = terrain
-		terrain.setSettlement()
+		terrain.settlement = True
+		terrain.owner = self
 
 	def tick(self):
 		self.households.sort(key=lambda x: x.grain)
