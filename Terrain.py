@@ -29,7 +29,6 @@ class Terrain:
 
 	def setSettlement(self):
 		self.settlement = True
-		self.settlement_territory = True
 
 	def setSettlementTerritory(self):
 		self.settlement_territory = True
