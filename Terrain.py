@@ -23,26 +23,33 @@ class Terrain:
 		self.x = x
 		self.y = y
 
-	def isRiver(self):
-		river = True
+	def setRiver(self):
+		self.river = True
+
+	def setSettlement(self):
+		self.settlement = True
+		self.settlement_territory = True
+
+	def setSettlementTerritory(self):
+		self.settlement_territory = True
 
 	def setFertility(self, beta, alpha, mu):
-		harvested = False
-		years_not_harvested += 1
-		fertility = 17*(beta*(np.exp((mu - distance)**2 / alpha)))
-		if owner != None:
-			harvest = fertility*max_yield*owner.competency - house_distance*owner.distance_cost
+		self.harvested = False
+		self.years_not_harvested += 1
+		fertility = 17*(beta*(np.exp((mu - self.nile_distance)**2 / alpha)))
+		if self.owner != None:
+			self.harvest = fertility*self.max_yield*self.owner.competency - self.house_distance*self.owner.distance_cost
 
 	def claim(self, claimant):
-		if (not settlement) and (not river) and (not owned) and (not settlement_territory):
-			owned = True
-			field = True
-			harvested = False
+		if (not self.settlement) and (not self.river) and (not self.owned) and (not self.settlement_territory):
+			self.owned = True
+			self.field = True
+			self.harvested = False
 
-			owner = claimant
-			years_not_harvested = 0
+			self.owner = claimant
+			self.years_not_harvested = 0
 
-			house_distance = 
+			self.house_distance = 0
 
 			return True
 		else:

@@ -10,6 +10,13 @@ class Settlement:
 
 	def __init__(self, terrain):
 		self.terrain = terrain
+		terrain.setSettlement()
+
+	def getX(self, population):
+		return self.terrain[0].x
+
+	def getY(self, population):
+		return self.terrain[0].y
 
 	def tick(self):
 		household.sort(key=lambda x: x.grain)
