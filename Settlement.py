@@ -25,20 +25,3 @@ class Settlement:
 			#unclaim unused land
 			#generational change
 			#household fission
-
-	# def claimFields(self, house):
-	# 	claim_chance = random.random()
-	# 	### TODO: Ask Kiara if this is correct. Takes 2 workers to farm field, fields can grow up to worker number?
-	# 	### TODO: Implement known_patches and completing the claim
-	# 	known_patches = []
-	# 	if (claim_chance < house.ambition) and (house.workers > house.fields_owned) or (len(house.fields_owned) <= 1):
-	# 		best_x = -1
-	# 		best_y = -1
-	# 		best_fertility = -1
-	# 		for patch in known_patches:
-	# 			if patch.fertility > best_fertility:
-	# 				best_x = patch.x
-	# 				best_y = patch.y
-	# 				best_fertility = patch.fertility
-
-	# 		self.terrain[best_x, best_y].claim(house)

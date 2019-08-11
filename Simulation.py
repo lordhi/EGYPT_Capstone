@@ -66,10 +66,10 @@ class Simulation:
 					for y in range(y_coord-1, y_coord+2):
 						is_valid = True
 
-						if x < 0 or x >= 300:
+						if x < 0 or x >= self.x_size:
 							is_valid = False
 
-						if y < 0 or y >= 300:
+						if y < 0 or y >= self.y_size:
 							is_valid = False
 
 						if is_valid:
@@ -80,7 +80,7 @@ class Simulation:
 
 	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, distance_cost):
 		for settlement in self.settlements:
-			for i in range(starting_households):
+			for i in range(int(starting_households)):
 				grain = starting_grain
 				workers = starting_household_size
 				ambition = min_ambition + (random.random()*(1 - min_ambition))
