@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
 from Simulation import Simulation
 
 ############################################################################
