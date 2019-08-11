@@ -130,7 +130,8 @@ def drawGridSimulation(canvas,simulation):
 	for row in range(0,rows):
 		for col in range(0,columns):
 			if overallterrain[row][col].field:
-				target = overallterrain[row][col].owner.location
+				print("Got in")
+				target = overallterrain[row][col].owner
 				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep)
 
 
@@ -300,7 +301,7 @@ slider_values = slider_values[0:8]
 info.sim = Simulation(*slider_values)
 info.paused = False
 
-#button_pause.command = button_pause_on_click
+button_pause.command = button_pause_on_click
 
 #Mainloop:
 #############################################################################
