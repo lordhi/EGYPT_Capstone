@@ -31,7 +31,7 @@ class Settlement:
 		### TODO: Ask Kiara if this is correct. Takes 2 workers to farm field, fields can grow up to worker number?
 		### TODO: Implement known_patches and completing the claim
 		known_patches = []
-		if (claim_chance < house.ambition) and (house.workers > house.fields_owned) or (house.fields_owned <= 1):
+		if (claim_chance < house.ambition) and (house.workers > house.fields_owned) or (len(house.fields_owned) <= 1):
 			best_x = -1
 			best_y = -1
 			best_fertility = -1
