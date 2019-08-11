@@ -56,8 +56,8 @@ class Simulation:
 	def setupSettlements(self, starting_settlements):
 		count = 0
 		while count < starting_settlements:
-			x_coord = random.randint(0, self.x_size)
-			y_coord = random.randint(0, self.y_size)
+			x_coord = random.randint(0, self.x_size-1)
+			y_coord = random.randint(0, self.y_size-1)
 			terrain_patch = self.terrain[x_coord][y_coord] 
 			if not terrain_patch.settlement and not terrain_patch.river:
 				self.settlements.append(Settlement(terrain_patch))
