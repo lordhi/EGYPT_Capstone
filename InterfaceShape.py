@@ -276,10 +276,10 @@ xpos = 0
 graphcount = 0
 #
 
-slider_values = [x.get()*1.0 for x in sliders]
-slider_values = slider_values[0:7]
-sim = Simulation(*slider_values)
-paused = False
+#slider_values = [x.get()*1.0 for x in sliders]
+#slider_values = slider_values[0:7]
+#sim = Simulation(*slider_values)
+#paused = False
 
 
 #Button functions
@@ -293,7 +293,7 @@ def button_reset():
 def button_go():
 	pass
 
-sim = Simulation(0,0,0,0,0,0,0)
+sim = Simulation(10,0,0,0,0,0,0)
 #info = Info()
 
 #Mainloop:
