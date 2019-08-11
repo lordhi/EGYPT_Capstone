@@ -7,6 +7,7 @@ import numpy
 import random
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 import threading
+from Simulation import Simulation
 
 
 
@@ -261,6 +262,8 @@ xpos = 0
 graphcount = 0
 #
 
+sim = Simulation()
+
 #Mainloop:
 #############################################################################
 while 1:
@@ -270,7 +273,7 @@ while 1:
 	animationcount += 1
 	if (animationcount >= animationEvery):
 		animationcount = 0
-		drawGrid(canvas,30,30)
+		drawGridSimulation(canvas,sim)
 
 
 	graphcount += 1
