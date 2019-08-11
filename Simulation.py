@@ -86,7 +86,7 @@ class Simulation:
 				ambition = min_ambition + (random.random()*(1 - min_ambition))
 				competency = min_competency + (random.random()*(1 - min_competency))
 				generation_countdown = random.randint(0, 5) + 10
-				new_household = Household(grain, workers, ambition, competency, generation_countdown, distance_cost, settlement.getX(), settlement.getY(), self.terrain)
+				new_household = Household(grain, workers, ambition, competency, generation_countdown, distance_cost, settlement.x, settlement.y, self.terrain)
 				settlement.households.append(new_household)
 				new_household.settled_in = settlement
 
