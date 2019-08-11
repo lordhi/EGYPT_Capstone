@@ -75,9 +75,6 @@ class Simulation:
 						if is_valid:
 							self.terrain[neighbour_x][neighbour_y].setSettlementTerritory() 
 
-						
-						neighbour_y += 1
-					neighbour_x += 1
 				count += 1
 		pass
 
