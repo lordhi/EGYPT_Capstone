@@ -62,17 +62,17 @@ class Simulation:
 			if not terrain_patch.settlement and not terrain_patch.river:
 				self.settlements.append(Settlement(terrain_patch))
 
-				neighbour_x = x_coord - 1
-				neighbour_y = y_coord - 1
+				neighbour_x = x_coord
+				neighbour_y = y_coord
 				
-				for i in range(3):
-					for j in range(3):
+				for x in range(neighbour_x-1, neighbour_x+2):
+					for y in range(neighbour_y-1, neighbour_y+2):
 						is_valid = True
 
-						if neighbour_x < 0 or neighbour_x >= 300:
+						if x < 0 or x >= 300:
 							is_valid = False
 
-						if neighbour_y < 0 or neighbour_y >= 300:
+						if y < 0 or y >= 300:
 							is_valid = False
 
 						if is_valid:
