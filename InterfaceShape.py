@@ -3,10 +3,11 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
 from Simulation import Simulation
 
-
+class info:
+	paused = True
 
 ############################################################################
 #Colors
@@ -287,8 +288,8 @@ paused = False
 
 #Button functions
 #############################################################################
-def button_pause():
-	pass
+def button_pause(info):
+	info.paused = True
 
 def button_reset():
 	pass
@@ -296,7 +297,8 @@ def button_reset():
 def button_go():
 	pass
 
-sim = Simulation(5,5,0,0,0,0,0)
+sim = Simulation(0,0,0,0,0,0,0)
+info = Info()
 
 #Mainloop:
 #############################################################################
@@ -310,21 +312,17 @@ while 1:
 		sim.tick()
 		drawGridSimulation(canvas,sim)
 
-
-
-	graphcount += 1
-	if (graphcount >= graphEvery/2):
-		pass
-	if (graphcount >= graphEvery):
+	#graphcount += 1
+	#if (graphcount >= graphEvery/2):
+	#	pass
+	#if (graphcount >= graphEvery):
 		#show the plots
 		#plotData(xpos)
 		#graph1.show()
 		#graph2.show()
-		graphcount=0
+	#	graphcount=0
 
 	xpos += 1
-
-
 
 	tk.update_idletasks()
 	tk.update()
