@@ -168,8 +168,8 @@ button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 button_go = Button(topframe,text='Go',bg=button_color)
 button_go.grid(row=0,column=1,padx=padx,pady=pady)
 
-button_run = Button(topframe,text='Run',bg=button_color)
-button_run.grid(row=0,column=2,padx=padx,pady=pady)
+button_pause = Button(topframe,text='Pause',bg=button_color)
+button_pause.grid(row=0,column=2,padx=padx,pady=pady)
 
 speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(w2*s),label="Simulation speed (fps)",bg=top_panel_color,troughcolor=trough_color)
 speed_scale.grid(row=0,column=3,padx=padx*5)
@@ -278,6 +278,23 @@ animationcount = 0
 xpos = 0
 graphcount = 0
 #
+
+slider_values = [x.get()*1.0 for x in sliders]
+slider_values = slider_values[0:7]
+sim = Simulation(*slider_values)
+paused = False
+
+
+#Button functions
+#############################################################################
+def button_pause():
+	pass
+
+def button_reset():
+	pass
+
+def button_go():
+	pass
 
 sim = Simulation(5,5,0,0,0,0,0)
 
