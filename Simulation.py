@@ -65,6 +65,7 @@ class Simulation:
 
 				if count == 0:
 					terrain_patch.owner = settlement
+					terrain_patch.field = True
 				
 				for x in range(x_coord-1, x_coord+2):
 					for y in range(y_coord-1, y_coord+2):
