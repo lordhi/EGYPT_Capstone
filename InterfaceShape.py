@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
 from Simulation import Simulation
 
 
@@ -89,13 +89,13 @@ def drawGridSimulation(canvas,simulation):
 	
 	for row in range(0,rows):
 		for col in range(0,columns):
-			block = overallterrain[col][row]
+			block = overallterrain[row][col]
 			if block.river:
 				color = 'blue'
 			else:
+				fertility = block.fertility/2
 				color = greeness(int(fertility*255))
 
-			fertility = block.fertility
 			#print("Fertility was: " + str(overallterrain[columns][rows].fertility))
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 

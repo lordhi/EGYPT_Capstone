@@ -18,8 +18,8 @@ class Simulation:
 	average_competency = 0
 	time_span = 0
 
-	x_size = 300
-	y_size = 300
+	x_size = 30
+	y_size = 30
 
 	settlements = []
 	terrain = []
