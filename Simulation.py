@@ -47,7 +47,7 @@ class Simulation:
 			self.terrain.append(column)
 
 		for y in range(self.y_size):
-			self.terrain[0][y].setRiver()
+			self.terrain[0][y].river = True
 
 		self.setupSettlements(starting_settlements)
 		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, distance_cost)
@@ -60,7 +60,11 @@ class Simulation:
 			y_coord = random.randint(0, self.y_size-1)
 			terrain_patch = self.terrain[x_coord][y_coord] 
 			if not terrain_patch.settlement and not terrain_patch.river:
-				self.settlements.append(Settlement(terrain_patch))
+				settlement = Settlement(terrain_patch)
+				self.settlements.append(settlement)
+
+				if count == 0:
+					terrain_patch.owner = settlement
 				
 				for x in range(x_coord-1, x_coord+2):
 					for y in range(y_coord-1, y_coord+2):
@@ -73,7 +77,7 @@ class Simulation:
 							is_valid = False
 
 						if is_valid:
-							self.terrain[x][y].setSettlementTerritory() 
+							self.terrain[x][y].settlement_territory = True 
 
 				count += 1
 		pass
