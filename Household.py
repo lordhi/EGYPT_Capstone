@@ -35,15 +35,15 @@ class Household:
 
 	def grainTick(self):
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
-		grain = self.grain - self.workers*160
-		if grain < 0:
-			num_not_supported = -grain/160
-			grain = 0
+		self.grain = self.grain - self.workers*160
+		if self.grain < 0:
+			num_not_supported = -self.grain/160
+			self.grain = 0
 			if num_not_supported < self.workers:
 				self.workers = self.workers -  num_not_supported
 			else:
 				pass
-		self.grain = grain * 0.9	#accounts for loss due to storage
+		self.grain = self.grain * 0.9	#accounts for loss due to storage
 
 	def populationIncrease(self):
 		pass
