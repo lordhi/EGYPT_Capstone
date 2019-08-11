@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from Simulation import Simulation
 
 
@@ -231,7 +231,7 @@ graph1menu.grid(row=1,column=1,columnspan=1,rowspan=1,padx=padx,pady=pady)
 toolbarframe1 = Frame(graph1frame)
 toolbarframe1.grid(row=1,column=0)
 
-toolbar1 = NavigationToolbar2TkAgg(graph1, toolbarframe1)
+toolbar1 = NavigationToolbar2Tk(graph1, toolbarframe1)
 toolbar1.update()
 toolbarframe1.grid_propagate(False)
 
@@ -254,7 +254,7 @@ toolbarframe2 = Frame(graph2frame,width=w3,bg='red')
 toolbarframe2.grid(row=1,column=0)
 
 
-toolbar2 = NavigationToolbar2TkAgg(graph2, toolbarframe2)
+toolbar2 = NavigationToolbar2Tk(graph2, toolbarframe2)
 toolbar2.update()
 toolbarframe2.grid_propagate(False)
 
@@ -288,8 +288,8 @@ while 1:
 	if (graphcount >= graphEvery):
 		#show the plots
 		plotData(xpos)
-		graph1.show()
-		graph2.show()
+		graph1.draw()
+		graph2.draw()
 		graphcount=0
 
 	xpos += 1
