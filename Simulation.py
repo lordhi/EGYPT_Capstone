@@ -63,10 +63,6 @@ class Simulation:
 				settlement = Settlement(terrain_patch)
 				self.settlements.append(settlement)
 
-				if count == 0:
-					terrain_patch.owner = settlement
-					terrain_patch.field = True
-				
 				for x in range(x_coord-1, x_coord+2):
 					for y in range(y_coord-1, y_coord+2):
 						is_valid = True
@@ -84,8 +80,13 @@ class Simulation:
 		pass
 
 	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, distance_cost):
+		count = 0
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
+				if count == 0:
+					self.terrain[0][0].owner = settlement
+					self.terrain[0][0].field = True
+					count += 1
 				grain = starting_grain
 				workers = starting_household_size
 				ambition = min_ambition + (random.random()*(1 - min_ambition))
