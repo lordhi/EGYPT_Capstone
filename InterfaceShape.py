@@ -1,12 +1,9 @@
 from tkinter import *
 import time
 import matplotlib.pyplot as plt
-from PIL import ImageTk
-from PIL import Image
 import numpy
 import random
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-import threading
 from Simulation import Simulation
 
 
@@ -55,6 +52,13 @@ def random_color():
 	ge="#"
 	return ge+de+re+we
 
+def greeness(value):
+	de=("%02x"%0)
+	re=("%02x"%value)
+	we=("%02x"%0)
+	ge="#"
+	return ge+de+re+we
+
 def plotData(xpos):
 	plt.figure(0)
 	plt.plot(xpos,random.uniform(-2,2),"or")
@@ -78,7 +82,7 @@ def drawGridSimulation(canvas,simulation):
 	width, height = canvas.winfo_width(),canvas.winfo_height()
 	overallterrain = simulation.terrain
 
-	rows,columns = len(overallterrain),len(overallterrain[0])
+	rows,columns = len(overallterrain)-1,len(overallterrain[0])-1
 	xstep = width/columns
 	ystep = height/rows
 	canvas.delete('all')
@@ -86,7 +90,7 @@ def drawGridSimulation(canvas,simulation):
 	
 	for row in range(0,rows):
 		for col in range(0,columns):
-			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=greeness(round(overallterrain[rows][columns].fertility*255)),outline="")
+			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=greeness(round(overallterrain[columns][rows].fertility*255)),outline="")
 
 
 	settlements = simulation.settlements
@@ -101,7 +105,7 @@ def drawGridSimulation(canvas,simulation):
 	for row in range(0,rows):
 		for col in range(0,columns):
 			parent = overallterrain[row][col].owner
-			if parent != null:
+			if parent != None:
 				target = parent.location
 				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep)
 
@@ -262,7 +266,7 @@ xpos = 0
 graphcount = 0
 #
 
-sim = Simulation()
+sim = Simulation(0,0,0,0,0,0,0)
 
 #Mainloop:
 #############################################################################
@@ -273,7 +277,9 @@ while 1:
 	animationcount += 1
 	if (animationcount >= animationEvery):
 		animationcount = 0
+		sim.tick()
 		drawGridSimulation(canvas,sim)
+
 
 
 	graphcount += 1
@@ -287,6 +293,8 @@ while 1:
 		graphcount=0
 
 	xpos += 1
+
+
 
 	tk.update_idletasks()
 	tk.update()
