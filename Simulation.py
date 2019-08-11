@@ -68,8 +68,6 @@ class Simulation:
 				for i in range(3):
 					for j in range(3):
 						is_valid = True
-						neighbour_x += i
-						neighbour_y += j
 
 						if neighbour_x < 0 or neighbour_x >= 300:
 							is_valid = False
@@ -80,7 +78,9 @@ class Simulation:
 						if is_valid:
 							self.terrain[neighbour_x][neighbour_y].setSettlementTerritory() 
 
-
+						
+						neighbour_y += 1
+					neighbour_x += 1
 				count += 1
 		pass
 
