@@ -94,7 +94,6 @@ def drawGridSimulation(canvas,simulation):
 			if block.river:
 				color = 'blue'
 			elif block.settlement:
-				print(1)
 				color = 'red'
 			else:
 				color = greeness(int(100+fertility*155))
