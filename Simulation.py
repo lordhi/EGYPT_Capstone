@@ -111,8 +111,6 @@ class Simulation:
 		self.flood()
 		self.tickSettlements()
 		self.populationShift()
-		
-		self.tick()
 
 	def flood(self):
 		mu= random.randint(0,10) + 5
