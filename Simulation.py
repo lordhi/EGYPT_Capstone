@@ -24,20 +24,20 @@ class Simulation:
 	settlements = []
 	terrain = []
 
-	def __init__(self, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, distance_cost):
-		elevation_dataset = []
-		flood_level = 0
-		total_households = 0
-		total_population = 0
-		projected_historical_population = 0
-		lorenz_points = 0
-		gini_index_reserve = 0
-		house_colours, claim_x, claim_y = 0,0,0
-
+	def __init__(self, model_time_span, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, distance_cost):
+		self.elevation_dataset = []
+		self.flood_level = 0
+		self.total_households = 0
+		self.total_population = 0
+		self.projected_historical_population = 0
+		self.lorenz_points = 0
+		self.gini_index_reserve = 0
+		self.house_colours, self.claim_x, self.claim_y = 0,0,0
+		self.time_span = model_time_span
 		#values reset
-		total_grain = 0
-		average_ambition = 0
-		average_competency = 0
+		self.total_grain = 0
+		self.average_ambition = 0
+		self.average_competency = 0
 
 		#initalise terrain
 		for x in range(self.x_size):
