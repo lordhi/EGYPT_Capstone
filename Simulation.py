@@ -64,10 +64,10 @@ class Simulation:
 
 				neighbour_x = x_coord - 1
 				neighbour_y = y_coord - 1
-				is_valid = True
 				
 				for i in range(3):
 					for j in range(3):
+						is_valid = True
 						neighbour_x += i
 						neighbour_y += j
 
