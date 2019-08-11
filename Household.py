@@ -84,7 +84,7 @@ class Household:
 		### TODO: Ask Kiara if this is correct. Takes 2 workers to farm field, fields can grow up to worker number?
 		### TODO: Implement known_patches
 		known_patches = []
-		if (claim_chance < self.ambition and self.workers > self.fields_owned) or fields_owned <= 1:
+		if (claim_chance < self.ambition and self.workers > self.fields_owned) or self.fields_owned <= 1:
 			best_x = -1
 			best_y = -1
 			best_fertility = -1
