@@ -22,6 +22,7 @@ class Terrain:
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
+		self.nile_distance = x
 
 	def setRiver(self):
 		self.river = True
