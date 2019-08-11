@@ -86,13 +86,12 @@ def drawGridSimulation(canvas,simulation):
 	xstep = width/columns
 	ystep = height/rows
 	canvas.delete('all')
-
 	
 	for row in range(0,rows):
 		for col in range(0,columns):
-			fertility = overallterrain[col][row].fertility
+			fertility = overallterrain[col][row].fertility/30.0
 			#print("Fertility was: " + str(overallterrain[columns][rows].fertility))
-			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=greeness(int(fertilty*255)),outline="")
+			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=greeness(int(fertility*255)),outline="")
 
 	settlements = simulation.settlements
 	for settlement in settlements:
@@ -199,7 +198,10 @@ for name in slider_info:
 	slider_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=w1*s-2*padx,height=sfHeight+pady))
 	slider_frames[-1].grid(row=currentRow,column=0,padx=padx)
 	slider_frames[-1].grid_propagate(False)
-	sliders.append(Scale(slider_frames[-1],from_=slider_info[currentRow][1],to=slider_info[currentRow][2],resolution=slider_info[currentRow][3],orient=HORIZONTAL,sliderrelief="raised",length=sliWidth,label=slider_info[currentRow][0],bg=bg_slider_color,troughcolor=trough_color))
+	sliders.append(Scale(slider_frames[-1],from_=slider_info[currentRow][1],
+		to=slider_info[currentRow][2],resolution=slider_info[currentRow][3],
+		orient=HORIZONTAL,sliderrelief="raised",length=sliWidth,
+		label=slider_info[currentRow][0],bg=bg_slider_color,troughcolor=trough_color))
 	sliders[-1].grid(row=0,column=0,padx=1)
 	currentRow += 1
 
@@ -288,9 +290,9 @@ while 1:
 		pass
 	if (graphcount >= graphEvery):
 		#show the plots
-		plotData(xpos)
-		graph1.show()
-		graph2.show()
+		#plotData(xpos)
+		#graph1.show()
+		#graph2.show()
 		graphcount=0
 
 	xpos += 1
