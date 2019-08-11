@@ -3,8 +3,26 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
 from Simulation import Simulation
+import sys
+
+
+#Button functions
+#############################################################################
+def button_pause_on_click():
+	sys.exit()
+	print ("Hello")
+
+def button_reset_on_click():
+	pass
+
+def button_go_on_click():
+	pass
+
+class Info:
+	sim = None
+	paused = None
 
 ############################################################################
 #Colors
@@ -111,9 +129,8 @@ def drawGridSimulation(canvas,simulation):
 
 	for row in range(0,rows):
 		for col in range(0,columns):
-			parent = overallterrain[row][col].owner
-			if parent != None:
-				target = parent.location
+			if overallterrain[row][col].field:
+				target = overallterrain[row][col].owner.location
 				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep)
 
 
@@ -162,7 +179,7 @@ canvas.grid(row=0,column=0)
 button_reset = Button(topframe,text='Reset',bg=button_color)
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
-button_go = Button(topframe,text='Go',bg=button_color)
+button_go = Button(topframe,text='Go',bg=button_color,command=button_pause_on_click)
 button_go.grid(row=0,column=1,padx=padx,pady=pady)
 
 button_pause = Button(topframe,text='Pause',bg=button_color)
@@ -276,25 +293,14 @@ xpos = 0
 graphcount = 0
 #
 
-#slider_values = [x.get()*1.0 for x in sliders]
-#slider_values = slider_values[0:7]
-#sim = Simulation(*slider_values)
-#paused = False
+info = Info()
 
+slider_values = [x.get()*1.0 for x in sliders]
+slider_values = slider_values[0:8]
+info.sim = Simulation(*slider_values)
+info.paused = False
 
-#Button functions
-#############################################################################
-def button_pause():
-	pass
-
-def button_reset():
-	pass
-
-def button_go():
-	pass
-
-sim = Simulation(10,0,0,0,0,0,0)
-#info = Info()
+#button_pause.command = button_pause_on_click
 
 #Mainloop:
 #############################################################################
@@ -305,8 +311,8 @@ while 1:
 	animationcount += 1
 	if (animationcount >= animationEvery):
 		animationcount = 0
-		sim.tick()
-		drawGridSimulation(canvas,sim)
+		info.sim.tick()
+		drawGridSimulation(canvas,info.sim)
 
 	#graphcount += 1
 	#if (graphcount >= graphEvery/2):
