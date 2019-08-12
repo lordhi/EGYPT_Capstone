@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
 from Simulation import Simulation
 import sys
 
@@ -98,9 +98,9 @@ def drawGridSimulation(canvas,simulation):
 	width, height = canvas.winfo_width(),canvas.winfo_height()
 	overallterrain = simulation.terrain
 
-	rows,columns = len(overallterrain)-1,len(overallterrain[0])-1
-	xstep = width/columns-1
-	ystep = height/rows-1
+	rows,columns = len(overallterrain),len(overallterrain[0])
+	xstep = width/columns - 1
+	ystep = height/rows - 1
 	canvas.delete('all')
 	
 	for row in range(0,rows):
@@ -324,8 +324,8 @@ while 1:
 	if (graphcount >= graphEvery):
 		#show the plots
 		plotData(xpos)
-		graph1.show()
-		graph2.show()
+		graph1.draw()
+		graph2.draw()
 		graphcount=0
 
 	xpos += 1
