@@ -31,7 +31,7 @@ class Terrain:
 		self.harvested = False
 		self.years_not_harvested += 1
 		self.fertility = 17*(beta*(np.exp(-(mu - self.nile_distance)**2 / alpha)))
-		if self.owner != None and not self.settlement:
+		if self.owner != None and self.field:
 			self.harvest = self.fertility*self.max_yield*self.owner.competency - self.house_distance*self.owner.distance_cost
 
 	def claim(self, claimant):

@@ -60,7 +60,7 @@ class Simulation:
 			y_coord = random.randint(0, self.y_size-1)
 			terrain_patch = self.terrain[x_coord][y_coord] 
 			if not terrain_patch.settlement and not terrain_patch.river:
-				settlement = Settlement(terrain_patch)
+				settlement = Settlement(terrain_patch, x_coord, y_coord)
 				self.settlements.append(settlement)
 
 				for x in range(x_coord-1, x_coord+2):
@@ -83,10 +83,6 @@ class Simulation:
 		count = 0
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
-				if count == 0:
-					self.terrain[0][0].owner = settlement
-					self.terrain[0][0].field = True
-					count += 1
 				grain = starting_grain
 				workers = starting_household_size
 				ambition = min_ambition + (random.random()*(1 - min_ambition))
@@ -94,6 +90,10 @@ class Simulation:
 				generation_countdown = random.randint(0, 5) + 10
 				new_household = Household(grain, workers, ambition, competency, generation_countdown, distance_cost, settlement.x, settlement.y, self.terrain)
 				settlement.households.append(new_household)
+				if count == 0:
+					self.terrain[2][2].owner = new_household
+					self.terrain[2][2].field = True
+					count += 1
 				new_household.settled_in = settlement
 
 			settlement.population += starting_households*starting_household_size

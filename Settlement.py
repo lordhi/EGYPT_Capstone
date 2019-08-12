@@ -11,10 +11,13 @@ class Settlement:
 	x = -1
 	y = -1
 
-	def __init__(self, terrain):
+	def __init__(self, terrain, x, y):
 		self.terrain = terrain
 		terrain.settlement = True
 		terrain.owner = self
+
+		self.x = x
+		self.y = y
 
 	def tick(self):
 		self.households.sort(key=lambda x: x.grain)
