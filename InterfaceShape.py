@@ -99,8 +99,8 @@ def drawGridSimulation(canvas,simulation):
 	overallterrain = simulation.terrain
 
 	rows,columns = len(overallterrain)-1,len(overallterrain[0])-1
-	xstep = width/columns
-	ystep = height/rows
+	xstep = width/columns-1
+	ystep = height/rows-1
 	canvas.delete('all')
 	
 	for row in range(0,rows):
