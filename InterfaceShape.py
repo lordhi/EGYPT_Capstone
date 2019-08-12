@@ -172,6 +172,9 @@ tk.grid_rowconfigure(0,weight=1,minsize=h1*s)
 
 tk.minsize((w1+w2+w3)*s,(h1+h2+h3)*s)
 
+def callback():
+    print("click!")
+
 canvas = Canvas(animationframe,width=w2*s,height=h2*s,bg=general_background)
 canvas.grid(row=0,column=0)
 
@@ -180,7 +183,7 @@ canvas.grid(row=0,column=0)
 button_reset = Button(topframe,text='Reset',bg=button_color)
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
-button_go = Button(topframe,text='Go',bg=button_color,command=button_pause_on_click)
+button_go = Button(topframe,text='Go',bg=button_color)
 button_go.grid(row=0,column=1,padx=padx,pady=pady)
 
 button_pause = Button(topframe,text='Pause',bg=button_color)
@@ -301,7 +304,7 @@ slider_values = slider_values[0:8]
 info.sim = Simulation(*slider_values)
 info.paused = False
 
-button_pause.command = button_pause_on_click
+button_pause.command =  button_pause_on_click
 
 #Mainloop:
 #############################################################################
@@ -315,15 +318,15 @@ while 1:
 		info.sim.tick()
 		drawGridSimulation(canvas,info.sim)
 
-	#graphcount += 1
-	#if (graphcount >= graphEvery/2):
-	#	pass
-	#if (graphcount >= graphEvery):
+	graphcount += 1
+	if (graphcount >= graphEvery/2):
+		pass
+	if (graphcount >= graphEvery):
 		#show the plots
-		#plotData(xpos)
-		#graph1.show()
-		#graph2.show()
-	#	graphcount=0
+		plotData(xpos)
+		graph1.show()
+		graph2.show()
+		graphcount=0
 
 	xpos += 1
 
