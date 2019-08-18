@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
 from Simulation import Simulation
 import sys
 
@@ -323,8 +323,8 @@ while 1:
 	if (graphcount >= graphEvery):
 		#show the plots
 		plotData(xpos)
-		graph1.show()
-		graph2.show()
+		graph1.draw()
+		graph2.draw()
 		graphcount=0
 
 	xpos += 1

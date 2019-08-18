@@ -8,6 +8,7 @@ class Settlement:
 	population = 0
 	households = []
 	terrain = None
+	rent_enabled = False
 	x = -1
 	y = -1
 
@@ -22,10 +23,10 @@ class Settlement:
 	def tick(self):
 		self.households.sort(key=lambda x: x.grain)
 		for house in self.households:
-			# self.claimFields(house)
-			#farm
-			#rent_land
+			house.claimLand()
+			house.farm()
+			if self.rent_enabled:
+				house.rentLand()
 			house.grainTick() #consume_grain, storage loss
-			#unclaim unused land
-			#generational change
+			house.generationalChange()
 			#household fission
