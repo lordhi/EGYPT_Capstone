@@ -24,9 +24,6 @@ class Terrain:
 		self.y = y
 		self.nile_distance = x
 
-	def setSettlementTerritory(self):
-		self.settlement_territory = True
-
 	def setFertility(self, beta, alpha, mu):
 		self.harvested = False
 		self.years_not_harvested += 1
