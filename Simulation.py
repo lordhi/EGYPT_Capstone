@@ -17,6 +17,13 @@ class Simulation:
 	average_ambition = 0
 	average_competency = 0
 	time_span = 0
+	generational_variation = 0
+	knowledge_radius = 0
+	distance_cost = 0
+	fallow_limit = 0
+	pop_growth_rate = 0
+	min_fission_chance = 0
+	land_rental_rate = 0
 
 	x_size = 30
 	y_size = 30
@@ -24,7 +31,8 @@ class Simulation:
 	settlements = []
 	terrain = []
 
-	def __init__(self, model_time_span, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, knowledge_radius, distance_cost):
+	def __init__(self, model_time_span, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, 
+						generational_variation, knowledge_radius, distance_cost, fallow_limit, pop_growth_rate, min_fission_chance, land_rental_rate):
 		self.elevation_dataset = []
 		self.flood_level = 0
 		self.total_households = 0
@@ -38,7 +46,18 @@ class Simulation:
 		self.total_grain = 0
 		self.average_ambition = 0
 		self.average_competency = 0
+		
+		self.generational_variation = generational_variation
+		self.knowledge_radius = knowledge_radius
+		self.distance_cost = distance_cost
+		self.fallow_limit = fallow_limit
+		self.pop_growth_rate = pop_growth_rate
+		self.min_fission_chance = min_fission_chance
+		self.land_rental_rate = land_rental_rate
 
+		print("-----")
+		print(knowledge_radius)
+		print("-----")
 		#initalise terrain
 		for x in range(self.x_size):
 			column = []
@@ -50,7 +69,7 @@ class Simulation:
 			self.terrain[0][y].river = True
 
 		self.setupSettlements(starting_settlements)
-		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, knowledge_radius, distance_cost)
+		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, int(knowledge_radius), distance_cost)
 		self.establish_population(starting_settlements, starting_households, starting_household_size)
 
 	def setupSettlements(self, starting_settlements):
@@ -80,8 +99,6 @@ class Simulation:
 		pass
 
 	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, knowledge_radius, distance_cost):
-		count = 0 ## Temporary
-
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
 				grain = starting_grain
@@ -95,14 +112,6 @@ class Simulation:
 
 
 				settlement.households.append(new_household)
-				
-				## Temporary claimed land ##
-				if count == 0:
-					self.terrain[2][2].owner = new_household
-					self.terrain[2][2].field = True
-					count += 1
-				##
-
 
 			settlement.population += starting_households*starting_household_size
 

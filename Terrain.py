@@ -32,6 +32,7 @@ class Terrain:
 			self.harvest = self.fertility*self.max_yield*self.owner.competency - self.house_distance*self.owner.distance_cost - 300
 
 	def claim(self, claimant):
+		print("Claim attempt by household " + str(claimant.x) + ", " + str(claimant.y))
 		if (not self.settlement) and (not self.river) and (not self.owned) and (not self.settlement_territory):
 			self.owned = True
 			self.field = True

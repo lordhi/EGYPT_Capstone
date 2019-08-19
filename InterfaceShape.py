@@ -205,8 +205,8 @@ frame_in_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
 slider_info = [("model-time-span",100,500,50),
 				("starting-settlements",5,20,1),
-				("starting-households",1,10,1),
-				("starting-household-size",1,10,1),
+				("starting-households",5,10,1),
+				("starting-household-size",3,10,1),
 				("starting-grain",100,8000,100),
 				("min-ambition",0,1,0.1),
 				("min-competency",0,1,0.1),
@@ -299,7 +299,8 @@ graphcount = 0
 info = Info()
 
 slider_values = [x.get()*1.0 for x in sliders]
-slider_values = slider_values[0:8]
+# slider_values = slider_values[0:14]
+
 info.sim = Simulation(*slider_values)
 info.paused = False
 
