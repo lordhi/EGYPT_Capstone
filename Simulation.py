@@ -24,7 +24,7 @@ class Simulation:
 	settlements = []
 	terrain = []
 
-	def __init__(self, model_time_span, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, distance_cost):
+	def __init__(self, model_time_span, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, knowledge_radius, distance_cost):
 		self.elevation_dataset = []
 		self.flood_level = 0
 		self.total_households = 0
@@ -50,7 +50,7 @@ class Simulation:
 			self.terrain[0][y].river = True
 
 		self.setupSettlements(starting_settlements)
-		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, distance_cost)
+		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, knowledge_radius, distance_cost)
 		self.establish_population(starting_settlements, starting_households, starting_household_size)
 
 	def setupSettlements(self, starting_settlements):
@@ -79,8 +79,9 @@ class Simulation:
 				count += 1
 		pass
 
-	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, distance_cost):
-		count = 0
+	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, knowledge_radius, distance_cost):
+		count = 0 ## Temporary
+
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
 				grain = starting_grain
@@ -88,13 +89,20 @@ class Simulation:
 				ambition = min_ambition + (random.random()*(1 - min_ambition))
 				competency = min_competency + (random.random()*(1 - min_competency))
 				generation_countdown = random.randint(0, 5) + 10
-				new_household = Household(grain, workers, ambition, competency, generation_countdown, distance_cost, settlement.x, settlement.y, self.terrain)
+				
+				new_household = Household(grain, workers, ambition, competency, generation_countdown, knowledge_radius, distance_cost, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
+				new_household.settled_in = settlement
+
+
 				settlement.households.append(new_household)
+				
+				## Temporary claimed land ##
 				if count == 0:
 					self.terrain[2][2].owner = new_household
 					self.terrain[2][2].field = True
 					count += 1
-				new_household.settled_in = settlement
+				##
+
 
 			settlement.population += starting_households*starting_household_size
 

@@ -1,5 +1,6 @@
 from Terrain import Terrain
 import random
+import numpy as np
 
 class Household:
 	grain = 0
@@ -14,29 +15,47 @@ class Household:
 	fallow_limit = 1
 	fields_owned = []		#list of terrain
 	fields_harvested = []	#list of terrain
-	all_terrain = None
+	
 	known_patches = []
+	knowledge_radius = 0
 
 	distance_cost = 0
+
+	all_terrain = None
+	x_size = 0
+	y_size = 0
 
 	x = 0
 	y = 0
 
 	settled_in = None
 
-	def __init__(self, grain, workers, ambition, competency, generation_countdown, distance_cost, x, y, all_terrain):
+	def __init__(self, grain, workers, ambition, competency, generation_countdown, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
 		self.ambition = ambition
 		self.competency	= competency
 		self.generation_countdown = generation_countdown
+		self.knowledge_radius = knowledge_radius
 		self.distance_cost = distance_cost
 		self.x = x
 		self.y = y
 		self.all_terrain = all_terrain
 
-	def setSettlement(self, settlement):
-		self.settled_in = settlement
+		for i in range(x-knowledge_radius, x+knowledge_radius+1):
+			for j in range(y-knowledge_radius, y+knowledge_radius+1):
+				is_valid = True
+
+				if i < 0 or i >= x_size:
+					is_valid = False
+
+				if j < 0 or j >= y_size:
+					is_valid = False
+
+				if is_valid:
+					distance = np.sqrt((i-x)^2 + (j-y)^2)
+					if distance < knowledge_radius:
+						self.known_patches.append(all_terrain[i][j])
 
 	def grainTick(self):
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
