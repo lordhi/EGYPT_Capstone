@@ -53,7 +53,7 @@ class Household:
 					is_valid = False
 
 				if is_valid:
-					distance = np.sqrt((i-x)^2 + (j-y)^2)
+					distance = round(np.sqrt((i-x)^2 + (j-y)^2))
 					if distance < knowledge_radius:
 						self.known_patches.append(all_terrain[i][j])
 
