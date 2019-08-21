@@ -50,4 +50,5 @@ class Terrain:
 	def unclaim(self):
 		self.owned = False
 		self.owner = None
+		self.field = False
 		self.house_distance = 0

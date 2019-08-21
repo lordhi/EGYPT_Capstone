@@ -12,7 +12,7 @@ class Household:
 	generational_variation = 0.2
 	minimum_ambition = 0
 	minimum_competency = 0
-	fallow_limit = 1
+	fallow_limit = 5
 	fields_owned = []		#list of terrain
 	fields_harvested = []	#list of terrain
 	
@@ -41,6 +41,7 @@ class Household:
 		self.x = x
 		self.y = y
 		self.all_terrain = all_terrain
+		self.fields_owned = []
 
 		for i in range(x-knowledge_radius, x+knowledge_radius+1):
 			for j in range(y-knowledge_radius, y+knowledge_radius+1):
@@ -118,7 +119,7 @@ class Household:
 			best_y = -1
 			best_fertility = -1
 			for patch in self.known_patches:
-				if patch.fertility > best_fertility:
+				if patch.fertility > best_fertility and not patch.owned:
 					best_x = patch.x
 					best_y = patch.y
 					best_fertility = patch.fertility
