@@ -107,7 +107,7 @@ class Simulation:
 				competency = min_competency + (random.random()*(1 - min_competency))
 				generation_countdown = random.randint(0, 5) + 10
 				
-				new_household = Household(grain, workers, ambition, competency, generation_countdown, knowledge_radius, distance_cost, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
+				new_household = Household(settlement, grain, workers, ambition, competency, generation_countdown, knowledge_radius, distance_cost, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
 				new_household.settled_in = settlement
 
 

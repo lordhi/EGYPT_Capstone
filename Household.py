@@ -31,7 +31,7 @@ class Household:
 
 	settled_in = None
 
-	def __init__(self, grain, workers, ambition, competency, generation_countdown, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
+	def __init__(self,settled_in, grain, workers, ambition, competency, generation_countdown, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
 		self.ambition = ambition
@@ -42,8 +42,11 @@ class Household:
 		self.x = x
 		self.y = y
 		self.all_terrain = all_terrain
+		self.settled_in = settled_in
 		self.fields_owned = []
 		self.known_patches = []
+
+		self.settled_in.population += workers
 
 		min_y = y-knowledge_radius
 		min_y = 0 if min_y < 0 else min_y
@@ -70,7 +73,7 @@ class Household:
 			if num_not_supported < self.workers:
 				self.workers = self.workers -  num_not_supported
 			else:
-				pass
+				self.workers = 0
 		self.grain = self.grain * 0.9	#accounts for loss due to storage
 
 	def populationIncrease(self):
@@ -101,9 +104,10 @@ class Household:
 				field.years_not_harvested = 0
 				fields_harvested += 1
 				workers_worked += 2
-
-				total_harvest += field.harvest
-			self.grain += field.harvest
+				field_harvest = field.fertility*field.max_yield*self.competency - field.house_distance*field.owner.distance_cost - 300
+				
+				total_harvest += field_harvest
+		self.grain += total_harvest
 
 		i = fields_harvested
 		if self.fallow_limit > 0:
@@ -117,7 +121,7 @@ class Household:
 		claim_chance = random.random()
 		### TODO: Ask Kiara if this is correct. Takes 2 workers to farm field, fields can grow up to worker number?
 		### TODO: Implement known_patches
-		if (claim_chance < self.ambition and self.workers > len(self.fields_owned)) or len(self.fields_owned) <= 1:
+		if (claim_chance < self.ambition and self.workers > len(self.fields_owned)) or (len(self.fields_owned) <= 1 and self.workers > 0):
 			best_x = -1
 			best_y = -1
 			best_fertility = -1

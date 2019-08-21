@@ -24,11 +24,25 @@ class Terrain:
 		self.y = y
 		self.nile_distance = x
 
+		self.settlement = False
+		self.settlement_territory = False
+		self.field = False
+		self.river = False
+		self.harvested = False
+		self.owned = False
+		self.owner = None
+		self.color_stack = 0,0,0
+		self.fertility = 0
+		self.harvest = 0
+		self.max_yield = 2475
+		self.house_distance = 0
+		self.years_not_harvested = 0
+
 	def setFertility(self, beta, alpha, mu):
 		self.harvested = False
 		self.years_not_harvested += 1
 		self.fertility = 17*(beta*(np.exp(-(mu - self.nile_distance)**2 / alpha)))
-		if self.owner != None and self.field:
+		if self.owned:
 			self.harvest = self.fertility*self.max_yield*self.owner.competency - self.house_distance*self.owner.distance_cost - 300
 
 	def claim(self, claimant):
