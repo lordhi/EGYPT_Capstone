@@ -1,6 +1,7 @@
 from Terrain import Terrain
 import random
 import numpy as np
+import math
 
 class Household:
 	grain = 0
@@ -42,27 +43,29 @@ class Household:
 		self.y = y
 		self.all_terrain = all_terrain
 		self.fields_owned = []
+		self.known_patches = []
 
-		for i in range(x-knowledge_radius, x+knowledge_radius+1):
-			for j in range(y-knowledge_radius, y+knowledge_radius+1):
-				is_valid = True
+		min_y = y-knowledge_radius
+		min_y = 0 if min_y < 0 else min_y
+		max_y = y+knowledge_radius
+		max_y = y_size if max_y > y_size else max_y
 
-				if i < 0 or i >= x_size:
-					is_valid = False
+		min_x = x-knowledge_radius
+		min_x = 0 if min_x < 0 else min_x
+		max_x = x+knowledge_radius
+		max_x = x_size if max_x > x_size else max_x
 
-				if j < 0 or j >= y_size:
-					is_valid = False
-
-				if is_valid:
-					distance = round(np.sqrt((i-x)^2 + (j-y)^2))
-					if distance < knowledge_radius:
-						self.known_patches.append(all_terrain[i][j])
+		for x in range(min_x, max_x):
+			for y in range(min_y, max_y):
+				distance = ((x-self.x)**2 + (y-self.y)**2)**0.5
+				if distance < knowledge_radius and not all_terrain[x][y].river:
+					self.known_patches.append(all_terrain[x][y])
 
 	def grainTick(self):
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
 		self.grain = self.grain - self.workers*160
 		if self.grain < 0:
-			num_not_supported = -self.grain/160
+			num_not_supported = -math.ceil(self.grain/160)
 			self.grain = 0
 			if num_not_supported < self.workers:
 				self.workers = self.workers -  num_not_supported
@@ -76,7 +79,7 @@ class Household:
 	def farm(self):
 		self.fields_owned.sort(key = lambda x: x.harvest)
 		max_fields_to_work = int(self.workers//2)
-		
+
 		total_harvest = 0
 		workers_worked = 0
 		fields_harvested = 0
@@ -119,7 +122,7 @@ class Household:
 			best_y = -1
 			best_fertility = -1
 			for patch in self.known_patches:
-				if patch.fertility > best_fertility and not patch.owned:
+				if patch.fertility > best_fertility and not patch.owned and not patch.settlement and not patch.settlement_territory:
 					best_x = patch.x
 					best_y = patch.y
 					best_fertility = patch.fertility
