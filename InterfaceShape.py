@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
 from Simulation import Simulation
 import sys
 
@@ -11,18 +11,25 @@ import sys
 #Button functions
 #############################################################################
 def button_pause_on_click():
-	sys.exit()
-	print ("Hello")
+	info.paused = True
 
 def button_reset_on_click():
-	pass
+	slider_values = [x.get()*1.0 for x in sliders]
+	info.sim = Simulation(*slider_values)
+	
+	info.animationcount = 0
+	info.xpos = 0
+	info.graphcount = 0
 
 def button_go_on_click():
-	pass
+	if (not info.clicked_go_once):
+		button_reset_on_click()
+		info.clicked_go_once = True
+	info.paused = False
 
-class Info:
-	sim = None
-	paused = None
+
+
+
 
 ############################################################################
 #Colors
@@ -61,13 +68,6 @@ sleeptime = 1/(runRate*1.0)
 
 #Functions:
 ############################################################################
-def random_color():
-	de=("%02x"%0)
-	re=("%02x"%random.randint(100,255))
-	we=("%02x"%0)
-	ge="#"
-	return ge+de+re+we
-
 def greeness(value):
 	de=("%02x"%0)
 	re=("%02x"%value)
@@ -85,20 +85,22 @@ def plotData(xpos):
 	plt.tight_layout()
 
 
-def drawGrid(canvas,rows,columns):
-	width, height = canvas.winfo_width(),canvas.winfo_height()
-	xstep = width/columns
-	ystep = height/rows
-	canvas.delete('all')
-	for row in range(0,rows):
-		for col in range(0,columns):
-			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=random_color(),outline="")
+# def drawGrid(canvas,rows,columns):
+# 	width, height = canvas.winfo_width(),canvas.winfo_height()
+# 	xstep = width/columns
+# 	ystep = height/rows
+# 	canvas.delete('all')
+# 	for row in range(0,rows):
+# 		for col in range(0,columns):
+# 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=random_color(),outline="")
 
 def drawGridSimulation(canvas,simulation):
 	width, height = canvas.winfo_width(),canvas.winfo_height()
 	overallterrain = simulation.terrain
 
-	rows,columns = len(overallterrain),len(overallterrain[0])
+	rows,columns = 30,30#len(overallterrain),len(overallterrain[0])
+	print ("Rows" + str(rows))
+	print ("Columns" + str(columns))
 	xstep = width/columns - 1
 	ystep = height/rows - 1
 	canvas.delete('all')
@@ -133,12 +135,19 @@ def drawGridSimulation(canvas,simulation):
 				target = overallterrain[row][col].owner
 				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep)
 
-
-#GUI setup frames:
 ############################################################################
+#Set up root
 tk = Tk()
 tk.configure(background=general_background)
 
+############################################################################
+#Close window behaviour
+def onClose():
+	info.ending = True
+tk.protocol('WM_DELETE_WINDOW', onClose)  
+
+#GUI setup frames:
+############################################################################
 topframe = Frame(tk,bg=top_panel_color,width=(w1+w2+w3)*s,height=h1*s,relief='raised')
 topframe.grid(row=0,column=0,columnspan=7,rowspan=1,sticky=N+S+E+W)
 topframe.grid_propagate(False)
@@ -171,21 +180,18 @@ tk.grid_rowconfigure(0,weight=1,minsize=h1*s)
 
 tk.minsize((w1+w2+w3)*s,(h1+h2+h3)*s)
 
-def callback():
-    print("click!")
-
 canvas = Canvas(animationframe,width=w2*s,height=h2*s,bg=general_background)
 canvas.grid(row=0,column=0)
 
 #Top panel
 ############################################################################
-button_reset = Button(topframe,text='Reset',bg=button_color)
+button_reset = Button(topframe,text='Reset',bg=button_color,command = button_reset_on_click)
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
-button_go = Button(topframe,text='Go',bg=button_color)
+button_go = Button(topframe,text='Go',bg=button_color,command = button_go_on_click)
 button_go.grid(row=0,column=1,padx=padx,pady=pady)
 
-button_pause = Button(topframe,text='Pause',bg=button_color)
+button_pause = Button(topframe,text='Pause',bg=button_color,command = button_pause_on_click)
 button_pause.grid(row=0,column=2,padx=padx,pady=pady)
 
 speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(w2*s),label="Simulation speed (fps)",bg=top_panel_color,troughcolor=trough_color)
@@ -288,48 +294,55 @@ toolbar2 = NavigationToolbar2Tk(graph2, toolbarframe2)
 toolbar2.update()
 toolbarframe2.grid_propagate(False)
 
-
-#Initialisation
+#Info initialisation
 #############################################################################
-animationcount = 0
-xpos = 0
-graphcount = 0
-#
+class Info:
+	sim = None
+	paused = None
+	animationcount = None
+	xpos = None
+	graphcount = None
+	clicked_once = None
+	ending = None
 
 info = Info()
-
-slider_values = [x.get()*1.0 for x in sliders]
-# slider_values = slider_values[0:14]
-
-info.sim = Simulation(*slider_values)
-info.paused = False
-
-button_pause.command =  button_pause_on_click
+info.clicked_go_once = False
+info.paused = True
+info.ending = False
 
 #Mainloop:
 #############################################################################
-while 1:
-	animationEvery = 1/(1.0*speed_scale.get())*runRate
-	graphEvery = 30 * animationEvery
 
-	animationcount += 1
-	if (animationcount >= animationEvery):
-		animationcount = 0
-		info.sim.tick()
-		drawGridSimulation(canvas,info.sim)
+def mainLoop():
+	if (not info.paused):	#if simulation is not paused
+		animationEvery = 1/(1.0*speed_scale.get())*runRate
+		graphEvery = 30 * animationEvery
 
-	graphcount += 1
-	if (graphcount >= graphEvery/2):
-		pass
-	if (graphcount >= graphEvery):
-		#show the plots
-		plotData(xpos)
-		graph1.draw()
-		graph2.draw()
-		graphcount=0
+		info.animationcount += 1
+		if (info.animationcount >= animationEvery):
+			info.animationcount = 0
+			info.sim.tick()
+			drawGridSimulation(canvas,info.sim)
 
-	xpos += 1
+		info.graphcount += 1
+		if (info.graphcount >= graphEvery/2):
+			pass
+		if (info.graphcount >= graphEvery):
+			#show the plots
+			plotData(info.xpos)
+			graph1.show()
+			graph2.show()
+			info.graphcount=0
 
-	tk.update_idletasks()
-	tk.update()
-	time.sleep(sleeptime)
+		info.xpos += 1
+
+	if info.ending: #user has closed the program 
+		tk.destroy()
+		sys.exit()
+		return
+
+	tk.after(runRate,mainLoop)
+
+
+tk.after(runRate,mainLoop)
+tk.mainloop()
