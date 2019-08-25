@@ -98,7 +98,7 @@ def drawGridSimulation(canvas,simulation):
 	width, height = canvas.winfo_width(),canvas.winfo_height()
 	overallterrain = simulation.terrain
 
-	rows,columns = 30,30#len(overallterrain),len(overallterrain[0])
+	rows,columns = len(overallterrain),len(overallterrain[0])
 	print ("Rows" + str(rows))
 	print ("Columns" + str(columns))
 	xstep = width/columns - 1
