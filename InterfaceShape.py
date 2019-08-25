@@ -3,7 +3,11 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+try:
+	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
+except:
+	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+
 from Simulation import Simulation
 import sys
 
@@ -99,8 +103,6 @@ def drawGridSimulation(canvas,simulation):
 	overallterrain = simulation.terrain
 
 	rows,columns = len(overallterrain),len(overallterrain[0])
-	print ("Rows" + str(rows))
-	print ("Columns" + str(columns))
 	xstep = width/columns - 1
 	ystep = height/rows - 1
 	canvas.delete('all')
