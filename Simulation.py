@@ -54,6 +54,8 @@ class Simulation:
 		self.pop_growth_rate = pop_growth_rate
 		self.min_fission_chance = min_fission_chance
 		self.land_rental_rate = land_rental_rate
+		self.settlements = []
+		self.terrain = []
 
 		print("-----")
 		print(knowledge_radius)
