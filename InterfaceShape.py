@@ -4,12 +4,41 @@ import matplotlib.pyplot as plt
 import numpy
 import random
 try:
-	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
-except:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+except:
+	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
 
 from Simulation import Simulation
 import sys
+
+from PIL import Image, ImageTk
+
+#Imported functions
+#############################################################################
+# def fig2data ( fig ):
+#     # draw the renderer
+#     fig.canvas.draw ( )
+ 
+#     # Get the RGBA buffer from the figure
+#     w,h = fig.canvas.get_width_height()
+#     buf = numpy.fromstring ( fig.canvas.tostring_argb(), dtype=numpy.uint8 )
+#     buf.shape = ( w, h, 4 )
+ 
+#     # canvas.tostring_argb give pixmap in ARGB mode. Roll the ALPHA channel to have it in RGBA mode
+#     buf = numpy.roll ( buf, 3, axis = 2 )
+#     return buf
+
+# def fig2img ( fig ):
+#     # put the figure pixmap into a numpy array
+#     buf = fig2data ( fig )
+#     w, h, d = buf.shape
+#     return Image.frombytes( "RGBA", ( w ,h ), buf.tostring( ) )
+
+def resizeImage(img,basewidth):
+	wpercent = (basewidth/float(img.size[0]))
+	hsize = int((float(img.size[1])*float(wpercent)))
+	img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+	return img
 
 
 #Button functions
@@ -31,10 +60,6 @@ def button_go_on_click():
 		info.clicked_go_once = True
 	info.paused = False
 
-
-
-
-
 ############################################################################
 #Colors
 bg_slider_color = '#82bcb7'
@@ -43,6 +68,9 @@ slider_knob_color = '#c86767'
 top_panel_color = '#f0f0f0'
 button_color = '#bcbce6'
 general_background = '#ffffff'
+circle_border_outline = '#9d6e48'
+
+
 
 #Parameters:
 ############################################################################
@@ -57,7 +85,7 @@ h1 = 1 	#top frame height
 h2 = 6	#animation frame height
 h3 = 2  #graphs 1 frame height
 		#graphs 2 frame height is h2 + h3
-s = 90  #how many pixels is the side of one cell worth
+s = 93  #how many pixels is the side of one cell worth
 
 padx = 10
 pady = 5
@@ -89,14 +117,8 @@ def plotData(xpos):
 	plt.tight_layout()
 
 
-# def drawGrid(canvas,rows,columns):
-# 	width, height = canvas.winfo_width(),canvas.winfo_height()
-# 	xstep = width/columns
-# 	ystep = height/rows
-# 	canvas.delete('all')
-# 	for row in range(0,rows):
-# 		for col in range(0,columns):
-# 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=random_color(),outline="")
+def drawCircle(canvas,x,y,r):
+	canvas.create_oval(x-r,y-r,x+r,y+r,fill='black',outline=circle_border_outline,width=r/6)
 
 def drawGridSimulation(canvas,simulation):
 	width, height = canvas.winfo_width(),canvas.winfo_height()
@@ -110,11 +132,12 @@ def drawGridSimulation(canvas,simulation):
 	for row in range(0,rows):
 		for col in range(0,columns):
 			block = overallterrain[row][col]
-			fertility = block.fertility/2
+			fertility = block.fertility/2 #still need to fix this!
 			if block.river:
 				color = 'blue'
-			elif block.settlement:
-				color = 'red'
+				#canvas.create_image(row*xstep,col*ystep,image=img_house)
+			elif block.field:
+				color='yellow'
 			else:
 				color = greeness(int(100+fertility*155))
 
@@ -131,11 +154,26 @@ def drawGridSimulation(canvas,simulation):
 	#		col = block.y
 	#		canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill='red',outline="")
 
+
+	#draw lines
 	for row in range(0,rows):
 		for col in range(0,columns):
-			if overallterrain[row][col].field:
-				target = overallterrain[row][col].owner
+			block = overallterrain[row][col]
+			if block.field:
+				target = block.owner
+				#if (not (row==target.x or col==target.y)):
+					#canvas.create_rectangle(row*xstep,col*ystep,(target.x+1)*xstep,(target.y+1)*ystep,fill="yellow",outline="")
 				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep)
+
+	#draw circle outlines and houses
+	for row in range(0,rows):
+		for col in range(0,columns):
+			block = overallterrain[row][col]
+			if block.settlement:
+					drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,30)
+					canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=img_house)
+
+
 
 ############################################################################
 #Set up root
@@ -147,6 +185,12 @@ tk.configure(background=general_background)
 def onClose():
 	info.ending = True
 tk.protocol('WM_DELETE_WINDOW', onClose)  
+
+############################################################################
+#Images
+img_house = Image.open("No background hose.png")
+img_house = resizeImage(img_house,20)
+img_house = ImageTk.PhotoImage(img_house)
 
 #GUI setup frames:
 ############################################################################
