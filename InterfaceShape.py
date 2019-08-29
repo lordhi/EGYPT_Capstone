@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.simpledialog as simpledialog
 import time
 import matplotlib.pyplot as plt
 import numpy
@@ -15,25 +16,6 @@ from PIL import Image, ImageTk
 
 #Imported functions
 #############################################################################
-# def fig2data ( fig ):
-#     # draw the renderer
-#     fig.canvas.draw ( )
- 
-#     # Get the RGBA buffer from the figure
-#     w,h = fig.canvas.get_width_height()
-#     buf = numpy.fromstring ( fig.canvas.tostring_argb(), dtype=numpy.uint8 )
-#     buf.shape = ( w, h, 4 )
- 
-#     # canvas.tostring_argb give pixmap in ARGB mode. Roll the ALPHA channel to have it in RGBA mode
-#     buf = numpy.roll ( buf, 3, axis = 2 )
-#     return buf
-
-# def fig2img ( fig ):
-#     # put the figure pixmap into a numpy array
-#     buf = fig2data ( fig )
-#     w, h, d = buf.shape
-#     return Image.frombytes( "RGBA", ( w ,h ), buf.tostring( ) )
-
 def resizeImage(img,basewidth):
 	wpercent = (basewidth/float(img.size[0]))
 	hsize = int((float(img.size[1])*float(wpercent)))
@@ -49,16 +31,51 @@ def button_pause_on_click():
 def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
 	info.sim = Simulation(*slider_values)
-	
+
 	info.animationcount = 0
 	info.xpos = 0
 	info.graphcount = 0
+
+	width = canvas.winfo_width()
+	columns = len(info.sim.terrain[0])
+	xstep = int(width/columns - 1)
+
+	#Barley images
+	info.barley_images = [None,None,None]
+	info.barley_images[PINK] = Image.open("pink_background_barley.png")
+	info.barley_images[BLUE] = Image.open("blue_background_barley.png")
+	info.barley_images[YELLOW] = Image.open("yellow_background_barley.png")
+
+	info.barley_images = [ImageTk.PhotoImage(resizeImage(img,int(xstep*4/5.0))) for img in info.barley_images]
+
+	#House images
+	info.house_images = [None,None,None]
+	info.house_images[PINK] = Image.open("pink_background_house.png")
+	info.house_images[BLUE] = Image.open("blue_background_house.png")
+	info.house_images[YELLOW] = Image.open("yellow_background_house.png")
+
+	info.house_images = [ImageTk.PhotoImage(resizeImage(img,int(2/3.0*xstep))) for img in info.house_images]
+
 
 def button_go_on_click():
 	if (not info.clicked_go_once):
 		button_reset_on_click()
 		info.clicked_go_once = True
 	info.paused = False
+
+def popup_window():
+	if check_var[0].get():
+		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
+
+def graphMenuOneClick(selection):
+	print("Menu one clicked" + str(selection))
+	names = [x[0] for x in options]
+	print(names.index(selection))
+
+def graphMenuTwoClick(selection):
+	print("Menu two clicked"+ str(selection))
+	names = [x[0] for x in options]
+	print(names.index(selection))
 
 ############################################################################
 #Colors
@@ -69,8 +86,12 @@ top_panel_color = '#f0f0f0'
 button_color = '#bcbce6'
 general_background = '#ffffff'
 circle_border_outline = '#9d6e48'
-
-
+PINK = 0
+BLUE = 1
+YELLOW = 2
+pink_hex = '#a71b6a'
+blue_hex = '#294b89'
+yellow_hex = '#f0f05a'
 
 #Parameters:
 ############################################################################
@@ -92,6 +113,7 @@ pady = 5
 sfHeight = 70 #the heights of the side slider blocks
 sliHeight = sfHeight - 2*pady #slider heights
 sliWidth = w1*s-2*padx
+chkHeight = 40 #the heights of the check boxes
 graphW = 75
 
 #Calculations
@@ -120,7 +142,8 @@ def plotData(xpos):
 def drawCircle(canvas,x,y,r):
 	canvas.create_oval(x-r,y-r,x+r,y+r,fill='black',outline=circle_border_outline,width=r/6)
 
-def drawGridSimulation(canvas,simulation):
+def drawGridSimulation(canvas,info):
+	simulation = info.sim
 	width, height = canvas.winfo_width(),canvas.winfo_height()
 	overallterrain = simulation.terrain
 
@@ -135,24 +158,10 @@ def drawGridSimulation(canvas,simulation):
 			fertility = block.fertility/2 #still need to fix this!
 			if block.river:
 				color = 'blue'
-				#canvas.create_image(row*xstep,col*ystep,image=img_house)
-			elif block.field:
-				color='yellow'
 			else:
-				color = greeness(int(100+fertility*155))
+				color = greeness(int(245-fertility*225))
 
-			
-			#print("Fertility was: " + str(overallterrain[columns][rows].fertility))
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
-
-	#settlements = simulation.settlements
-	#for settlement in settlements:
-	#		terrain = settlement.terrain
-
-	#	for block in terrain:
-	#		row = block.x
-	#		col = block.y
-	#		canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill='red',outline="")
 
 
 	#draw lines
@@ -163,7 +172,7 @@ def drawGridSimulation(canvas,simulation):
 				target = block.owner
 				#if (not (row==target.x or col==target.y)):
 					#canvas.create_rectangle(row*xstep,col*ystep,(target.x+1)*xstep,(target.y+1)*ystep,fill="yellow",outline="")
-				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep)
+				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep,fill=yellow_hex)
 
 	#draw circle outlines and houses
 	for row in range(0,rows):
@@ -171,8 +180,15 @@ def drawGridSimulation(canvas,simulation):
 			block = overallterrain[row][col]
 			if block.settlement:
 					drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,30)
-					canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=img_house)
+					color = BLUE
+					canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[color])
 
+			if block.field:
+				color = YELLOW
+				canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.barley_images[color])
+
+	canvas.create_rectangle(xstep*columns,0,xstep*(columns+2),ystep*rows,fill=general_background,outline=general_background)
+	canvas.create_rectangle(0,ystep*rows,xstep*(columns+2),ystep*(rows+2),fill=general_background,outline=general_background)
 
 
 ############################################################################
@@ -186,11 +202,7 @@ def onClose():
 	info.ending = True
 tk.protocol('WM_DELETE_WINDOW', onClose)  
 
-############################################################################
-#Images
-img_house = Image.open("No background hose.png")
-img_house = resizeImage(img_house,20)
-img_house = ImageTk.PhotoImage(img_house)
+
 
 #GUI setup frames:
 ############################################################################
@@ -269,30 +281,63 @@ slider_info = [("model-time-span",100,500,50),
 				("pop-growth-rate",0,0.5,0.01),
 				("min-fission-chance",0.5,0.9,0.1),
 				("land-rental-rate",30,60,5)]
-
 slider_frames = []
 sliders = []
 currentRow = 0
+pos = 0
 for name in slider_info:
 	slider_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=w1*s-2*padx,height=sfHeight+pady))
 	slider_frames[-1].grid(row=currentRow,column=0,padx=padx)
 	slider_frames[-1].grid_propagate(False)
-	sliders.append(Scale(slider_frames[-1],from_=slider_info[currentRow][1],
-		to=slider_info[currentRow][2],resolution=slider_info[currentRow][3],
+	sliders.append(Scale(slider_frames[-1],from_=slider_info[pos][1],
+		to=slider_info[pos][2],resolution=slider_info[pos][3],
 		orient=HORIZONTAL,sliderrelief="raised",length=sliWidth,
-		label=slider_info[currentRow][0],bg=bg_slider_color,troughcolor=trough_color))
+		label=slider_info[pos][0],bg=bg_slider_color,troughcolor=trough_color))
 	sliders[-1].grid(row=0,column=0,padx=1)
 	currentRow += 1
+	pos += 1
+
+
+
+check_box_info = [("manual-seed"),("allow-household-fission"),("allow-land-rental")]
+check_box_frames = []
+check_boxes = []
+check_var = []
+
+pos = 0
+for name in check_box_info:
+	check_box_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=w1*s-2*padx,height=chkHeight+pady))
+	check_box_frames[-1].grid(row=currentRow,column=0,padx=padx)
+	check_box_frames[-1].grid_propagate(False)
+
+	var = IntVar()
+
+	check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos],bg=bg_slider_color))
+	if pos == 0:
+		check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos],bg=bg_slider_color,command=popup_window,variable=var))
+	else:
+		check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos],bg=bg_slider_color,variable=var))
+
+	check_var.append(var)
+	check_boxes[-1].grid(row=0,column=0,padx=1)
+
+	currentRow += 1
+	pos += 1
 
 slider_canvas.create_window(0, 0, anchor='nw', window=frame_in_canvas)
 slider_canvas.update_idletasks()
-slider_canvas.configure(scrollregion=(0,0,w1*s,(sfHeight + pady)*len(slider_info)), 
+slider_canvas.configure(scrollregion=(0,0,w1*s,(sfHeight + pady)*len(slider_info)+(chkHeight+pady)*len(check_box_info)), 
                  yscrollcommand=yscrollbar.set)
 
 
 #Graph panel
 #############################################################################
-options = ["One","Two","Three","Four"]
+options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
+		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),("Total population","",""),
+		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
+		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
+		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
+		("Household wealth households 25-29","Years","Wealth")]
 
 
 ###############
@@ -306,7 +351,7 @@ graph1.get_tk_widget().grid(row=0,column=0,columnspan=2,rowspan=1,padx=padx,pady
 graph1.get_tk_widget().configure(background = 'BLACK', borderwidth = 1, relief = SUNKEN)
 
 graph1var = StringVar(graph1frame)
-graph1menu = OptionMenu(graph1frame,graph1var,*options)
+graph1menu = OptionMenu(graph1frame,graph1var,*[x[0] for x in options],command=graphMenuOneClick)
 graph1menu.config(width=int(graphW/4))
 graph1menu.grid(row=1,column=1,columnspan=1,rowspan=1,padx=padx,pady=pady)
 
@@ -328,7 +373,7 @@ graph2.get_tk_widget().grid(row=0,column=0,columnspan=2,rowspan=1,padx=padx,pady
 graph2.get_tk_widget().configure(background = 'BLACK', borderwidth = 1, relief = SUNKEN)
 
 graph2var = StringVar(graph2frame)
-graph2menu = OptionMenu(graph2frame,graph2var,*options)
+graph2menu = OptionMenu(graph2frame,graph2var,*[x[0] for x in options],command=graphMenuTwoClick)
 graph2menu.config(width=int(graphW/4))
 graph2menu.grid(row=1,column=1,columnspan=1,rowspan=1,padx=padx,pady=pady)
 
@@ -350,6 +395,9 @@ class Info:
 	graphcount = None
 	clicked_once = None
 	ending = None
+	house_images = None
+	barley_images = None
+	seed = None
 
 info = Info()
 info.clicked_go_once = False
@@ -368,11 +416,9 @@ def mainLoop():
 		if (info.animationcount >= animationEvery):
 			info.animationcount = 0
 			info.sim.tick()
-			drawGridSimulation(canvas,info.sim)
+			drawGridSimulation(canvas,info)
 
 		info.graphcount += 1
-		if (info.graphcount >= graphEvery/2):
-			pass
 		if (info.graphcount >= graphEvery):
 			#show the plots
 			plotData(info.xpos)
