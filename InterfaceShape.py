@@ -4,6 +4,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import random
+import time
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
 	agg = False
@@ -59,20 +60,21 @@ def button_reset_on_click():
 	info.house_images = [ImageTk.PhotoImage(resizeImage(img,int(2/3.0*xstep))) for img in info.house_images]
 
 	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),("Total population","",""),
+		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),
 		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
 		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
 		("Household wealth households 25-29","Years","Wealth")]
 
-	info.graphs_data = 	[
-					[[],[]],			[[],[],[]],			[[],[],[]],
-					[[],[]],			[[],[]],			[[],[]],
-					[[],[],[],[]],
+	info.graphs_data = [
+					[[], [[]] ],		[[],[[]] ],		[[], [[]] ],
+					[[], [[]] ],		[[],[[]] ],
+					[[],[[],[],[]]],
 					[[],[]],			[[],[]],
 					[[],[]],			[[],[]],
 					[[],[]]
 					]
+
 	info.changed = [True,True]
 
 def button_go_on_click():
@@ -175,85 +177,92 @@ def plotData():
 	#
 
 	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),("Total population","",""),
+		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),
 		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
 		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
 		("Household wealth households 25-29","Years","Wealth")]
 
-
+	#Total Grain
 	info.graphs_data[0][0].append(info.sim.years_passed)
-	info.graphs_data[0][1].append(info.sim.total_population)
+	info.graphs_data[0][1][0].append(info.sim.total_population)
 
+	#Total Population
 	info.graphs_data[1][0].append(info.sim.years_passed)
-	info.graphs_data[1][1].append(info.sim.years_passed)
+	info.graphs_data[1][1][0].append(info.sim.total_population)
+
+	#Total households and settlements
+	info.graphs_data[2][0].append(info.sim.years_passed)
+	info.graphs_data[2][1][0].append(len(info.sim.settlements) + len(info.sim.all_households))
+
+	#Gini-index
+	info.graphs_data[3][0].append(info.sim.years_passed)
+	info.graphs_data[3][1][0].append(info.sim.years_passed)
+
+	#Grain-equality
+
+	
 
 def updateGraphs():
 	for fig in [0,1]:
-		pointer = info.pointers[fig]
+		data = info.graphs_data[info.pointers[fig]]
+		xdata = data[0]
+		ydata = data[1]
 
-		if (pointer==0):
+		plt.figure(fig)
+		plt.clf()
 
-			data = info.graphs_data[pointer]
+		for line in ydata:
 
-			xdata = data[0]
-			ydata = data[1]
+			plt.plot(xdata,line)
 
-			print("For pointer: " + str(pointer))
-			print("Xdata " + str(xdata))
-			print("Ydata " + str(ydata))
+		plt.tight_layout()
 
-			if info.changed[fig]:
-				print("Reset figure")
-				plt.figure(fig)
-				plt.clf()
-				plt.plot(xdata,ydata)
-				plt.tight_layout()
-				info.changed[fig] = False	
-			else:
-				plt.plot(xdata[-1],ydata[-1])
-				plt.tight_layout()
+		# if (pointer==0):
 
-		elif (pointer==1):
+		# elif (pointer==1):
 			
 
-			data = info.graphs_data[pointer]
+		# 	data = info.graphs_data[pointer]
 
-			xdata = data[0]
-			ydata = data[1]
+		# 	xdata = data[0]
+		# 	ydata = data[1]
 
-			print("For pointer: " + str(pointer))
-			print("Xdata " + str(xdata))
-			print("Ydata " + str(ydata))
+		# 	print("For pointer: " + str(pointer))
+		# 	print("Xdata " + str(xdata))
+		# 	print("Ydata " + str(ydata))
 
-			if info.changed[fig]:
-				plt.figure(fig)
-				plt.clf()
-				plt.plot(xdata,ydata)
-				info.changed[fig] = False	
-			else:
-				plt.plot(xdata[-1],ydata[-1])
+		# 	# if info.changed[fig]:
+		# 	print("Reset figure")
+		# 	plt.figure(fig)
+		# 	plt.clf()
+		# 	plt.plot(xdata,ydata,'o')
+		# 	plt.tight_layout()
+		# 	info.changed[fig] = False	
+		# 	# else:
+		# 	# 	plt.plot(xdata[-1],ydata[-1],'o')
+		# 	# 	plt.tight_layout()
 
-		elif (pointer==2):
-			pass
-		elif (pointer==3):
-			pass
-		elif (pointer==4):
-			pass
-		elif (pointer==5):
-			pass
-		elif (pointer==6):
-			pass
-		elif (pointer==7):
-			pass
-		elif (pointer==8):
-			pass
-		elif (pointer==9):
-			pass
-		elif (pointer==10):
-			pass
-		elif (pointer==11):
-			pass
+		# elif (pointer==2):
+		# 	pass
+		# elif (pointer==3):
+		# 	pass
+		# elif (pointer==4):
+		# 	pass
+		# elif (pointer==5):
+		# 	pass
+		# elif (pointer==6):
+		# 	pass
+		# elif (pointer==7):
+		# 	pass
+		# elif (pointer==8):
+		# 	pass
+		# elif (pointer==9):
+		# 	pass
+		# elif (pointer==10):
+		# 	pass
+		# elif (pointer==11):
+		# 	pass
 
 def drawCircle(canvas,x,y,r):
 	canvas.create_oval(x-r,y-r,x+r,y+r,fill='black',outline=circle_border_outline,width=r/6)
@@ -293,8 +302,9 @@ def drawGridSimulation(canvas,info):
 		for col in range(0,columns):
 			block = overallterrain[row][col]
 			if block.settlement:
-					drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,30)
-					canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])
+				radius = ((block.owner.population//50+1)*xstep)/2
+				drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,radius)
+				canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])
 
 			if block.field:
 				canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.barley_images[main_color])
@@ -364,7 +374,7 @@ button_go.grid(row=0,column=1,padx=padx,pady=pady)
 button_pause = Button(topframe,text='Pause',bg=button_color,command = button_pause_on_click)
 button_pause.grid(row=0,column=2,padx=padx,pady=pady)
 
-speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(w2*s),label="Simulation speed (fps)",bg=top_panel_color,troughcolor=trough_color)
+speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(w2*s),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 speed_scale.grid(row=0,column=3,padx=padx*5)
 
 #Slider panel
@@ -446,7 +456,7 @@ slider_canvas.configure(scrollregion=(0,0,w1*s,(sfHeight + pady)*len(slider_info
 #Graph panel
 #############################################################################
 options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),("Total population","",""),
+		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),
 		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
 		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
@@ -526,21 +536,28 @@ info.changed = [False,False]
 
 #Mainloop:
 #############################################################################
+current_milli_time = lambda: int(round(time.time() * 1000))
 
 def mainLoop():
+	time1 = current_milli_time()
 	if (not info.paused): #and not (info.sim.done)):	#if simulation is not paused
-		animationEvery = 1/(1.0*speed_scale.get())*runRate
-		graphEvery = 30 * animationEvery
+	
+		animationEvery = 2#1/(1.0*speed_scale.get())*runRate
+		graphEvery = 30
+
 
 		info.animationcount += 1
 		if (info.animationcount >= animationEvery):
 			info.animationcount = 0
-			info.sim.tick()
 			drawGridSimulation(canvas,info)
+
+		info.sim.tick()
+		plotData()
 
 		info.graphcount += 1
 		if (info.graphcount >= graphEvery):
-			plotData()
+			info.graphcount=0
+			
 			updateGraphs()
 
 			#Show the graphs
@@ -550,17 +567,21 @@ def mainLoop():
 			else:
 				graph1.draw()
 				graph2.draw()
-			info.graphcount=0
-
-		info.xpos += 1
 
 	if info.ending: #user has closed the program 
 		tk.destroy()
 		sys.exit()
 		return
 
-	tk.after(runRate,mainLoop)
+
+	time2 = current_milli_time()
+	#print(time2-time1)
 
 
-tk.after(runRate,mainLoop)
+	sleep = int(1000/(1.0*speed_scale.get())) - time2 + time1
+	if (sleep < 0):
+		sleep = 0
+	tk.after(sleep,mainLoop)
+
+tk.after(30,mainLoop)
 tk.mainloop()
