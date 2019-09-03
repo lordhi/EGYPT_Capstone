@@ -13,6 +13,7 @@ class Household:
 	generational_variation = 0.2
 	minimum_ambition = 0
 	minimum_competency = 0
+	min_fission_chance = 0
 	fallow_limit = 5
 	fields_owned = []		#list of terrain
 	fields_harvested = 0	
@@ -21,6 +22,7 @@ class Household:
 	knowledge_radius = 0
 
 	distance_cost = 0
+	land_rental_rate = 0
 
 	all_terrain = None
 	x_size = 0
@@ -31,25 +33,26 @@ class Household:
 
 	settled_in = None
 
-	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, generation_countdown, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
+	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
 		self.ambition = min_ambition + (random.random()*(1 - min_ambition))
 		self.competency = min_competency + (random.random()*(1 - min_competency))
 		self.minimum_ambition = min_ambition
 		self.minimum_competency = min_competency
-		# self.ambition = ambition
-		# self.competency	= competency
 		self.workers_worked = 0
-		self.generation_countdown = generation_countdown
+		self.generation_countdown = random.randint(0, 5) + 10
+		self.min_fission_chance = min_fission_chance
 		self.knowledge_radius = knowledge_radius
 		self.distance_cost = distance_cost
+		self.land_rental_rate = land_rental_rate
 		self.x = x
 		self.y = y
 		self.x_size = x_size
 		self.y_size = y_size
 		self.all_terrain = all_terrain
 		self.settled_in = settled_in
+		self.settled_in.population += self.workers
 		self.fields_owned = []
 		self.fields_harvested = 0
 		self.known_patches = []
@@ -72,6 +75,11 @@ class Household:
 				if distance < knowledge_radius and not all_terrain[x][y].river:
 					self.known_patches.append(all_terrain[x][y])
 
+	def clearUp(self):
+		while len(self.fields_owned) > 0:
+			self.fields_owned[0].unclaim()
+			del self.fields_owned[0]
+
 	def grainTick(self):
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
 		self.grain -= self.workers*160
@@ -89,11 +97,12 @@ class Household:
 		self.grain = self.grain * 0.9	#accounts for loss due to storage
 		self.settled_in.parent.total_grain += self.grain
 
+
 	def populationIncrease(self):
 		pass
 
 	def farm(self):
-		self.fields_owned.sort(key = lambda x: x.harvest)
+		self.fields_owned.sort(key = lambda x: x.harvest*self.competency - x.house_distance*x.owner.distance_cost)
 		max_fields_to_work = int(self.workers//2)
 
 		total_harvest = 0
@@ -119,7 +128,8 @@ class Household:
 				field_harvest = field.harvest*self.competency - field.house_distance*field.owner.distance_cost - 300
 				
 				total_harvest += field_harvest
-		#self.grain += total_harvest
+				print("Harvested:" + str(field_harvest))
+		self.grain += total_harvest
 
 		i = self.fields_harvested
 		if self.fallow_limit > 0:
@@ -146,50 +156,70 @@ class Household:
 			if self.all_terrain[best_x][best_y].claim(self):
 				self.fields_owned.append(self.all_terrain[best_x][best_y])
 
-	def rentLand(self, land_rental_rate):
+	def rentLand(self):
+		self.known_patches.sort(key = lambda x: x.harvest*self.competency - (((self.x - x.x)**2 + (self.y - x.y)**2)**0.5)*self.distance_cost if not x.harvested else 0)
+
 		total_harvest = 0
 		max_fields_to_work = (self.workers - self.workers_worked)//2
+		num_fields_rented = 0
 
 		for i in range(max_fields_to_work):
-			best_harvest = 0
-			best_field = self.all_terrain[self.x][self.y]
 
-			for field in self.known_patches:
-				this_harvest = field.fertility*field.max_yield*self.competency - (((self.x - field.x)**2 + (self.y - field.y)**2)**0.5)*self.distance_cost
-				if not field.harvested and this_harvest >= best_harvest: # this_harvest > best_harvest ?
-					best_field = field
-					best_harvest = this_harvest
+			best_field = self.known_patches[num_fields_rented]
 
 			harvest_chance = random.random()
 
-			if best_field.field and field not in self.fields_owned and harvest_chance < (self.ambition * self.competency):
-				field.harvested = True
+			if best_field.field and best_field not in self.fields_owned and harvest_chance < (self.ambition * self.competency):
+				best_field.harvested = True
 				# shape
 				# color
+				field_harvest = best_field.harvest*self.competency - (((self.x - best_field.x)**2 + (self.y - best_field.y)**2)**0.5)*self.distance_cost
 
-				total_harvest += best_harvest * (1 - (land_rental_rate/100)) - 300
+				total_harvest += field_harvest * (1 - (self.land_rental_rate/100)) - 300
 
-				best_field.owner.grain += best_harvest * (land_rental_rate/100)
-		
-			self.fields_harvested += 1
+				best_field.owner.grain += field_harvest * (self.land_rental_rate/100)
+
+				num_fields_rented += 1
+				self.fields_harvested += 1
 
 		self.grain += total_harvest
+
+	def randomRange(self, minimum, maximum):
+		if maximum == minimum:
+			return minimum
+		return random.random()*(maximum-minimum) + minimum
 
 	def generationalChange(self):
 		self.generation_countdown -= 1
 		if self.generation_countdown <= 0:
 			self.generation_countdown = random.randrange(0,5) + 10
 
-			ambition_change = 2*self.generational_variation*(random.random() - 0.5)
-			while self.ambition + ambition_change > 1 or self.ambition + ambition_change < self.minimum_ambition:
-				ambition_change = 2*self.generational_variation*(random.random() - 0.5)
-			
-			self.ambition += ambition_change
+			self.ambition = self.randomRange(max(self.ambition-self.generational_variation, self.minimum_ambition), min(self.ambition+self.generational_variation, 1))
+			#ambition_change = 2*self.generational_variation*(random.random() - 0.5)
+			#while self.ambition + ambition_change > 1 or self.ambition + ambition_change < self.minimum_ambition:
+			#	ambition_change = 2*self.generational_variation*(random.random() - 0.5)
+			#self.ambition += ambition_change
 
-			competency_change = 2*self.generational_variation*(random.random() - 0.5)
-			while self.competency + competency_change > 1 or self.competency + competency_change < self.minimum_competency:
-				competency_change = 2*self.generational_variation*(random.random() - 0.5)
-			
-			self.competency += competency_change
+			self.competency = self.randomRange(max(self.competency-self.generational_variation, self.minimum_competency), min(self.competency+self.generational_variation, 1))
 
-	
+			#competency_change = 2*self.generational_variation*(random.random() - 0.5)
+			#while self.competency + competency_change > 1 or self.competency + competency_change < self.minimum_competency:
+			#	competency_change = 2*self.generational_variation*(random.random() - 0.5)
+			#self.competency += competency_change
+
+	def fission(self):
+		if self.workers > 15 and self.grain > 3 * self.workers * 164:
+			fission_chance = random.random()
+			if fission_chance > self.min_fission_chance:
+				grain = 1100
+				workers = 5
+
+				# Think which variables should be inherited from the previous household for extensibility purposes
+				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.land_rental_rate, self.x, self.y, self.all_terrain, self.x_size, self.y_size)
+
+				self.settled_in.households.append(new_household)
+				self.settled_in.parent.all_households.append(new_household)
+
+				self.workers -= 5
+				self.grain -= 1100
+

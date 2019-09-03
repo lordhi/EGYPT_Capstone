@@ -3,6 +3,7 @@ import numpy as np
 
 class Terrain:
 	settlement = False
+	was_settlement = False
 	settlement_territory = False
 	field = False
 	river = False
@@ -42,8 +43,7 @@ class Terrain:
 		self.harvested = False
 		self.years_not_harvested += 1
 		self.fertility = 17*(beta*(np.exp(-(mu - self.nile_distance)**2 / alpha)))
-		if self.owned:
-			self.harvest = self.fertility*self.max_yield
+		self.harvest = self.fertility*self.max_yield
 
 	def claim(self, claimant):
 		if (not self.settlement) and (not self.river) and (not self.owned) and (not self.settlement_territory):
