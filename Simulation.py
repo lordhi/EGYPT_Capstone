@@ -106,7 +106,6 @@ class Simulation:
 			terrain_patch = self.terrain[x_coord][y_coord] 
 			if not terrain_patch.settlement and not terrain_patch.river:
 				settlement = Settlement(terrain_patch, x_coord, y_coord)
-				terrain_patch.owner = settlement
 				self.settlements.append(settlement)
 
 				for x in range(x_coord-1, x_coord+2):
