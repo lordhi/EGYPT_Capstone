@@ -106,6 +106,7 @@ class Simulation:
 			terrain_patch = self.terrain[x_coord][y_coord] 
 			if not terrain_patch.settlement and not terrain_patch.river:
 				settlement = Settlement(terrain_patch, x_coord, y_coord)
+				terrain_patch.owner = settlement
 				self.settlements.append(settlement)
 
 				for x in range(x_coord-1, x_coord+2):
@@ -127,7 +128,6 @@ class Simulation:
 	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate):
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
-				
 				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
 
 				settlement.households.append(new_household)
