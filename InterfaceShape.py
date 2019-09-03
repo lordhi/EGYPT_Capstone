@@ -73,7 +73,8 @@ def button_reset_on_click():
 					[[],[]],			[[],[]],
 					[[],[]]
 					]
-
+	info.changed = [True,True]
+	info.pointers = [0,0]
 
 def button_go_on_click():
 	if (not info.clicked_go_once):
@@ -181,6 +182,7 @@ def plotData():
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
 		("Household wealth households 25-29","Years","Wealth")]
 
+	print(info.graphs_data[0])
 	info.graphs_data[0][0].append(info.sim.years_passed)
 	info.graphs_data[0][1].append(info.sim.total_grain)
 
@@ -189,7 +191,6 @@ def plotData():
 def updateGraphs():
 	for fig in [0,1]:
 		pointer = info.pointers[fig]
-		print(pointer)
 
 		if (pointer==0):
 			data = info.graphs_data[pointer]
@@ -197,9 +198,10 @@ def updateGraphs():
 			xdata = data[0]
 			ydata = data[1]
 			if info.changed[fig]:
-				plt.clf(fig)
+				plt.figure(fig)
+				plt.clf()
 				plt.plot(xdata,ydata)
-				info.changed[fig] = False
+				info.changed[fig] = False	
 			else:
 				plt.plot(xdata[-1],ydata[-1])
 
@@ -512,7 +514,7 @@ def mainLoop():
 		info.graphcount += 1
 		if (info.graphcount >= graphEvery):
 			plotData()
-			#updateGraphs()
+			updateGraphs()
 
 			#Show the graphs
 			if agg:
