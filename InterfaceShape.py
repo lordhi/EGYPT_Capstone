@@ -88,14 +88,14 @@ def popup_window():
 def graphMenuOneClick(selection):
 	print("Menu one clicked" + str(selection))
 	names = [x[0] for x in options]
-	pointer[0] = names.index(selection)
-	changed[0] = True
+	info.pointers[0] = names.index(selection)
+	info.changed[0] = True
 
 def graphMenuTwoClick(selection):
 	print("Menu two clicked"+ str(selection))
 	names = [x[0] for x in options]
-	pointer[1] = names.index(selection)
-	changed[1] = True
+	info.pointers[1] = names.index(selection)
+	info.changed[1] = True
 
 ############################################################################
 #Colors
@@ -146,8 +146,7 @@ chkHeight = 40 #the heights of the check boxes
 graphW = 75
 
 
-pointers = [0,1] #what does each graph point to 
-changed = [False,False]
+
 
 #Calculations
 #############################################################################
@@ -172,24 +171,27 @@ def greeness(value):
 # 	plt.tight_layout()
 
 def plotData():
-	print(info.graphs_data)
+	#print(info.graphs_data)
+	#
 	info.graphs_data[0][0].append(info.sim.years_passed)
 	info.graphs_data[0][1].append(info.sim.total_grain)
 
+
+
 def updateGraphs():
 	for fig in [0,1]:
-		pointer = pointers[fig]
+		pointer = info.pointers[fig]
 		print(pointer)
 
 		if (pointer==0):
-			data = graphs_data[pointer]
+			data = info.graphs_data[pointer]
 
 			xdata = data[0]
 			ydata = data[1]
-			if changed[fig]:
+			if info.changed[fig]:
 				plt.clf(fig)
 				plt.plot(xdata,ydata)
-				changed[fig] = False
+				info.changed[fig] = False
 			else:
 				plt.plot(xdata[-1],ydata[-1])
 
@@ -474,12 +476,16 @@ class Info:
 	barley_images = None
 	seed = None
 	graphs_data = None
+	changed = None
+	pointers = None
 
 info = Info()
 info.clicked_go_once = False
 info.paused = True
 info.ending = False
 info.graphs_data = []
+info.pointers = [0,1] #what does each graph point to 
+info.changed = [False,False]
 
 #Mainloop:
 #############################################################################
@@ -498,7 +504,7 @@ def mainLoop():
 		info.graphcount += 1
 		if (info.graphcount >= graphEvery):
 			plotData()
-			updateGraphs()
+			#updateGraphs()
 
 			#Show the graphs
 			if agg:
