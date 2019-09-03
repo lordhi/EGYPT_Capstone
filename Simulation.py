@@ -136,13 +136,11 @@ class Simulation:
 			settlement.population += starting_households*starting_household_size
 
 	def run(self):
-		self.years_passed = 0
 		while self.years_passed < self.time_span:
 			self.tick()
 			self.years_passed += 1 
 
 	def tick(self):
-		print(self.total_population)
 		self.years_passed += 1
 		random.shuffle(self.settlements)
 
@@ -153,8 +151,10 @@ class Simulation:
 
 		i = 0
 		while(i < len(self.settlements)):
-			if self.settlements[i].population == 0:
-				print("Deleted")
+			if len(self.settlements[i].households) == 0:
+				self.settlements[i].terrain.settlement = False
+				self.settlements[i].terrain.was_settlement = True
+				self.settlements[i].terrain.settlement_territory = True
 				del self.settlements[i]
 			else:
 				i += 1
