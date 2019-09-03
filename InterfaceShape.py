@@ -321,7 +321,6 @@ def drawGridSimulation(canvas,info):
 			temp = 2
 		radius = ((temp+1)*xstep)/2
 
-		print(settlement.population)
 		drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,radius)
 		canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])	
 
@@ -407,20 +406,20 @@ yscrollbar.grid(row=0,column=1,sticky=N+S+E+W)
 frame_in_canvas = Frame(slider_canvas,bg='white smoke',width = w1*s,height=(h2+h3)*s)
 frame_in_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
-slider_info = [("model-time-span",100,500,50),
-				("starting-settlements",14,20,1),
-				("starting-households",7,10,1),
-				("starting-household-size",5,10,1),
-				("starting-grain",3000,8000,100),
-				("min-ambition",0.1,1,0.1),
-				("min-competency",0.5,1,0.1),
-				("generational-variation",0.9,1,0.1),
-				("knowledge-radius",20,40,5),
-				("distance-cost",10,15,1),
-				("fallow-limit",4,10,1),
-				("pop-growth-rate",0.1,0.5,0.01),
-				("min-fission-chance",0.5,0.9,0.1),
-				("land-rental-rate",30,60,5)]
+slider_info = [("model-time-span",500,100,500,50),
+				("starting-settlements",14,5,20,1),
+				("starting-households",7,1,10,1),
+				("starting-household-size",5,2,10,1),
+				("starting-grain",3000,100,8000,100),
+				("min-ambition",0.1,0,1,0.1),
+				("min-competency",0.5,0,1,0.1),
+				("generational-variation",0.9,0,1,0.1),
+				("knowledge-radius",20,5,40,5),
+				("distance-cost",10,1,15,1),
+				("fallow-limit",4,0,10,1),
+				("pop-growth-rate",0.1,0,0.5,0.01),
+				("min-fission-chance",0.5,0.5,0.9,0.1),
+				("land-rental-rate",30,30,60,5)]
 
 slider_frames = []
 sliders = []
@@ -430,11 +429,12 @@ for name in slider_info:
 	slider_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=w1*s-2*padx,height=sfHeight+pady))
 	slider_frames[-1].grid(row=currentRow,column=0,padx=padx)
 	slider_frames[-1].grid_propagate(False)
-	sliders.append(Scale(slider_frames[-1],from_=slider_info[pos][1],
-		to=slider_info[pos][2],resolution=slider_info[pos][3],
+	sliders.append(Scale(slider_frames[-1],from_=slider_info[pos][2],
+		to=slider_info[pos][3],resolution=slider_info[pos][4],
 		orient=HORIZONTAL,sliderrelief="raised",length=sliWidth,
 		label=slider_info[pos][0],bg=bg_slider_color,troughcolor=trough_color))
 	sliders[-1].grid(row=0,column=0,padx=1)
+	sliders[-1].set(slider_info[pos][1])
 	currentRow += 1
 	pos += 1
 
