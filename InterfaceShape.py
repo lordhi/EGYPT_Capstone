@@ -74,7 +74,6 @@ def button_reset_on_click():
 					[[],[]]
 					]
 	info.changed = [True,True]
-	info.pointers = [0,0]
 
 def button_go_on_click():
 	if (not info.clicked_go_once):
@@ -186,29 +185,55 @@ def plotData():
 	info.graphs_data[0][0].append(info.sim.years_passed)
 	info.graphs_data[0][1].append(info.sim.total_population)
 
+	info.graphs_data[1][0].append(info.sim.years_passed)
+	info.graphs_data[1][1].append(info.sim.years_passed)
+
 def updateGraphs():
 	for fig in [0,1]:
 		pointer = info.pointers[fig]
 
 		if (pointer==0):
+
 			data = info.graphs_data[pointer]
 
 			xdata = data[0]
-			print(xdata)
 			ydata = data[1]
-			print(ydata)
+
+			print("For pointer: " + str(pointer))
+			print("Xdata " + str(xdata))
+			print("Ydata " + str(ydata))
+
 			if info.changed[fig]:
-				print("Replotted")
+				print("Reset figure")
+				plt.figure(fig)
+				plt.clf()
+				plt.plot(xdata,ydata)
+				plt.tight_layout()
+				info.changed[fig] = False	
+			else:
+				plt.plot(xdata[-1],ydata[-1])
+				plt.tight_layout()
+
+		elif (pointer==1):
+			
+
+			data = info.graphs_data[pointer]
+
+			xdata = data[0]
+			ydata = data[1]
+
+			print("For pointer: " + str(pointer))
+			print("Xdata " + str(xdata))
+			print("Ydata " + str(ydata))
+
+			if info.changed[fig]:
 				plt.figure(fig)
 				plt.clf()
 				plt.plot(xdata,ydata)
 				info.changed[fig] = False	
 			else:
-				print("New item")
 				plt.plot(xdata[-1],ydata[-1])
 
-		elif (pointer==1):
-			pass
 		elif (pointer==2):
 			pass
 		elif (pointer==3):
@@ -503,7 +528,7 @@ info.changed = [False,False]
 #############################################################################
 
 def mainLoop():
-	if (not info.paused and not (info.sim.done)):	#if simulation is not paused
+	if (not info.paused): #and not (info.sim.done)):	#if simulation is not paused
 		animationEvery = 1/(1.0*speed_scale.get())*runRate
 		graphEvery = 30 * animationEvery
 
