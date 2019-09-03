@@ -58,6 +58,22 @@ def button_reset_on_click():
 
 	info.house_images = [ImageTk.PhotoImage(resizeImage(img,int(2/3.0*xstep))) for img in info.house_images]
 
+	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
+		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),("Total population","",""),
+		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
+		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
+		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
+		("Household wealth households 25-29","Years","Wealth")]
+
+	info.graphs_data = 	[
+					[[],[]],			[[],[],[]],			[[],[],[]],
+					[[],[]],			[[],[]],			[[],[]],
+					[[],[],[],[]],
+					[[],[]],			[[],[]],
+					[[],[]],			[[],[]],
+					[[],[]]
+					]
+
 
 def button_go_on_click():
 	if (not info.clicked_go_once):
@@ -72,12 +88,14 @@ def popup_window():
 def graphMenuOneClick(selection):
 	print("Menu one clicked" + str(selection))
 	names = [x[0] for x in options]
-	print(names.index(selection))
+	pointer[0] = names.index(selection)
+	changed[0] = True
 
 def graphMenuTwoClick(selection):
 	print("Menu two clicked"+ str(selection))
 	names = [x[0] for x in options]
-	print(names.index(selection))
+	pointer[1] = names.index(selection)
+	changed[1] = True
 
 ############################################################################
 #Colors
@@ -127,6 +145,10 @@ sliWidth = w1*s-2*padx
 chkHeight = 40 #the heights of the check boxes
 graphW = 75
 
+
+pointers = [0,1] #what does each graph point to 
+changed = [False,False]
+
 #Calculations
 #############################################################################
 sleeptime = 1/(runRate*1.0)
@@ -140,15 +162,59 @@ def greeness(value):
 	ge="#"
 	return ge+de+re+we
 
-def plotData(xpos):
-	plt.figure(0)
-	plt.plot(xpos,random.uniform(-2,2),"or")
-	plt.tight_layout()
+# def plotData(xpos):
+# 	plt.figure(0)
+# 	plt.plot(xpos,random.uniform(-2,2),"or")
+# 	plt.tight_layout()
 	
-	plt.figure(1)
-	plt.plot(xpos,random.uniform(-2,2),"or")
-	plt.tight_layout()
+# 	plt.figure(1)
+# 	plt.plot(xpos,random.uniform(-2,2),"or")
+# 	plt.tight_layout()
 
+def plotData():
+	print(info.graphs_data)
+	info.graphs_data[0][0].append(info.sim.years_passed)
+	info.graphs_data[0][1].append(info.sim.total_grain)
+
+def updateGraphs():
+	for fig in [0,1]:
+		pointer = pointers[fig]
+		print(pointer)
+
+		if (pointer==0):
+			data = graphs_data[pointer]
+
+			xdata = data[0]
+			ydata = data[1]
+			if changed[fig]:
+				plt.clf(fig)
+				plt.plot(xdata,ydata)
+				changed[fig] = False
+			else:
+				plt.plot(xdata[-1],ydata[-1])
+
+		elif (pointer==1):
+			pass
+		elif (pointer==2):
+			pass
+		elif (pointer==3):
+			pass
+		elif (pointer==4):
+			pass
+		elif (pointer==5):
+			pass
+		elif (pointer==6):
+			pass
+		elif (pointer==7):
+			pass
+		elif (pointer==8):
+			pass
+		elif (pointer==9):
+			pass
+		elif (pointer==10):
+			pass
+		elif (pointer==11):
+			pass
 
 def drawCircle(canvas,x,y,r):
 	canvas.create_oval(x-r,y-r,x+r,y+r,fill='black',outline=circle_border_outline,width=r/6)
@@ -194,6 +260,8 @@ def drawGridSimulation(canvas,info):
 			if block.field:
 				canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.barley_images[main_color])
 
+
+	#create rectangles at edges to prevent ugly stuff
 	canvas.create_rectangle(xstep*columns,0,xstep*(columns+2),ystep*rows,fill=general_background,outline=general_background)
 	canvas.create_rectangle(0,ystep*rows,xstep*(columns+2),ystep*(rows+2),fill=general_background,outline=general_background)
 
@@ -208,8 +276,6 @@ tk.configure(background=general_background)
 def onClose():
 	info.ending = True
 tk.protocol('WM_DELETE_WINDOW', onClose)  
-
-
 
 #GUI setup frames:
 ############################################################################
@@ -288,6 +354,7 @@ slider_info = [("model-time-span",100,500,50),
 				("pop-growth-rate",0,0.5,0.01),
 				("min-fission-chance",0.5,0.9,0.1),
 				("land-rental-rate",30,60,5)]
+
 slider_frames = []
 sliders = []
 currentRow = 0
@@ -346,7 +413,7 @@ options = [("Total Grain","Years","Total grain"),("Total Population","Years","Po
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
 		("Household wealth households 25-29","Years","Wealth")]
 
-graphs = []*len(options)
+
 
 ###############
 #Graph 1
@@ -406,17 +473,19 @@ class Info:
 	house_images = None
 	barley_images = None
 	seed = None
+	graphs_data = None
 
 info = Info()
 info.clicked_go_once = False
 info.paused = True
 info.ending = False
+info.graphs_data = []
 
 #Mainloop:
 #############################################################################
 
 def mainLoop():
-	if (not info.paused and (not info.sim.done)):	#if simulation is not paused
+	if (not info.paused):	#if simulation is not paused
 		animationEvery = 1/(1.0*speed_scale.get())*runRate
 		graphEvery = 30 * animationEvery
 
@@ -428,8 +497,10 @@ def mainLoop():
 
 		info.graphcount += 1
 		if (info.graphcount >= graphEvery):
-			#show the plots
-			plotData(info.xpos)
+			plotData()
+			updateGraphs()
+
+			#Show the graphs
 			if agg:
 				graph1.show()
 				graph2.show()
