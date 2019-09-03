@@ -135,7 +135,6 @@ class Household:
 				field_harvest = field.harvest*self.competency - field.house_distance*field.owner.distance_cost - 300
 				
 				total_harvest += field_harvest
-				print("Harvested:" + str(field_harvest))
 		self.grain += total_harvest
 
 		i = self.fields_harvested
