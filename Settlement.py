@@ -29,6 +29,6 @@ class Settlement:
 			house.farm()
 			if self.rent_enabled:
 				house.rentLand()
-			house.grainTick() #consume_grain, storage loss
+			house.grainTick() #consume_grain, storage loss, kills
 			house.generationalChange()
 			#household fission

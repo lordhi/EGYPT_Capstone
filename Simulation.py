@@ -43,7 +43,7 @@ class Simulation:
 		self.house_colours, self.claim_x, self.claim_y = 0,0,0
 		self.time_span = model_time_span
 		#values reset
-		self.total_grain = 0
+		self.total_grain = starting_settlements*starting_households*starting_grain
 		self.average_ambition = 0
 		self.average_competency = 0
 		
@@ -129,6 +129,7 @@ class Simulation:
 
 	def tick(self):
 		random.shuffle(self.settlements)
+		self.total_grain = 0
 		self.flood()
 		self.tickSettlements()
 		self.populationShift()
