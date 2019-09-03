@@ -146,7 +146,8 @@ class Simulation:
 		self.total_grain = 0
 		self.flood()
 		self.tickSettlements()
-		self.populationShift()
+		
+		self.projected_historical_population = self.starting_population * (1.001) ** self.years_passed
 
 		i = 0
 		while(i < len(self.settlements)):
@@ -180,10 +181,6 @@ class Simulation:
 		#for settlement in settlements:
 			#recolor
 			#get plot values
-
-	def populationShift(self):
-		pass
-
 
 	def rentLand(self):
 		for household in self.all_households.sort(key=lambda x: x.ambition, reverse=True):
