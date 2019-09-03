@@ -71,8 +71,12 @@ class Household:
 			num_not_supported = -math.ceil(self.grain/160)
 			self.grain = 0
 			if num_not_supported < self.workers:
-				self.workers = self.workers -  num_not_supported
+				self.workers -= num_not_supported
+				self.settled_in.population -= num_not_supported
+				self.settled_in.parent.total_population -= num_not_supported
 			else:
+				self.settled_in.population -= self.workers
+				self.settled_in.parent.total_population -= self.workers
 				self.workers = 0
 		self.grain = self.grain * 0.9	#accounts for loss due to storage
 

@@ -9,6 +9,7 @@ class Settlement:
 	households = []
 	terrain = None
 	rent_enabled = False
+	parent = None
 	x = -1
 	y = -1
 
@@ -21,6 +22,7 @@ class Settlement:
 		self.y = y
 
 	def tick(self):
+		random.shuffle(self.households)
 		self.households.sort(key=lambda x: x.grain)
 		for house in self.households:
 			house.claimLand()

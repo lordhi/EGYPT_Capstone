@@ -13,7 +13,7 @@ class Simulation:
 	projected_historical_population = 0
 	lorenz_points = 0
 	gini_index_reserve = 0
-	house_colours, claim_x, claim_y = 0,0,0
+	house_colours = 0,0,0
 	average_ambition = 0
 	average_competency = 0
 	time_span = 0
@@ -76,6 +76,7 @@ class Simulation:
 
 	def setupSettlements(self, starting_settlements):
 		count = 0
+		Settlement.parent = self
 		while count < starting_settlements:
 			x_coord = random.randint(0, self.x_size-1)
 			y_coord = random.randint(0, self.y_size-1)
@@ -127,6 +128,7 @@ class Simulation:
 			c += 1 
 
 	def tick(self):
+		random.shuffle(self.settlements)
 		self.flood()
 		self.tickSettlements()
 		self.populationShift()

@@ -6,8 +6,10 @@ import numpy
 import random
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+	agg = False
 except:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
+	agg = True
 
 from Simulation import Simulation
 import sys
@@ -427,8 +429,12 @@ def mainLoop():
 		if (info.graphcount >= graphEvery):
 			#show the plots
 			plotData(info.xpos)
-			graph1.show()
-			graph2.show()
+			if agg:
+				graph1.show()
+				graph2.show()
+			else:
+				graph1.draw()
+				graph2.draw()
 			info.graphcount=0
 
 		info.xpos += 1
