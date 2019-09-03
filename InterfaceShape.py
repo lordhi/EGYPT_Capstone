@@ -344,6 +344,7 @@ options = [("Total Grain","Years","Total grain"),("Total Population","Years","Po
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
 		("Household wealth households 25-29","Years","Wealth")]
 
+graphs = []*len(options)
 
 ###############
 #Graph 1
@@ -413,7 +414,7 @@ info.ending = False
 #############################################################################
 
 def mainLoop():
-	if (not info.paused):	#if simulation is not paused
+	if (not info.paused and (not info.sim.done)):	#if simulation is not paused
 		animationEvery = 1/(1.0*speed_scale.get())*runRate
 		graphEvery = 30 * animationEvery
 
