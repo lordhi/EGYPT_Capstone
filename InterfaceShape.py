@@ -173,6 +173,14 @@ def greeness(value):
 def plotData():
 	#print(info.graphs_data)
 	#
+
+	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
+		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),("Total population","",""),
+		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
+		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
+		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
+		("Household wealth households 25-29","Years","Wealth")]
+
 	info.graphs_data[0][0].append(info.sim.years_passed)
 	info.graphs_data[0][1].append(info.sim.total_grain)
 
