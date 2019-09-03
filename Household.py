@@ -103,7 +103,7 @@ class Household:
 
 	def populationIncrease(self):
 		populate_chance = random.random()
-		if self.settled_in.parent.total_population <= (self.settled_in.parent.starting_population * (1 + (pop_growth_rate/100)) ** self.settled_in.parent.years_passed) and populate_chance > 0.5:
+		if self.settled_in.parent.total_population <= (self.settled_in.parent.starting_population * (1 + (self.settled_in.parent.pop_growth_rate/100)) ** self.settled_in.parent.years_passed) and populate_chance > 0.5:
 			self.workers += 1
 			self.settled_in.population += 1
 			self.settled_in.parent.total_population += 1
