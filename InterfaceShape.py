@@ -267,6 +267,14 @@ def updateGraphs():
 def drawCircle(canvas,x,y,r):
 	canvas.create_oval(x-r,y-r,x+r,y+r,fill='black',outline=circle_border_outline,width=r/6)
 
+def getColor(max_grain,grain):
+	if (grain > 2/3*max_grain):
+		return PINK
+	elif (grain > 1/3*max_grain):
+		return BLUE
+	else:
+		return YELLOW
+
 def drawGridSimulation(canvas,info):
 	simulation = info.sim
 	width, height = canvas.winfo_width(),canvas.winfo_height()
@@ -277,9 +285,14 @@ def drawGridSimulation(canvas,info):
 	ystep = height/rows - 1
 	canvas.delete('all')
 	
+
+	biggest_grain = max([x.grain for x in info.sim.all_households])
+
+
+	
 	for row in range(0,rows):
 		for col in range(0,columns):
-			block = overallterrain[row][col]
+			block = overallterrain[row][col]		
 			fertility = block.fertility/2 #still need to fix this!
 			if block.river:
 				color = 'blue'
@@ -287,28 +300,21 @@ def drawGridSimulation(canvas,info):
 				color = greeness(int(245-fertility*205))
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 
-	#draw lines
-	for row in range(0,rows):
-		for col in range(0,columns):
-			block = overallterrain[row][col]
-			if block.field:
-				target = block.owner
-				#if (not (row==target.x or col==target.y)):
-					#canvas.create_rectangle(row*xstep,col*ystep,(target.x+1)*xstep,(target.y+1)*ystep,fill="yellow",outline="")
-				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep,fill=color_hexes[main_color])
 
-	#draw circle outlines and houses
-	for row in range(0,rows):
-		for col in range(0,columns):
-			block = overallterrain[row][col]
-			if block.settlement:
-				radius = ((block.owner.population//50+1)*xstep)/2
-				drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,radius)
-				canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])
+	for settlement in info.sim.settlements:
+		row = settlement.x
+		col = settlement.y
 
-			if block.field:
-				canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.barley_images[main_color])
-
+		#draw lines
+		for household in settlement.households:
+			for field in household.fields_owned:
+				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(field.x+0.5)*xstep,(field.y+0.5)*ystep,fill=color_hexes[main_color])		
+				canvas.create_image(((field.x+0.5)*xstep,(field.y+0.5)*xstep),image=info.barley_images[main_color])
+		
+		#draw settlements
+		radius = ((settlement.population//50+1)*xstep)/2
+		drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,radius)
+		canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])	
 
 	#create rectangles at edges to prevent ugly stuff
 	canvas.create_rectangle(xstep*columns,0,xstep*(columns+2),ystep*rows,fill=general_background,outline=general_background)
