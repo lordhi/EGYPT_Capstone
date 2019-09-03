@@ -82,6 +82,7 @@ class Simulation:
 		self.manual_seed_enabled = manual_seed_enabled
 
 		self.starting_population = starting_settlements * starting_households * starting_household_size
+		self.total_population = self.starting_population
 
 		#initalise terrain
 		for x in range(self.x_size):
@@ -94,8 +95,7 @@ class Simulation:
 			self.terrain[0][y].river = True
 
 		self.setupSettlements(starting_settlements)
-		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, int(knowledge_radius), distance_cost)
-		self.establish_population(starting_settlements, starting_households, starting_household_size)
+		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, int(knowledge_radius), distance_cost, land_rental_rate)
 
 	def setupSettlements(self, starting_settlements):
 		count = 0
@@ -124,24 +124,16 @@ class Simulation:
 				count += 1
 		pass
 
-	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost):
+	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate):
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
-				grain = starting_grain
-				workers = starting_household_size
-				ambition = min_ambition + (random.random()*(1 - min_ambition))
-				competency = min_competency + (random.random()*(1 - min_competency))
-				generation_countdown = random.randint(0, 5) + 10
 				
-				new_household = Household(settlement, grain, workers, min_ambition, min_competency, generation_countdown, knowledge_radius, distance_cost, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
+				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
 
 				settlement.households.append(new_household)
 				self.all_households.append(new_household)
 
 			settlement.population += starting_households*starting_household_size
-
-	def establish_population(self, starting_settlements, starting_households, starting_household_size):
-		self.total_population = starting_settlements * starting_households * starting_household_size
 
 	def run(self):
 		self.years_passed = 0
@@ -196,7 +188,7 @@ class Simulation:
 
 	def rentLand(self):
 		for household in self.all_households.sort(key=lambda x: x.ambition, reverse=True):
-			household.rentLand(self.land_rental_rate) # Move land_rental_rate inside household or not? (Thinking about extensibility)
+			household.rentLand() # Move land_rental_rate inside household or not? (Thinking about extensibility)
 	
 
 					
