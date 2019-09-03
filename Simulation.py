@@ -56,6 +56,8 @@ class Simulation:
 		self.gini_index_reserve = 0
 		self.house_colours, self.claim_x, self.claim_y = 0,0,0
 		self.time_span = model_time_span
+		self.done = False
+
 		#values reset
 		self.total_grain = starting_settlements*starting_households*starting_grain
 		self.average_ambition = 0
@@ -81,9 +83,6 @@ class Simulation:
 
 		self.starting_population = starting_settlements * starting_households * starting_household_size
 
-		print("-----")
-		print(knowledge_radius)
-		print("-----")
 		#initalise terrain
 		for x in range(self.x_size):
 			column = []
@@ -151,14 +150,18 @@ class Simulation:
 			self.years_passed += 1 
 
 	def tick(self):
+		self.years_passed += 1
 		random.shuffle(self.settlements)
 		self.total_grain = 0
 		self.flood()
 		self.tickSettlements()
 		self.populationShift()
+
 		if self.rent_enabled:
 			self.rentLand()
 
+		if self.years_passed > self.time_span:
+			self.done = True
 
 	def flood(self):
 		mu= random.randint(0,10) + 5
@@ -183,10 +186,7 @@ class Simulation:
 
 
 	def rentLand(self):
-		def getAmbition(household):
-			return household.ambition
-
-		for household in self.all_households.sort(key=getAmbition, reverse=True):
+		for household in self.all_households.sort(key=lambda x: x.ambition, reverse=True):
 			household.rentLand(self.land_rental_rate) # Move land_rental_rate inside household or not? (Thinking about extensibility)
 	
 
