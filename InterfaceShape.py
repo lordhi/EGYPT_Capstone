@@ -143,7 +143,7 @@ padx = 10
 pady = 5
 sfHeight = 70 #the heights of the side slider blocks
 sliHeight = sfHeight - 2*pady #slider heights
-sliWidth = w1*s-2*padx
+sliWidth = w1*s-2*padx-5
 chkHeight = 40 #the heights of the check boxes
 graphW = 75
 
