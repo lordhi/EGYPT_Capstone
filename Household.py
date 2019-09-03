@@ -38,8 +38,6 @@ class Household:
 		self.competency = min_competency + (random.random()*(1 - min_competency))
 		self.minimum_ambition = min_ambition
 		self.minimum_competency = min_competency
-		# self.ambition = ambition
-		# self.competency	= competency
 		self.workers_worked = 0
 		self.generation_countdown = generation_countdown
 		self.knowledge_radius = knowledge_radius
@@ -93,7 +91,7 @@ class Household:
 		pass
 
 	def farm(self):
-		self.fields_owned.sort(key = lambda x: x.harvest)
+		self.fields_owned.sort(key = lambda x: x.harvest*self.competency - x.house_distance*x.owner.distance_cost)
 		max_fields_to_work = int(self.workers//2)
 
 		total_harvest = 0
@@ -119,7 +117,7 @@ class Household:
 				field_harvest = field.harvest*self.competency - field.house_distance*field.owner.distance_cost - 300
 				
 				total_harvest += field_harvest
-		#self.grain += total_harvest
+		self.grain += total_harvest
 
 		i = self.fields_harvested
 		if self.fallow_limit > 0:
@@ -175,21 +173,27 @@ class Household:
 
 		self.grain += total_harvest
 
+	def randomRange(self, minimum, maximum):
+		if maximum == minimum:
+			return minimum
+		return random.random()*(maximum-minimum) + minimum
+
 	def generationalChange(self):
 		self.generation_countdown -= 1
 		if self.generation_countdown <= 0:
 			self.generation_countdown = random.randrange(0,5) + 10
 
-			ambition_change = 2*self.generational_variation*(random.random() - 0.5)
-			while self.ambition + ambition_change > 1 or self.ambition + ambition_change < self.minimum_ambition:
-				ambition_change = 2*self.generational_variation*(random.random() - 0.5)
-			
-			self.ambition += ambition_change
+			self.ambition = self.randomRange(max(self.ambition-self.generational_variation, self.minimum_ambition), min(self.ambition+self.generational_variation, 1))
+			#ambition_change = 2*self.generational_variation*(random.random() - 0.5)
+			#while self.ambition + ambition_change > 1 or self.ambition + ambition_change < self.minimum_ambition:
+			#	ambition_change = 2*self.generational_variation*(random.random() - 0.5)
+			#self.ambition += ambition_change
 
-			competency_change = 2*self.generational_variation*(random.random() - 0.5)
-			while self.competency + competency_change > 1 or self.competency + competency_change < self.minimum_competency:
-				competency_change = 2*self.generational_variation*(random.random() - 0.5)
-			
-			self.competency += competency_change
+			self.competency = self.randomRange(max(self.competency-self.generational_variation, self.minimum_competency), min(self.competency+self.generational_variation, 1))
+
+			#competency_change = 2*self.generational_variation*(random.random() - 0.5)
+			#while self.competency + competency_change > 1 or self.competency + competency_change < self.minimum_competency:
+			#	competency_change = 2*self.generational_variation*(random.random() - 0.5)
+			#self.competency += competency_change
 
 	

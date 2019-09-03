@@ -150,6 +150,7 @@ class Simulation:
 			self.years_passed += 1 
 
 	def tick(self):
+		print(self.total_population)
 		self.years_passed += 1
 		random.shuffle(self.settlements)
 		self.total_grain = 0
@@ -185,9 +186,8 @@ class Simulation:
 
 
 	def rentLand(self):
-		pass
-		#for household in self.all_households.sort(key=lambda x: x.ambition, reverse=True):
-		#	household.rentLand(self.land_rental_rate) # Move land_rental_rate inside household or not? (Thinking about extensibility)
+		for household in self.all_households.sort(key=lambda x: x.ambition, reverse=True):
+			household.rentLand(self.land_rental_rate) # Move land_rental_rate inside household or not? (Thinking about extensibility)
 	
 
 					
