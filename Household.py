@@ -36,8 +36,8 @@ class Household:
 	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
-		self.ambition = min_ambition + (random.random()*(1 - min_ambition))
-		self.competency = min_competency + (random.random()*(1 - min_competency))
+		self.ambition = self.randomRange(min_ambition, 1) # min_ambition + (random.random()*(1 - min_ambition))
+		self.competency = self.randomRange(min_competency, 1) # min_competency + (random.random()*(1 - min_competency))
 		self.minimum_ambition = min_ambition
 		self.minimum_competency = min_competency
 		self.workers_worked = 0
@@ -85,7 +85,10 @@ class Household:
 		self.grain -= self.workers*160
 		if self.grain < 0:
 			num_not_supported = math.ceil(-self.grain/160)
-			self.grain = 0
+			#self.grain = 0
+			#self.workers -= 1
+			#self.settled_in.population -= 1
+			#self.settled_in.parent.total_population -= 1
 			if num_not_supported < self.workers:
 				self.workers -= num_not_supported
 				self.settled_in.population -= num_not_supported

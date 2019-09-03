@@ -16,6 +16,7 @@ class Settlement:
 	def __init__(self, terrain, x, y):
 		self.population = 0
 		self.terrain = terrain
+		self.households = []
 		terrain.settlement = True
 		terrain.owner = self
 

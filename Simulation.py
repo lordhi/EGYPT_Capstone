@@ -7,7 +7,6 @@ import numpy as np
 class Simulation:
 	years_passed = 0
 
-	elevation_dataset = []
 	flood_level = 0
 	total_grain = 0
 	total_households = 0
@@ -15,7 +14,6 @@ class Simulation:
 	projected_historical_population = 0
 	lorenz_points = 0
 	gini_index_reserve = 0
-	house_colours = 0,0,0
 	average_ambition = 0
 	average_competency = 0
 	min_ambition = 0
@@ -39,6 +37,7 @@ class Simulation:
 	y_size = 30
 
 	settlements = []
+	dead_settlements = []
 	all_households = []
 	terrain = []
 
@@ -154,6 +153,7 @@ class Simulation:
 				self.settlements[i].terrain.settlement = False
 				self.settlements[i].terrain.was_settlement = True
 				self.settlements[i].terrain.settlement_territory = True
+				self.dead_settlements.append(self.settlements[i])
 				del self.settlements[i]
 			else:
 				i += 1
