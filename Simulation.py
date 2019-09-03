@@ -127,13 +127,8 @@ class Simulation:
 	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost):
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
-				grain = starting_grain
-				workers = starting_household_size
-				ambition = min_ambition + (random.random()*(1 - min_ambition))
-				competency = min_competency + (random.random()*(1 - min_competency))
-				generation_countdown = random.randint(0, 5) + 10
 				
-				new_household = Household(settlement, grain, workers, min_ambition, min_competency, generation_countdown, knowledge_radius, distance_cost, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
+				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
 
 				settlement.households.append(new_household)
 				self.all_households.append(new_household)

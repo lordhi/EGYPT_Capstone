@@ -13,6 +13,7 @@ class Household:
 	generational_variation = 0.2
 	minimum_ambition = 0
 	minimum_competency = 0
+	min_fission_chance = 0
 	fallow_limit = 5
 	fields_owned = []		#list of terrain
 	fields_harvested = 0	
@@ -31,7 +32,7 @@ class Household:
 
 	settled_in = None
 
-	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, generation_countdown, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
+	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
 		self.ambition = min_ambition + (random.random()*(1 - min_ambition))
@@ -39,7 +40,8 @@ class Household:
 		self.minimum_ambition = min_ambition
 		self.minimum_competency = min_competency
 		self.workers_worked = 0
-		self.generation_countdown = generation_countdown
+		self.generation_countdown = random.randint(0, 5) + 10
+		self.min_fission_chance = min_fission_chance
 		self.knowledge_radius = knowledge_radius
 		self.distance_cost = distance_cost
 		self.x = x
@@ -72,20 +74,15 @@ class Household:
 
 	def grainTick(self):
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
-		self.grain -= self.workers*160
+		self.grain = self.grain - self.workers*160
 		if self.grain < 0:
 			num_not_supported = math.ceil(-self.grain/160)
 			self.grain = 0
 			if num_not_supported < self.workers:
-				self.workers -= num_not_supported
-				self.settled_in.population -= num_not_supported
-				self.settled_in.parent.total_population -= num_not_supported
+				self.workers = self.workers -  num_not_supported
 			else:
-				self.settled_in.population -= self.workers
-				self.settled_in.parent.total_population -= self.workers
 				self.workers = 0
 		self.grain = self.grain * 0.9	#accounts for loss due to storage
-		self.settled_in.parent.total_grain += self.grain
 
 	def populationIncrease(self):
 		pass
@@ -196,4 +193,20 @@ class Household:
 			#	competency_change = 2*self.generational_variation*(random.random() - 0.5)
 			#self.competency += competency_change
 
-	
+	def fission(self):
+		if self.workers > 15 and self.grain > 3 * self.workers * 164:
+			fission_chance = random.random()
+			if fission_chance > self.min_fission_chance:
+				grain = 1100
+				workers = 5
+				generation_countdown = random.randint(0, 5) + 10
+
+				# Think which variables should be inherited from the previous household for extensibility purposes
+				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, generation_countdown, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.x, self.y, self.all_terrain, self.x_size, self.y_size)
+
+				self.settled_in.households.append(new_household)
+				self.settled_in.parent.all_households.append(new_household)
+
+				self.workers -= 5
+				self.grain -= 1100
+
