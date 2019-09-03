@@ -48,6 +48,7 @@ class Household:
 		self.y_size = y_size
 		self.all_terrain = all_terrain
 		self.settled_in = settled_in
+		self.settled_in.population += self.workers
 		self.fields_owned = []
 		self.fields_harvested = 0
 		self.known_patches = []
@@ -69,6 +70,11 @@ class Household:
 				distance = ((x-self.x)**2 + (y-self.y)**2)**0.5
 				if distance < knowledge_radius and not all_terrain[x][y].river:
 					self.known_patches.append(all_terrain[x][y])
+
+	def clearUp(self):
+		while len(self.fields_owned) > 0:
+			self.fields_owned[0].unclaim()
+			del self.fields_owned[0]
 
 	def grainTick(self):
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.

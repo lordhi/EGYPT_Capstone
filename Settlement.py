@@ -31,6 +31,13 @@ class Settlement:
 			house.grainTick() #consume_grain, storage loss
 			house.generationalChange()
 		
+		i = 0
+		while (i < len(self.households)):
+			if self.households[i].workers == 0:
+				self.households[i].clearUp()
+				del self.households[i]
+			else:
+				i += 1
 		self.fission()
 
 	def fission(self):

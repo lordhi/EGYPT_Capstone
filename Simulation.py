@@ -153,10 +153,19 @@ class Simulation:
 		print(self.total_population)
 		self.years_passed += 1
 		random.shuffle(self.settlements)
+
 		self.total_grain = 0
 		self.flood()
 		self.tickSettlements()
 		self.populationShift()
+
+		i = 0
+		while(i < len(self.settlements)):
+			if self.settlements[i].population == 0:
+				print("Deleted")
+				del self.settlements[i]
+			else:
+				i += 1
 
 		if self.rent_enabled:
 			self.rentLand()
