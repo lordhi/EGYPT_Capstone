@@ -22,6 +22,7 @@ class Household:
 	knowledge_radius = 0
 
 	distance_cost = 0
+	land_rental_rate = 0
 
 	all_terrain = None
 	x_size = 0
@@ -32,7 +33,7 @@ class Household:
 
 	settled_in = None
 
-	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
+	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
 		self.ambition = min_ambition + (random.random()*(1 - min_ambition))
@@ -44,6 +45,7 @@ class Household:
 		self.min_fission_chance = min_fission_chance
 		self.knowledge_radius = knowledge_radius
 		self.distance_cost = distance_cost
+		self.land_rental_rate = land_rental_rate
 		self.x = x
 		self.y = y
 		self.x_size = x_size
@@ -74,15 +76,21 @@ class Household:
 
 	def grainTick(self):
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
-		self.grain = self.grain - self.workers*160
+		self.grain -= self.workers*160
 		if self.grain < 0:
 			num_not_supported = math.ceil(-self.grain/160)
 			self.grain = 0
 			if num_not_supported < self.workers:
-				self.workers = self.workers -  num_not_supported
+				self.workers -= num_not_supported
+				self.settled_in.population -= num_not_supported
+				self.settled_in.parent.total_population -= num_not_supported
 			else:
+				self.settled_in.population -= self.workers
+				self.settled_in.parent.total_population -= self.workers
 				self.workers = 0
 		self.grain = self.grain * 0.9	#accounts for loss due to storage
+		self.settled_in.parent.total_grain += self.grain
+
 
 	def populationIncrease(self):
 		pass
@@ -141,7 +149,7 @@ class Household:
 			if self.all_terrain[best_x][best_y].claim(self):
 				self.fields_owned.append(self.all_terrain[best_x][best_y])
 
-	def rentLand(self, land_rental_rate):
+	def rentLand(self):
 		self.known_patches.sort(key = lambda x: x.harvest*self.competency - (((self.x - x.x)**2 + (self.y - x.y)**2)**0.5)*self.distance_cost if not x.harvested else 0)
 
 		total_harvest = 0
@@ -160,9 +168,9 @@ class Household:
 				# color
 				field_harvest = best_field.harvest*self.competency - (((self.x - best_field.x)**2 + (self.y - best_field.y)**2)**0.5)*self.distance_cost
 
-				total_harvest += field_harvest * (1 - (land_rental_rate/100)) - 300
+				total_harvest += field_harvest * (1 - (self.land_rental_rate/100)) - 300
 
-				best_field.owner.grain += field_harvest * (land_rental_rate/100)
+				best_field.owner.grain += field_harvest * (self.land_rental_rate/100)
 
 				num_fields_rented += 1
 				self.fields_harvested += 1
@@ -200,7 +208,7 @@ class Household:
 				workers = 5
 
 				# Think which variables should be inherited from the previous household for extensibility purposes
-				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.x, self.y, self.all_terrain, self.x_size, self.y_size)
+				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.land_rental_rate, self.x, self.y, self.all_terrain, self.x_size, self.y_size)
 
 				self.settled_in.households.append(new_household)
 				self.settled_in.parent.all_households.append(new_household)
