@@ -176,7 +176,6 @@ class Simulation:
 	def tickSettlements(self):
 		for settlement in self.settlements:
 			settlement.tick()
-				#household fission
 		#for settlement in settlements:
 			#recolor
 			#get plot values
@@ -186,8 +185,9 @@ class Simulation:
 
 
 	def rentLand(self):
-		for household in self.all_households.sort(key=lambda x: x.ambition, reverse=True):
-			household.rentLand(self.land_rental_rate) # Move land_rental_rate inside household or not? (Thinking about extensibility)
+		pass
+		#for household in self.all_households.sort(key=lambda x: x.ambition, reverse=True):
+		#	household.rentLand(self.land_rental_rate) # Move land_rental_rate inside household or not? (Thinking about extensibility)
 	
 
 					

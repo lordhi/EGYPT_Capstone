@@ -76,7 +76,7 @@ class Household:
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
 		self.grain -= self.workers*160
 		if self.grain < 0:
-			num_not_supported = math.ceil(self.grain/160)
+			num_not_supported = math.ceil(-self.grain/160)
 			self.grain = 0
 			if num_not_supported < self.workers:
 				self.workers -= num_not_supported
@@ -119,7 +119,7 @@ class Household:
 				field_harvest = field.harvest*self.competency - field.house_distance*field.owner.distance_cost - 300
 				
 				total_harvest += field_harvest
-		self.grain += total_harvest
+		#self.grain += total_harvest
 
 		i = self.fields_harvested
 		if self.fallow_limit > 0:
