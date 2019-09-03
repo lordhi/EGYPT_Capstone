@@ -142,31 +142,30 @@ class Household:
 				self.fields_owned.append(self.all_terrain[best_x][best_y])
 
 	def rentLand(self, land_rental_rate):
+		self.known_patches.sort(key = lambda x: x.harvest*self.competency - (((self.x - x.x)**2 + (self.y - x.y)**2)**0.5)*self.distance_cost if not x.harvested else 0)
+
 		total_harvest = 0
 		max_fields_to_work = (self.workers - self.workers_worked)//2
+		num_fields_rented = 0
 
 		for i in range(max_fields_to_work):
-			best_harvest = 0
-			best_field = self.all_terrain[self.x][self.y]
 
-			for field in self.known_patches:
-				this_harvest = field.fertility*field.max_yield*self.competency - (((self.x - field.x)**2 + (self.y - field.y)**2)**0.5)*self.distance_cost
-				if not field.harvested and this_harvest >= best_harvest: # this_harvest > best_harvest ?
-					best_field = field
-					best_harvest = this_harvest
+			best_field = self.known_patches[num_fields_rented]
 
 			harvest_chance = random.random()
 
-			if best_field.field and field not in self.fields_owned and harvest_chance < (self.ambition * self.competency):
-				field.harvested = True
+			if best_field.field and best_field not in self.fields_owned and harvest_chance < (self.ambition * self.competency):
+				best_field.harvested = True
 				# shape
 				# color
+				field_harvest = best_field.harvest*self.competency - (((self.x - best_field.x)**2 + (self.y - best_field.y)**2)**0.5)*self.distance_cost
 
-				total_harvest += best_harvest * (1 - (land_rental_rate/100)) - 300
+				total_harvest += field_harvest * (1 - (land_rental_rate/100)) - 300
 
-				best_field.owner.grain += best_harvest * (land_rental_rate/100)
-		
-			self.fields_harvested += 1
+				best_field.owner.grain += field_harvest * (land_rental_rate/100)
+
+				num_fields_rented += 1
+				self.fields_harvested += 1
 
 		self.grain += total_harvest
 
@@ -199,10 +198,9 @@ class Household:
 			if fission_chance > self.min_fission_chance:
 				grain = 1100
 				workers = 5
-				generation_countdown = random.randint(0, 5) + 10
 
 				# Think which variables should be inherited from the previous household for extensibility purposes
-				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, generation_countdown, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.x, self.y, self.all_terrain, self.x_size, self.y_size)
+				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.x, self.y, self.all_terrain, self.x_size, self.y_size)
 
 				self.settled_in.households.append(new_household)
 				self.settled_in.parent.all_households.append(new_household)

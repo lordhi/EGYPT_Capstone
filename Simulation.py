@@ -82,6 +82,7 @@ class Simulation:
 		self.manual_seed_enabled = manual_seed_enabled
 
 		self.starting_population = starting_settlements * starting_households * starting_household_size
+		self.total_population = self.starting_population
 
 		#initalise terrain
 		for x in range(self.x_size):
@@ -95,7 +96,6 @@ class Simulation:
 
 		self.setupSettlements(starting_settlements)
 		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, int(knowledge_radius), distance_cost)
-		self.establish_population(starting_settlements, starting_households, starting_household_size)
 
 	def setupSettlements(self, starting_settlements):
 		count = 0
@@ -134,9 +134,6 @@ class Simulation:
 				self.all_households.append(new_household)
 
 			settlement.population += starting_households*starting_household_size
-
-	def establish_population(self, starting_settlements, starting_households, starting_household_size):
-		self.total_population = starting_settlements * starting_households * starting_household_size
 
 	def run(self):
 		self.years_passed = 0
