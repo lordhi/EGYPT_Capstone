@@ -6,8 +6,10 @@ import numpy
 import random
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
+	agg = False
 except:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
+	agg = True
 
 from Simulation import Simulation
 import sys
@@ -89,9 +91,18 @@ circle_border_outline = '#9d6e48'
 PINK = 0
 BLUE = 1
 YELLOW = 2
+GREY = 3
+
 pink_hex = '#a71b6a'
 blue_hex = '#294b89'
 yellow_hex = '#f0f05a'
+grey_hex = '#8d8d8d'
+
+color_hexes = [pink_hex,blue_hex,yellow_hex,grey_hex] 
+
+main_color = PINK
+
+
 
 #Parameters:
 ############################################################################
@@ -159,10 +170,8 @@ def drawGridSimulation(canvas,info):
 			if block.river:
 				color = 'blue'
 			else:
-				color = greeness(int(245-fertility*225))
-
+				color = greeness(int(245-fertility*205))
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
-
 
 	#draw lines
 	for row in range(0,rows):
@@ -172,7 +181,7 @@ def drawGridSimulation(canvas,info):
 				target = block.owner
 				#if (not (row==target.x or col==target.y)):
 					#canvas.create_rectangle(row*xstep,col*ystep,(target.x+1)*xstep,(target.y+1)*ystep,fill="yellow",outline="")
-				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep,fill=yellow_hex)
+				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(target.x+0.5)*xstep,(target.y+0.5)*ystep,fill=color_hexes[main_color])
 
 	#draw circle outlines and houses
 	for row in range(0,rows):
@@ -180,12 +189,10 @@ def drawGridSimulation(canvas,info):
 			block = overallterrain[row][col]
 			if block.settlement:
 					drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,30)
-					color = BLUE
-					canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[color])
+					canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])
 
 			if block.field:
-				color = YELLOW
-				canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.barley_images[color])
+				canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.barley_images[main_color])
 
 	canvas.create_rectangle(xstep*columns,0,xstep*(columns+2),ystep*rows,fill=general_background,outline=general_background)
 	canvas.create_rectangle(0,ystep*rows,xstep*(columns+2),ystep*(rows+2),fill=general_background,outline=general_background)
@@ -422,8 +429,12 @@ def mainLoop():
 		if (info.graphcount >= graphEvery):
 			#show the plots
 			plotData(info.xpos)
-			graph1.show()
-			graph2.show()
+			if agg:
+				graph1.show()
+				graph2.show()
+			else:
+				graph1.draw()
+				graph2.draw()
 			info.graphcount=0
 
 		info.xpos += 1
