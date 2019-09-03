@@ -33,7 +33,7 @@ class Household:
 
 	settled_in = None
 
-	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, x, y, all_terrain, x_size, y_size):
+	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
 		self.ambition = self.randomRange(min_ambition, 1) # min_ambition + (random.random()*(1 - min_ambition))
@@ -102,7 +102,11 @@ class Household:
 
 
 	def populationIncrease(self):
-		pass
+		populate_chance = random.random()
+		if self.settled_in.parent.total_population <= (self.settled_in.parent.starting_population * (1 + (pop_growth_rate/100)) ** self.settled_in.parent.years_passed) and populate_chance > 0.5:
+			self.workers += 1
+			self.settled_in.population += 1
+			self.settled_in.parent.total_population += 1
 
 	def farm(self):
 		self.fields_owned.sort(key = lambda x: x.harvest*self.competency - x.house_distance*x.owner.distance_cost)

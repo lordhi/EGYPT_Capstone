@@ -31,6 +31,7 @@ class Settlement:
 			house.farm()
 			house.grainTick() #consume_grain, storage loss
 			house.generationalChange()
+			house.populationIncrease()
 		
 		i = 0
 		while (i < len(self.households)):
