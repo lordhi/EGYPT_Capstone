@@ -73,7 +73,7 @@ def button_reset_on_click():
 					[[],[]],			[[],[]],
 					[[],[]]
 					]
-
+	info.changed = [True,True]
 
 def button_go_on_click():
 	if (not info.clicked_go_once):
@@ -181,30 +181,59 @@ def plotData():
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
 		("Household wealth households 25-29","Years","Wealth")]
 
+
 	info.graphs_data[0][0].append(info.sim.years_passed)
-	info.graphs_data[0][1].append(info.sim.total_grain)
+	info.graphs_data[0][1].append(info.sim.total_population)
 
-
+	info.graphs_data[1][0].append(info.sim.years_passed)
+	info.graphs_data[1][1].append(info.sim.years_passed)
 
 def updateGraphs():
 	for fig in [0,1]:
 		pointer = info.pointers[fig]
-		print(pointer)
 
 		if (pointer==0):
+
 			data = info.graphs_data[pointer]
 
 			xdata = data[0]
 			ydata = data[1]
+
+			print("For pointer: " + str(pointer))
+			print("Xdata " + str(xdata))
+			print("Ydata " + str(ydata))
+
 			if info.changed[fig]:
-				plt.clf(fig)
+				print("Reset figure")
+				plt.figure(fig)
+				plt.clf()
 				plt.plot(xdata,ydata)
-				info.changed[fig] = False
+				plt.tight_layout()
+				info.changed[fig] = False	
+			else:
+				plt.plot(xdata[-1],ydata[-1])
+				plt.tight_layout()
+
+		elif (pointer==1):
+			
+
+			data = info.graphs_data[pointer]
+
+			xdata = data[0]
+			ydata = data[1]
+
+			print("For pointer: " + str(pointer))
+			print("Xdata " + str(xdata))
+			print("Ydata " + str(ydata))
+
+			if info.changed[fig]:
+				plt.figure(fig)
+				plt.clf()
+				plt.plot(xdata,ydata)
+				info.changed[fig] = False	
 			else:
 				plt.plot(xdata[-1],ydata[-1])
 
-		elif (pointer==1):
-			pass
 		elif (pointer==2):
 			pass
 		elif (pointer==3):
@@ -499,7 +528,7 @@ info.changed = [False,False]
 #############################################################################
 
 def mainLoop():
-	if (not info.paused):	#if simulation is not paused
+	if (not info.paused): #and not (info.sim.done)):	#if simulation is not paused
 		animationEvery = 1/(1.0*speed_scale.get())*runRate
 		graphEvery = 30 * animationEvery
 
@@ -512,7 +541,7 @@ def mainLoop():
 		info.graphcount += 1
 		if (info.graphcount >= graphEvery):
 			plotData()
-			#updateGraphs()
+			updateGraphs()
 
 			#Show the graphs
 			if agg:
