@@ -32,7 +32,7 @@ def button_pause_on_click():
 
 def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
-	info.sim = Simulation(*slider_values)
+	info.sim = Simulation(*slider_values, 0, 0, 0)
 
 	info.animationcount = 0
 	info.xpos = 0
@@ -341,17 +341,17 @@ frame_in_canvas = Frame(slider_canvas,bg='white smoke',width = w1*s,height=(h2+h
 frame_in_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
 slider_info = [("model-time-span",100,500,50),
-				("starting-settlements",5,20,1),
-				("starting-households",5,10,1),
-				("starting-household-size",3,10,1),
-				("starting-grain",100,8000,100),
-				("min-ambition",0,1,0.1),
-				("min-competency",0,1,0.1),
-				("generational-variation",0,1,0.1),
-				("knowledge-radius",5,40,5),
-				("distance-cost",1,15,1),
-				("fallow-limit",0,10,1),
-				("pop-growth-rate",0,0.5,0.01),
+				("starting-settlements",14,20,1),
+				("starting-households",7,10,1),
+				("starting-household-size",5,10,1),
+				("starting-grain",3000,8000,100),
+				("min-ambition",0.1,1,0.1),
+				("min-competency",0.5,1,0.1),
+				("generational-variation",0.9,1,0.1),
+				("knowledge-radius",20,40,5),
+				("distance-cost",10,15,1),
+				("fallow-limit",4,10,1),
+				("pop-growth-rate",0.1,0.5,0.01),
 				("min-fission-chance",0.5,0.9,0.1),
 				("land-rental-rate",30,60,5)]
 

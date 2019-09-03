@@ -5,6 +5,8 @@ import random
 import numpy as np
 
 class Simulation:
+	years_passed = 0
+
 	elevation_dataset = []
 	flood_level = 0
 	total_grain = 0
@@ -16,6 +18,8 @@ class Simulation:
 	house_colours = 0,0,0
 	average_ambition = 0
 	average_competency = 0
+	min_ambition = 0
+	min_competency = 0
 	time_span = 0
 	generational_variation = 0
 	knowledge_radius = 0
@@ -25,14 +29,24 @@ class Simulation:
 	min_fission_chance = 0
 	land_rental_rate = 0
 
+	starting_population = 0
+
+	fission_enabled = False
+	rent_enabled = False
+	manual_seed_enabled = False
+	
 	x_size = 30
 	y_size = 30
 
 	settlements = []
+	all_households = []
 	terrain = []
 
 	def __init__(self, model_time_span, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, 
-						generational_variation, knowledge_radius, distance_cost, fallow_limit, pop_growth_rate, min_fission_chance, land_rental_rate):
+						generational_variation, knowledge_radius, distance_cost, fallow_limit, pop_growth_rate, min_fission_chance, land_rental_rate, 
+						fission_enabled, rent_enabled, manual_seed_enabled):
+		self.years_passed = 0
+		
 		self.elevation_dataset = []
 		self.flood_level = 0
 		self.total_households = 0
@@ -47,6 +61,9 @@ class Simulation:
 		self.average_ambition = 0
 		self.average_competency = 0
 		
+		self.min_ambition = min_ambition
+		self.min_competency = min_competency
+
 		self.generational_variation = generational_variation
 		self.knowledge_radius = knowledge_radius
 		self.distance_cost = distance_cost
@@ -55,7 +72,14 @@ class Simulation:
 		self.min_fission_chance = min_fission_chance
 		self.land_rental_rate = land_rental_rate
 		self.settlements = []
+		self.all_households = []
 		self.terrain = []
+
+		self.fission_enabled = fission_enabled
+		self.rent_enabled = rent_enabled
+		self.manual_seed_enabled = manual_seed_enabled
+
+		self.starting_population = starting_settlements * starting_households * starting_household_size
 
 		print("-----")
 		print(knowledge_radius)
@@ -71,7 +95,7 @@ class Simulation:
 			self.terrain[0][y].river = True
 
 		self.setupSettlements(starting_settlements)
-		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, int(knowledge_radius), distance_cost)
+		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, int(knowledge_radius), distance_cost)
 		self.establish_population(starting_settlements, starting_households, starting_household_size)
 
 	def setupSettlements(self, starting_settlements):
@@ -101,7 +125,7 @@ class Simulation:
 				count += 1
 		pass
 
-	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, knowledge_radius, distance_cost):
+	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost):
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
 				grain = starting_grain
@@ -110,11 +134,10 @@ class Simulation:
 				competency = min_competency + (random.random()*(1 - min_competency))
 				generation_countdown = random.randint(0, 5) + 10
 				
-				new_household = Household(settlement, grain, workers, ambition, competency, generation_countdown, knowledge_radius, distance_cost, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
-				new_household.settled_in = settlement
-
+				new_household = Household(settlement, grain, workers, min_ambition, min_competency, generation_countdown, knowledge_radius, distance_cost, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
 
 				settlement.households.append(new_household)
+				self.all_households.append(new_household)
 
 			settlement.population += starting_households*starting_household_size
 
@@ -122,10 +145,10 @@ class Simulation:
 		self.total_population = starting_settlements * starting_households * starting_household_size
 
 	def run(self):
-		c = 0
-		while c < self.time_span:
+		self.years_passed = 0
+		while self.years_passed < self.time_span:
 			self.tick()
-			c += 1 
+			self.years_passed += 1 
 
 	def tick(self):
 		random.shuffle(self.settlements)
@@ -133,6 +156,9 @@ class Simulation:
 		self.flood()
 		self.tickSettlements()
 		self.populationShift()
+		if self.rent_enabled:
+			self.rentLand()
+
 
 	def flood(self):
 		mu= random.randint(0,10) + 5
@@ -154,3 +180,14 @@ class Simulation:
 
 	def populationShift(self):
 		pass
+
+
+	def rentLand(self):
+		def getAmbition(household):
+			return household.ambition
+
+		for household in self.all_households.sort(key=getAmbition, reverse=True):
+			household.rentLand(self.land_rental_rate) # Move land_rental_rate inside household or not? (Thinking about extensibility)
+	
+
+					

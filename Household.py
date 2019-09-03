@@ -15,7 +15,7 @@ class Household:
 	minimum_competency = 0
 	fallow_limit = 5
 	fields_owned = []		#list of terrain
-	fields_harvested = []	#list of terrain
+	fields_harvested = 0	
 	
 	known_patches = []
 	knowledge_radius = 0
@@ -31,19 +31,27 @@ class Household:
 
 	settled_in = None
 
-	def __init__(self,settled_in, grain, workers, ambition, competency, generation_countdown, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
+	def __init__(self,settled_in, grain, workers, min_ambition, min_competency, generation_countdown, knowledge_radius, distance_cost, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
-		self.ambition = ambition
-		self.competency	= competency
+		self.ambition = min_ambition + (random.random()*(1 - min_ambition))
+		self.competency = min_competency + (random.random()*(1 - min_competency))
+		self.minimum_ambition = min_ambition
+		self.minimum_competency = min_competency
+		# self.ambition = ambition
+		# self.competency	= competency
+		self.workers_worked = 0
 		self.generation_countdown = generation_countdown
 		self.knowledge_radius = knowledge_radius
 		self.distance_cost = distance_cost
 		self.x = x
 		self.y = y
+		self.x_size = x_size
+		self.y_size = y_size
 		self.all_terrain = all_terrain
 		self.settled_in = settled_in
 		self.fields_owned = []
+		self.fields_harvested = 0
 		self.known_patches = []
 
 		self.settled_in.population += workers
@@ -68,7 +76,7 @@ class Household:
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
 		self.grain -= self.workers*160
 		if self.grain < 0:
-			num_not_supported = -math.ceil(self.grain/160)
+			num_not_supported = math.ceil(self.grain/160)
 			self.grain = 0
 			if num_not_supported < self.workers:
 				self.workers -= num_not_supported
@@ -89,16 +97,16 @@ class Household:
 		max_fields_to_work = int(self.workers//2)
 
 		total_harvest = 0
-		workers_worked = 0
-		fields_harvested = 0
+		self.workers_worked = 0
+		self.fields_harvested = 0
 		best_harvest = 0
 		best_field = None
 		for i in range(max_fields_to_work):
 			#Stop harvesting if all owned fields have been harvested
-			if fields_harvested >= len(self.fields_owned):
+			if self.fields_harvested >= len(self.fields_owned):
 				break
 			
-			field = self.fields_owned[fields_harvested]
+			field = self.fields_owned[self.fields_harvested]
 
 			farm_chance = random.random()
 			## TODO:
@@ -107,14 +115,14 @@ class Household:
 			if self.grain < self.workers*160 or farm_chance < self.ambition*self.competency:
 				field.harvested = True
 				field.years_not_harvested = 0
-				fields_harvested += 1
-				workers_worked += 2
+				self.fields_harvested += 1
+				self.workers_worked += 2
 				field_harvest = field.fertility*field.max_yield*self.competency - field.house_distance*field.owner.distance_cost - 300
 				
 				total_harvest += field_harvest
 		self.grain += total_harvest
 
-		i = fields_harvested
+		i = self.fields_harvested
 		if self.fallow_limit > 0:
 			while i < len(self.fields_owned):
 				if self.fields_owned[i].years_not_harvested > self.fallow_limit:
@@ -139,8 +147,34 @@ class Household:
 			if self.all_terrain[best_x][best_y].claim(self):
 				self.fields_owned.append(self.all_terrain[best_x][best_y])
 
-	def rentLand(self):
-		pass
+	def rentLand(self, land_rental_rate):
+		total_harvest = 0
+		max_fields_to_work = (self.workers - self.workers_worked)//2
+
+		for i in range(max_fields_to_work):
+			best_harvest = 0
+			best_field = self.all_terrain[self.x][self.y]
+
+			for field in self.known_patches:
+				this_harvest = field.fertility*field.max_yield*self.competency - (((self.x - field.x)**2 + (self.y - field.y)**2)**0.5)*self.distance_cost
+				if not field.harvested and this_harvest >= best_harvest: # this_harvest > best_harvest ?
+					best_field = field
+					best_harvest = this_harvest
+
+			harvest_chance = random.random()
+
+			if best_field.field and field not in self.fields_owned and harvest_chance < (self.ambition * self.competency):
+				field.harvested = True
+				# shape
+				# color
+
+				total_harvest += best_harvest * (1 - (land_rental_rate/100)) - 300
+
+				best_field.owner.grain += best_harvest * (land_rental_rate/100)
+		
+			self.fields_harvested += 1
+
+		self.grain += total_harvest
 
 	def generationalChange(self):
 		self.generation_countdown -= 1
@@ -158,3 +192,5 @@ class Household:
 				competency_change = 2*self.generational_variation*(random.random() - 0.5)
 			
 			self.competency += competency_change
+
+	
