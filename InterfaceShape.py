@@ -182,11 +182,9 @@ def plotData():
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
 		("Household wealth households 25-29","Years","Wealth")]
 
-	print(info.graphs_data[0])
+
 	info.graphs_data[0][0].append(info.sim.years_passed)
-	info.graphs_data[0][1].append(info.sim.total_grain)
-
-
+	info.graphs_data[0][1].append(info.sim.total_population)
 
 def updateGraphs():
 	for fig in [0,1]:
@@ -196,13 +194,17 @@ def updateGraphs():
 			data = info.graphs_data[pointer]
 
 			xdata = data[0]
+			print(xdata)
 			ydata = data[1]
+			print(ydata)
 			if info.changed[fig]:
+				print("Replotted")
 				plt.figure(fig)
 				plt.clf()
 				plt.plot(xdata,ydata)
 				info.changed[fig] = False	
 			else:
+				print("New item")
 				plt.plot(xdata[-1],ydata[-1])
 
 		elif (pointer==1):
@@ -501,7 +503,7 @@ info.changed = [False,False]
 #############################################################################
 
 def mainLoop():
-	if (not info.paused):	#if simulation is not paused
+	if (not info.paused and not (info.sim.done)):	#if simulation is not paused
 		animationEvery = 1/(1.0*speed_scale.get())*runRate
 		graphEvery = 30 * animationEvery
 
