@@ -99,8 +99,7 @@ class Household:
 		total_harvest = 0
 		self.workers_worked = 0
 		self.fields_harvested = 0
-		best_harvest = 0
-		best_field = None
+
 		for i in range(max_fields_to_work):
 			#Stop harvesting if all owned fields have been harvested
 			if self.fields_harvested >= len(self.fields_owned):
@@ -117,7 +116,7 @@ class Household:
 				field.years_not_harvested = 0
 				self.fields_harvested += 1
 				self.workers_worked += 2
-				field_harvest = field.fertility*field.max_yield*self.competency - field.house_distance*field.owner.distance_cost - 300
+				field_harvest = field.harvest*self.competency - field.house_distance*field.owner.distance_cost - 300
 				
 				total_harvest += field_harvest
 		self.grain += total_harvest
