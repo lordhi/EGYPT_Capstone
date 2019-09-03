@@ -288,8 +288,6 @@ def drawGridSimulation(canvas,info):
 
 	biggest_grain = max([x.grain for x in info.sim.all_households])
 
-
-	
 	for row in range(0,rows):
 		for col in range(0,columns):
 			block = overallterrain[row][col]		
@@ -300,6 +298,13 @@ def drawGridSimulation(canvas,info):
 				color = greeness(int(245-fertility*205))
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 
+	for settlement in info.sim.settlements:
+		row = settlement.x
+		col = settlement.y
+		for household in settlement.households:
+			for field in household.fields_owned:
+				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(field.x+0.5)*xstep,(field.y+0.5)*ystep,fill=color_hexes[main_color])		
+
 
 	for settlement in info.sim.settlements:
 		row = settlement.x
@@ -307,14 +312,21 @@ def drawGridSimulation(canvas,info):
 
 		#draw lines
 		for household in settlement.households:
-			for field in household.fields_owned:
-				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(field.x+0.5)*xstep,(field.y+0.5)*ystep,fill=color_hexes[main_color])		
+			for field in household.fields_owned:	
 				canvas.create_image(((field.x+0.5)*xstep,(field.y+0.5)*xstep),image=info.barley_images[main_color])
 		
 		#draw settlements
-		radius = ((settlement.population//50+1)*xstep)/2
+		temp = settlement.population//50
+		if temp > 2:
+			temp = 2
+		radius = ((temp+1)*xstep)/2
+
+		print(settlement.population)
 		drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,radius)
 		canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])	
+
+
+
 
 	#create rectangles at edges to prevent ugly stuff
 	canvas.create_rectangle(xstep*columns,0,xstep*(columns+2),ystep*rows,fill=general_background,outline=general_background)
