@@ -166,6 +166,29 @@ def plotData():
 	total_grain = info.sim.total_grain
 	total_households = len(info.sim.all_households)
 	total_population = info.sim.total_population
+	total_ambition = max([x.ambition for x in info.sim.all_households])
+	total_competency = max([x.competency for x in info.sim.all_households])
+	start_population = info.sim.starting_population
+	
+	average_ambition = total_ambition/total_households
+	average_competency = total_competency/total_households
+
+	sorted_grain = sorted([x.grain for x in info.sim.all_households])
+	wealth_so_far = 0
+	index = 0
+	gini_index_reserve = 0
+
+	lorenz_points = []
+
+	for i in range(total_households):
+		wealth_so_far += sorted_grain[0]
+		sorted_grain = sorted_grain[1:]
+
+		if total_grain > 0:
+			lorenz_points += [(wealth_so_far/total_grain)*100]
+			index += 1
+
+		gini_index_reserve += (index/total_households) - (wealth_so_far/total_grain)
 
 
 
@@ -183,7 +206,7 @@ def plotData():
 
 	#Gini-index
 	info.graphs_data[3][0].append(info.sim.years_passed)
-	info.graphs_data[3][1][0].append(info.sim.years_passed)
+	info.graphs_data[3][1][0].append(gini_index_reserve/total_households/0.5)
 
 	#Grain-equality
 	info.graphs_data[4][0].append(info.sim.years_passed)
@@ -341,6 +364,7 @@ def drawGridSimulation(canvas,info):
 				 	drawCircle(canvas,(field.x+0.5)*xstep,(field.y+0.5)*xstep,xstep/5,color_hexes[main_color])
 		#draw settlements
 		temp = settlement.population//50
+		print(settlement.population)
 		if temp > 2:
 			temp = 2
 		radius = ((temp+1)*xstep)/2
