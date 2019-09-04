@@ -88,7 +88,7 @@ class Simulation:
 			self.terrain[0][y].river = True
 
 		self.setupSettlements(starting_settlements)
-		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, int(knowledge_radius), distance_cost, land_rental_rate)
+		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, int(knowledge_radius), distance_cost, land_rental_rate, fallow_limit)
 
 	def setupSettlements(self, starting_settlements):
 		count = 0
@@ -117,10 +117,10 @@ class Simulation:
 				count += 1
 		pass
 
-	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate):
+	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit):
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
-				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
+				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
 
 				settlement.households.append(new_household)
 				self.all_households.append(new_household)
