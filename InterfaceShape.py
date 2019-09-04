@@ -207,12 +207,29 @@ def plotData():
 	info.graphs_data[3][1][0].append(gini_index_reserve/total_households/2)
 
 	#Grain-equality
-	info.graphs_data[4].append(range(len(lorenz_points)))
-	info.graphs_data[4][1].append(lorenz_points)
+	x = range(len(lorenz_points))
+	info.graphs_data[4][0]= x
+	info.graphs_data[4][1][0]=lorenz_points
 
-	# #Households holding
-	# info.graphs_data[5][0].append(info.sim.years_passed)
-	# info.graphs_data[5][1][0].append(info.sim.years_passed)
+	 #Households holding
+	t_pink = 0
+	t_blue = 0
+	t_yellow = 0
+	info.graphs_data[5] = info.graphs_data[3]
+	for settlement in info.sim.settlements:
+	 	for household in settlement.households:
+	 		if household.color == PINK:
+	 			t_pink += 1
+	 		if household.color == BLUE:
+	 			t_blue += 1
+	 		if household.color == YELLOW:
+	 			t_yellow += 1
+
+
+	info.graphs_data[5][1][0].append(t_pink)
+	info.graphs_data[5][1][1].append(t_blue)
+	info.graphs_data[5][1][2].append(t_yellow)
+	 
 
 	# #Settlements population
 	# info.graphs_data[6][0].append(info.sim.years_passed)
@@ -254,6 +271,9 @@ def updateGraphs():
 			plt.xlabel(options[pointer][1])
 			plt.ylabel(options[pointer][2])
 			plt.title(options[pointer][0])
+
+		if (pointer == 4):
+			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]])
 
 		plt.tight_layout()
 
@@ -327,7 +347,6 @@ def drawGridSimulation(canvas,info):
 	ystep = height/rows - 1
 	canvas.delete('all')
 	
-
 	overall_biggest_grain = max([x.grain for x in info.sim.all_households])
 
 	for row in range(0,rows):
@@ -344,8 +363,9 @@ def drawGridSimulation(canvas,info):
 		row = settlement.x
 		col = settlement.y
 		for household in settlement.households:
+			main_color = getColor(overall_biggest_grain,household.grain)
+			household.color = main_color
 			for field in household.fields_owned:
-				main_color = getColor(overall_biggest_grain,household.grain)
 				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(field.x+0.5)*xstep,(field.y+0.5)*ystep,fill=color_hexes[main_color])		
 
 
@@ -355,11 +375,11 @@ def drawGridSimulation(canvas,info):
 
 		#draw lines
 		for household in settlement.households:
+			main_color = household.color#getColor(overall_biggest_grain,household.grain)
 			for field in household.fields_owned:	
 				if field.harvested:
 					canvas.create_image(((field.x+0.5)*xstep,(field.y+0.5)*xstep),image=info.barley_images[main_color])
-				else:
-					main_color = getColor(overall_biggest_grain,household.grain)
+				else: 	
 					drawCircle(canvas,(field.x+0.5)*xstep,(field.y+0.5)*xstep,xstep/5,color_hexes[main_color])
 		
 		#draw settlements
