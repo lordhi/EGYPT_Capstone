@@ -265,10 +265,6 @@ def plotData():
 	print(len(info.graphs_data[6][0]))
 	for i in range(len(info.sim.all_settlements)):
 		info.graphs_data[6][1][i].append(info.sim.all_settlements[i].population)
-		print(len(info.graphs_data[6][1][i]))
-	#for settlement,  i   in   zip(info.sim.all_settlements,  range(length)):
-	#	info.graphs_data[6][1][i].append(settlement.population)
-	print("-----")
 	
 
 	#Max mean min settlement popuplation
@@ -336,17 +332,11 @@ def updateGraphs():
 			plt.plot(xdata,ydata[1],label='avg')
 			plt.plot(xdata,ydata[2],label='min') 
 			plt.legend()
-		elif (pointer == 6):
-			print("Here")
-			print(str(len(xdata)))
-			print(str(len(ydata[0])))
-			print(str(len(ydata[1])))
 
-		else: #pointer = 1,2,3,9,10
+		else: #pointer = 1,2,3,6,9,10
 			for line in ydata:
 				plt.plot(xdata,line)
 		
-
 		plt.title(options[pointer][0])
 		plt.xlabel(options[pointer][1])
 		plt.ylabel(options[pointer][2])
