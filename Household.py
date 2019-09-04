@@ -78,6 +78,7 @@ class Household:
 					self.known_patches.append(all_terrain[x][y])
 
 	def clearUp(self):
+		self.grain = 0
 		while len(self.fields_owned) > 0:
 			self.fields_owned[0].unclaim()
 			del self.fields_owned[0]
