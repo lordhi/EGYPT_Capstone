@@ -60,7 +60,7 @@ def button_reset_on_click():
 	info.house_images = [ImageTk.PhotoImage(resizeImage(img,int(2/3.0*xstep))) for img in info.house_images]
 
 	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),
+		("Gini-index","Time","Gini"),("Grain Grain-equalityy","%-population","%-wealth"),
 		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
 		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
@@ -70,12 +70,15 @@ def button_reset_on_click():
 					[ [], [[]] ],		[ [], [[]] ],		[ [], [[]] ],
 					[[], [[]] ],		[ [], [[]] ],
 					[ [], [[],[],[]] ],
-					[[],[]],			[[],[[],[],[]]],
-					[[],[[],[],[]]],			[[],[]],
-					[[],[]]
+					[[],[]],			[[], [[],[],[]] ],
+					[[], [[],[],[]] ],			[[],[[],[],[],[],[]]],
+					[[],[[],[],[],[],[]]]
 					]
 
 	info.changed = [True,True]
+
+	info.chosen_households_one = info.sim.all_households[20:25]
+	info.chosen_households_two = info.sim.all_households[25:30]
 
 def button_go_on_click():
 	if (not info.clicked_go_once):
@@ -151,6 +154,13 @@ def greeness(value):
 	we=("%02x"%0)
 	ge="#"
 	return ge+de+re+we
+
+def padListWithZeros(l,length):
+	d = length-len(l)
+	if d > 0:
+		l += [0]*d
+	return l
+
 
 def plotData():
 	#print(info.graphs_data)
@@ -242,19 +252,31 @@ def plotData():
 	info.graphs_data[7][1][2].append(min(populations))
 	
 	#Mean min max wealth levels of households
-	# grains = [x.grain for x in info.sim.all_households]
-	# info.graphs_data[8][0].append(info.sim.years_passed)
-	# info.graphs_data[8][1][0].append(max(grains))
-	# info.graphs_data[8][1][0].append(sum(grains)/len(grains))
-	# info.graphs_data[8][1][0].append(min(grains))
+	grains = [x.grain for x in info.sim.all_households]
+	info.graphs_data[8][0].append(info.sim.years_passed)
+	info.graphs_data[8][1][0].append(max(grains))
+	info.graphs_data[8][1][1].append(sum(grains)/len(grains))
+	info.graphs_data[8][1][2].append(min(grains))
 
-	# #Household wealth households 20-24
-	# info.graphs_data[9][0].append(info.sim.years_passed)
-	# info.graphs_data[9][1][0].append(info.sim.years_passed)
+	#Household wealth households 20-24
+	chosen_households = info.chosen_households_one
 
-	# #Household wealth households 25-29
-	# info.graphs_data[10][0].append(info.sim.years_passed)
-	# info.graphs_data[10][1][0].append(info.sim.years_passed)
+	info.graphs_data[9][0].append(info.sim.years_passed)
+	length=len(chosen_households)
+	for household,  i   in zip(chosen_households,  range(length)):
+		info.graphs_data[9][1][i].append(household.grain)
+	for j in range(length,5):
+		info.graphs_data[9][1][i].append(0)
+
+	#Household wealth households 25-29
+	chosen_households = info.chosen_households_two
+
+	info.graphs_data[10][0].append(info.sim.years_passed)
+	length=len(chosen_households)
+	for household,  i in zip(chosen_households,  range(length)):
+		info.graphs_data[10][1][i].append(household.grain)
+	for j in range(length,5):
+		info.graphs_data[10][1][i].append(0)
 
 def updateGraphs():
 	for fig in [0,1]:
@@ -276,21 +298,17 @@ def updateGraphs():
 			plt.legend()
 
 		elif (pointer == 4):
-			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]])
-
-		elif (pointer == 7):
-			plt.plot(xdata,ydata[0],label='max')
-			plt.plot(xdata,ydata[1],label='avg')
-			plt.plot(xdata,ydata[2],label='min')
+			plt.plot(xdata,ydata[0],label='Wealth')
+			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality')
 			plt.legend()
 
-		# elif (pointer == 8):
-		# 	plt.plot(xdata,ydata[0],label='max')
-		# 	plt.plot(xdata,ydata[1],label='avg')
-		# 	plt.plot(xdata,ydata[2],label='min')
-		# 	plt.legend()
+		elif (pointer == 7 or pointer == 8):
+			plt.plot(xdata,ydata[0],label='max')
+			plt.plot(xdata,ydata[1],label='avg')
+			plt.plot(xdata,ydata[2],label='min') 
+			plt.legend()
 
-		else:
+		else: #pointer = 1,2,3,9,10
 			for line in ydata:
 				plt.plot(xdata,line)
 		
@@ -590,6 +608,8 @@ class Info:
 	graphs_data = None
 	changed = None
 	pointers = None
+	chosen_households_one = None
+	chosen_households_two = None
 
 info = Info()
 info.clicked_go_once = False
@@ -605,21 +625,20 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 
 def mainLoop():
 	time1 = current_milli_time()
-	if (not info.paused and not info.sim.done):	#if simulation is not paused
+	if (not info.paused): #and not info.sim.done):	#if simulation is not paused
 	
 		animationEvery = 2#1/(1.0*speed_scale.get())*runRate
 		graphEvery = 30
-
-
+		
 		info.animationcount += 1
 		if (info.animationcount >= animationEvery):
 			info.animationcount = 0
 			drawGridSimulation(canvas,info)
 
 		info.sim.tick()
-		if (info.sim.done):
-			tk.after(30,mainLoop)
-			return
+		#if (info.sim.done):
+		#	tk.after(30,mainLoop)
+		#	return
 
 
 		plotData()
