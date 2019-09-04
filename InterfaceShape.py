@@ -77,6 +77,8 @@ def button_reset_on_click():
 					[[],[[],[],[],[],[]]]
 					]
 
+	info.graphs_data[6][1] = len(info.sim.all_settlements)*[[]]
+
 	info.changed = [True,True]
 
 	info.chosen_households_one = info.sim.all_households[20:25]
@@ -111,6 +113,7 @@ def graphMenuOneClick(selection):
 	print("Menu one clicked" + str(selection))
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
+	print("Pointer is " +str(info.pointers[0]))
 	info.changed[0] = True
 	updateGraphs()
 	showGraphs()
@@ -119,6 +122,7 @@ def graphMenuTwoClick(selection):
 	print("Menu two clicked"+ str(selection))
 	names = [x[0] for x in options]
 	info.pointers[1] = names.index(selection)
+	print("Pointer is " + str(info.pointers[1]))
 	info.changed[1] = True
 	updateGraphs()
 	showGraphs()
@@ -254,9 +258,13 @@ def plotData():
 	info.graphs_data[5][1][2].append(t_yellow)
 	 
 
-	# #Settlements population
-	# info.graphs_data[6][0].append(info.sim.years_passed)
-	# info.graphs_data[6][1][0].append(info.sim.years_passed)
+	#Settlements population
+	info.graphs_data[6][0].append(info.sim.years_passed)
+	length = len(info.sim.all_settlements)
+	for settlement,  i   in   zip(info.sim.all_settlements,  range(length)):
+		info.graphs_data[6][1][i].append(settlement.population)
+	print(info.graphs_data[6][0])
+	print(info.graphs_data[6][1][0])
 
 	#Max mean min settlement popuplation
 	populations = [x.population for x in info.sim.settlements]
@@ -295,6 +303,8 @@ def plotData():
 def updateGraphs():
 	for fig in [0,1]:
 		pointer = info.pointers[fig]
+		#print(info.graphs_data)
+		#print("Important pointer " + str(pointer))
 		data = info.graphs_data[pointer]
 		xdata = data[0]
 		ydata = data[1]
@@ -321,6 +331,11 @@ def updateGraphs():
 			plt.plot(xdata,ydata[1],label='avg')
 			plt.plot(xdata,ydata[2],label='min') 
 			plt.legend()
+		elif (pointer == 6):
+			print("Here")
+			print(str(len(xdata)))
+			print(str(len(ydata[0])))
+			print(str(len(ydata[1])))
 
 		else: #pointer = 1,2,3,9,10
 			for line in ydata:
@@ -646,6 +661,17 @@ info.pointers = [0,1] #what does each graph point to
 info.changed = [False,False]
 info.pause_play_text = pause_play_text
 info.stepping = False
+info.graphs_data = [
+					[ [], [[]] ],		[ [], [[]] ],		[ [], [[]] ],
+					[[], [[]] ],		[ [], [[]] ],
+					[ [], [[],[],[]] ],
+					[[],[]],			[[], [[],[],[]] ],
+					[[], [[],[],[]] ],			[[],[[],[],[],[],[]]],
+					[[],[[],[],[],[],[]]]
+					]
+
+updateGraphs()
+showGraphs()
 
 #Mainloop:
 #############################################################################
@@ -655,18 +681,27 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 def mainLoop():
 	time1 = current_milli_time()
 	if (not info.paused): #and not info.sim.done):	#if simulation is not paused
+		#print("enter")
 
 		if info.stepping:
 			info.paused = True
 			info.stepping = False
-	
-		animationEvery = 2#1/(1.0*speed_scale.get())*runRate
+
+		animationEvery = 1
+
+		if not info.stepping:
+			if (speed_scale.get()>40):
+				animationEvery = 2
+			if (speed_scale.get()>80):
+				animationEvery = 3
 		graphEvery = 30
 
 		info.animationcount += 1
+
 		if (info.animationcount >= animationEvery):
 			info.animationcount = 0
 			drawGridSimulation(canvas,info)
+			#print("draw")
 
 		info.sim.tick()
 		#if (info.sim.done):
