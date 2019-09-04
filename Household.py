@@ -52,7 +52,6 @@ class Household:
 		self.y_size = y_size
 		self.all_terrain = all_terrain
 		self.settled_in = settled_in
-		self.settled_in.population += self.workers
 		self.fields_owned = []
 		self.fields_harvested = 0
 		self.known_patches = []
