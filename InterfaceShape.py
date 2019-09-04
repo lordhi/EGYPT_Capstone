@@ -31,7 +31,6 @@ def resizeImage(img,basewidth):
 def button_step_on_click():
 	info.paused = False
 	info.stepping = True
-	mainLoop()
 
 def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
@@ -210,6 +209,7 @@ def plotData():
 
 	lorenz_points = []
 
+
 	for i in range(total_households):
 		wealth_so_far += sorted_grain[0]
 		sorted_grain = sorted_grain[1:]
@@ -217,8 +217,9 @@ def plotData():
 		if total_grain > 0:
 			lorenz_points += [(wealth_so_far/total_grain)*100]
 			index += 1
+			if (total_households>0):
+				gini_index_reserve += (index/total_households) - (wealth_so_far/total_grain)
 
-		gini_index_reserve += (index/total_households) - (wealth_so_far/total_grain)
 
 	#Total Grain
 	info.graphs_data[0][0].append(info.sim.years_passed)
@@ -262,7 +263,6 @@ def plotData():
 
 	#Settlements population
 	info.graphs_data[6][0].append(info.sim.years_passed)
-	print(len(info.graphs_data[6][0]))
 	for i in range(len(info.sim.all_settlements)):
 		info.graphs_data[6][1][i].append(info.sim.all_settlements[i].population)
 	
@@ -311,36 +311,68 @@ def updateGraphs():
 		ydata = data[1]
 
 		plt.figure(fig)
-		plt.clf()
-
-		if (pointer == 5):
-			line, = plt.plot(xdata,ydata[0],label='>66%')
-			line.set_color(color_hexes[PINK])
-			line, = plt.plot(xdata,ydata[1],label='33-66%')
-			line.set_color(color_hexes[YELLOW])
-			line, = plt.plot(xdata,ydata[2],label='<33%')
-			line.set_color(color_hexes[BLUE])
-			plt.legend()
-
-		elif (pointer == 4):
-			plt.plot(xdata,ydata[0],label='Wealth')
-			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality')
-			plt.legend()
-
-		elif (pointer == 7 or pointer == 8):
-			plt.plot(xdata,ydata[0],label='max')
-			plt.plot(xdata,ydata[1],label='avg')
-			plt.plot(xdata,ydata[2],label='min') 
-			plt.legend()
-
-		else: #pointer = 1,2,3,6,9,10
-			for line in ydata:
-				plt.plot(xdata,line)
 		
-		plt.title(options[pointer][0])
-		plt.xlabel(options[pointer][1])
-		plt.ylabel(options[pointer][2])
-		plt.tight_layout()
+		if (info.changed[fig]):
+			info.changed[fig] = False
+			plt.clf()
+
+			if (pointer == 5):
+				line, = plt.plot(xdata,ydata[0],label='>66%')
+				line.set_color(color_hexes[PINK])
+				line, = plt.plot(xdata,ydata[1],label='33-66%')
+				line.set_color(color_hexes[YELLOW])
+				line, = plt.plot(xdata,ydata[2],label='<33%')
+				line.set_color(color_hexes[BLUE])
+				plt.legend()
+
+			elif (pointer == 4):
+				plt.plot(xdata,ydata[0],label='Wealth')
+				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality')
+				plt.legend()
+
+			elif (pointer == 7 or pointer == 8):
+				plt.plot(xdata,ydata[0],label='max')
+				plt.plot(xdata,ydata[1],label='avg')
+				plt.plot(xdata,ydata[2],label='min') 
+				plt.legend()
+
+			else: #pointer = 0,1,2,3,6,9,10
+				for line in ydata:
+					plt.plot(xdata,line)
+		
+			plt.title(options[pointer][0])
+			plt.xlabel(options[pointer][1])
+			plt.ylabel(options[pointer][2])
+			plt.tight_layout()
+
+		elif (len(xdata)>1):	
+			g = info.graphEvery
+
+			if (pointer == 5):
+				line, = plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],label='>66%')
+				line.set_color(color_hexes[PINK])
+				line, = plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],label='33-66%')
+				line.set_color(color_hexes[YELLOW])
+				line, = plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],label='<33%')
+				line.set_color(color_hexes[BLUE])
+				plt.legend()
+
+			elif (pointer == 4):
+				plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],label='Wealth')
+				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality')
+				plt.legend()
+
+			elif (pointer == 7 or pointer == 8):
+				plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],label='max')
+				plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],label='avg')
+				plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],label='min') 
+				plt.legend()
+
+			else: #pointer = 0,1,2,3,6,9,10
+				for line in ydata:
+					plt.plot(xdata[-(g+2):-1],line[-(g+2):-1])
+
+
 
 def showGraphs():
 	if agg:
@@ -374,8 +406,10 @@ def drawGridSimulation(canvas,info):
 	xstep = width/columns - 1
 	ystep = height/rows - 1
 	canvas.delete('all')
-	
-	overall_biggest_grain = max([x.grain for x in info.sim.all_households])
+	if (len(info.sim.all_households)>0):
+		overall_biggest_grain = max([x.grain for x in info.sim.all_households])
+	else:
+		overall_biggest_grain = 0
 
 	for row in range(0,rows):
 		for col in range(0,columns):
@@ -513,7 +547,7 @@ slider_info = [("model-time-span",500,100,500,50),
 				("min-ambition",0.1,0,1,0.1),
 				("min-competency",0.5,0,1,0.1),
 				("generational-variation",0.9,0,1,0.1),
-				("knowledge-radius",20,5,40,1),
+				("knowledge-radius",5,3,40,1),
 				("distance-cost",10,1,15,1),
 				("fallow-limit",4,0,10,1),
 				("pop-growth-rate",0.1,0,0.5,0.01),
@@ -646,6 +680,8 @@ class Info:
 	chosen_households_two = None
 	pause_play_text = None
 	stepping = None
+	animationEvery = None
+	graphEvery = None
 
 info = Info()
 info.clicked_go_once = False
@@ -665,6 +701,9 @@ info.graphs_data = [
 					[[],[[],[],[],[],[]]]
 					]
 
+info.graphEvery = 30
+info.animationEvery = 1
+
 updateGraphs()
 showGraphs()
 
@@ -682,32 +721,34 @@ def mainLoop():
 			info.paused = True
 			info.stepping = False
 
-		animationEvery = 1
+		info.animationEvery = 1
 
 		if not info.stepping:
 			if (speed_scale.get()>40):
-				animationEvery = 2
+				info.animationEvery = 2
 			if (speed_scale.get()>80):
-				animationEvery = 3
-		graphEvery = 30
+				info.animationEvery = 3
+		info.graphEvery = 30
 
 		info.animationcount += 1
 
-		if (info.animationcount >= animationEvery):
+		if (info.animationcount >= info.animationEvery):
 			info.animationcount = 0
 			drawGridSimulation(canvas,info)
 			#print("draw")
 
 		info.sim.tick()
-		#if (info.sim.done):
-		#	tk.after(30,mainLoop)
-		#	return
+		if (len(info.sim.settlements)==0):
+			info.paused = True
+			drawGridSimulation(canvas,info)
+			tk.after(30,mainLoop)
+			return
 
 
 		plotData()
 
 		info.graphcount += 1
-		if (info.graphcount >= graphEvery):
+		if (info.graphcount >= info.graphEvery):
 			info.graphcount=0
 			updateGraphs()
 			showGraphs()
