@@ -318,7 +318,6 @@ def getColor(max_grain,grain):
 		return YELLOW
 
 def drawGridSimulation(canvas,info):
-	main_color = PINK
 	simulation = info.sim
 	width, height = canvas.winfo_width(),canvas.winfo_height()
 	overallterrain = simulation.terrain
@@ -329,7 +328,7 @@ def drawGridSimulation(canvas,info):
 	canvas.delete('all')
 	
 
-	biggest_grain = max([x.grain for x in info.sim.all_households])
+	overall_biggest_grain = max([x.grain for x in info.sim.all_households])
 
 	for row in range(0,rows):
 		for col in range(0,columns):
@@ -342,6 +341,9 @@ def drawGridSimulation(canvas,info):
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 
 	for settlement in info.sim.settlements:
+		biggest_household_grain = max([x.grain for x in settlement.households])
+		main_color = getColor(overall_biggest_grain,biggest_household_grain)
+
 		row = settlement.x
 		col = settlement.y
 		for household in settlement.households:
@@ -352,6 +354,9 @@ def drawGridSimulation(canvas,info):
 	for settlement in info.sim.settlements:
 		row = settlement.x
 		col = settlement.y
+
+		biggest_household_grain = max([x.grain for x in settlement.households])
+		main_color = getColor(overall_biggest_grain,biggest_household_grain)
 
 		#draw lines
 		for household in settlement.households:
