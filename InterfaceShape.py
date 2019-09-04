@@ -120,15 +120,11 @@ grey_hex = '#8d8d8d'
 
 color_hexes = [pink_hex,blue_hex,yellow_hex,grey_hex] 
 
-main_color = PINK
 
 
 
 #Parameters:
 ############################################################################
-runRate = 30 			#frames per second it computes at
-#animationEvery = 1 	#number of frames between animation updates
-#graphEvery = 30 		#number of frames between graph updates
 
 w1 = 2 	#slider frame width
 w2 = 6 	#animation frame + graphs frame width
@@ -147,13 +143,6 @@ sliWidth = w1*s-2*padx-5
 chkHeight = 40 #the heights of the check boxes
 graphW = 75
 
-
-
-
-#Calculations
-#############################################################################
-sleeptime = 1/(runRate*1.0)
-
 #Functions:
 ############################################################################
 def greeness(value):
@@ -162,15 +151,6 @@ def greeness(value):
 	we=("%02x"%0)
 	ge="#"
 	return ge+de+re+we
-
-# def plotData(xpos):
-# 	plt.figure(0)
-# 	plt.plot(xpos,random.uniform(-2,2),"or")
-# 	plt.tight_layout()
-	
-# 	plt.figure(1)
-# 	plt.plot(xpos,random.uniform(-2,2),"or")
-# 	plt.tight_layout()
 
 def plotData():
 	#print(info.graphs_data)
@@ -182,6 +162,11 @@ def plotData():
 		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
 		("Household wealth households 25-29","Years","Wealth")]
+
+	total_grain = info.sim.total_grain
+	total_households = len(info.sim.all_households)
+	total_population = info.sim.total_population
+
 
 	#Total Grain
 	info.graphs_data[0][0].append(info.sim.years_passed)
@@ -200,12 +185,41 @@ def plotData():
 	info.graphs_data[3][1][0].append(info.sim.years_passed)
 
 	#Grain-equality
+	info.graphs_data[4][0].append(info.sim.years_passed)
+	info.graphs_data[4][1][0].append(info.sim.years_passed)
+
+	# #Households holding
+	# info.graphs_data[5][0].append(info.sim.years_passed)
+	# info.graphs_data[5][1][0].append(info.sim.years_passed)
+
+	# #Settlements population
+	# info.graphs_data[6][0].append(info.sim.years_passed)
+	# info.graphs_data[6][1][0].append(info.sim.years_passed)
+
+	# #Max mean min settlement popuplation
+	# info.graphs_data[7][0].append(info.sim.years_passed)
+	# info.graphs_data[7][1][0].append(info.sim.years_passed)
+
+	# #Mean min max wealth levels of households
+	# info.graphs_data[8][0].append(info.sim.years_passed)
+	# info.graphs_data[8][1][0].append(info.sim.years_passed)
+
+	# #Household wealth households 20-24
+	# info.graphs_data[9][0].append(info.sim.years_passed)
+	# info.graphs_data[9][1][0].append(info.sim.years_passed)
+
+	# #Household wealth households 25-29
+	# info.graphs_data[10][0].append(info.sim.years_passed)
+	# info.graphs_data[10][1][0].append(info.sim.years_passed)
+
+
 
 	
 
 def updateGraphs():
 	for fig in [0,1]:
-		data = info.graphs_data[info.pointers[fig]]
+		pointer = info.pointers[fig]
+		data = info.graphs_data[pointer]
 		xdata = data[0]
 		ydata = data[1]
 
@@ -215,6 +229,9 @@ def updateGraphs():
 		for line in ydata:
 
 			plt.plot(xdata,line)
+			plt.xlabel(options[pointer][1])
+			plt.ylabel(options[pointer][2])
+			plt.title(options[pointer][0])
 
 		plt.tight_layout()
 
@@ -264,8 +281,11 @@ def updateGraphs():
 		# elif (pointer==11):
 		# 	pass
 
-def drawCircle(canvas,x,y,r):
-	canvas.create_oval(x-r,y-r,x+r,y+r,fill='black',outline=circle_border_outline,width=r/6)
+def drawCircle(canvas,x,y,r,color=False):
+	if (not color):
+		canvas.create_oval(x-r,y-r,x+r,y+r,fill='black',outline=circle_border_outline,width=r/6)
+	else:
+		canvas.create_oval(x-r,y-r,x+r,y+r,fill=color,width=0)
 
 def getColor(max_grain,grain):
 	if (grain > 2/3*max_grain):
@@ -276,6 +296,7 @@ def getColor(max_grain,grain):
 		return YELLOW
 
 def drawGridSimulation(canvas,info):
+	main_color = PINK
 	simulation = info.sim
 	width, height = canvas.winfo_width(),canvas.winfo_height()
 	overallterrain = simulation.terrain
@@ -313,8 +334,10 @@ def drawGridSimulation(canvas,info):
 		#draw lines
 		for household in settlement.households:
 			for field in household.fields_owned:	
-				canvas.create_image(((field.x+0.5)*xstep,(field.y+0.5)*xstep),image=info.barley_images[main_color])
-		
+				if field.harvested:
+					canvas.create_image(((field.x+0.5)*xstep,(field.y+0.5)*xstep),image=info.barley_images[main_color])
+				else:
+				 	drawCircle(canvas,(field.x+0.5)*xstep,(field.y+0.5)*xstep,xstep/5,color_hexes[main_color])
 		#draw settlements
 		temp = settlement.population//50
 		if temp > 2:
@@ -323,8 +346,6 @@ def drawGridSimulation(canvas,info):
 
 		drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,radius)
 		canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])	
-
-
 
 
 	#create rectangles at edges to prevent ugly stuff
