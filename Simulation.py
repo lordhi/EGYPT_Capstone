@@ -9,13 +9,8 @@ class Simulation:
 
 	flood_level = 0
 	total_grain = 0
-	total_households = 0
 	total_population = 0
 	projected_historical_population = 0
-	lorenz_points = 0
-	gini_index_reserve = 0
-	average_ambition = 0
-	average_competency = 0
 	min_ambition = 0
 	min_competency = 0
 	time_span = 0
@@ -48,7 +43,6 @@ class Simulation:
 		
 		self.elevation_dataset = []
 		self.flood_level = 0
-		self.total_households = 0
 		self.total_population = 0
 		self.projected_historical_population = 0
 		self.lorenz_points = 0
@@ -162,7 +156,7 @@ class Simulation:
 		if self.rent_enabled:
 			self.rentLand()
 
-		if self.years_passed > self.time_span:
+		if self.years_passed > self.time_span or len(self.settlements) == 0:
 			self.done = True
 
 	def flood(self):
