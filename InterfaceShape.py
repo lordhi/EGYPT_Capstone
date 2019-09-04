@@ -77,7 +77,9 @@ def button_reset_on_click():
 					[[],[[],[],[],[],[]]]
 					]
 
-	info.graphs_data[6][1] = len(info.sim.all_settlements)*[[]]
+	info.graphs_data[6][1] = []
+	for i in range(len(info.sim.all_settlements)):
+		info.graphs_data[6][1].append([])
 
 	info.changed = [True,True]
 
@@ -260,11 +262,14 @@ def plotData():
 
 	#Settlements population
 	info.graphs_data[6][0].append(info.sim.years_passed)
-	length = len(info.sim.all_settlements)
-	for settlement,  i   in   zip(info.sim.all_settlements,  range(length)):
-		info.graphs_data[6][1][i].append(settlement.population)
-	print(info.graphs_data[6][0])
-	print(info.graphs_data[6][1][0])
+	print(len(info.graphs_data[6][0]))
+	for i in range(len(info.sim.all_settlements)):
+		info.graphs_data[6][1][i].append(info.sim.all_settlements[i].population)
+		print(len(info.graphs_data[6][1][i]))
+	#for settlement,  i   in   zip(info.sim.all_settlements,  range(length)):
+	#	info.graphs_data[6][1][i].append(settlement.population)
+	print("-----")
+	
 
 	#Max mean min settlement popuplation
 	populations = [x.population for x in info.sim.settlements]
