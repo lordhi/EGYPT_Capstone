@@ -32,7 +32,7 @@ class Simulation:
 	y_size = 30
 
 	settlements = []
-	dead_settlements = []
+	all_settlements = [] #Used only for data collection purposes
 	all_households = []
 	terrain = []
 
@@ -100,6 +100,7 @@ class Simulation:
 			if not terrain_patch.settlement and not terrain_patch.river:
 				settlement = Settlement(terrain_patch, x_coord, y_coord)
 				self.settlements.append(settlement)
+				self.all_settlements.append(settlement)
 
 				for x in range(x_coord-1, x_coord+2):
 					for y in range(y_coord-1, y_coord+2):
@@ -147,7 +148,6 @@ class Simulation:
 				self.settlements[i].terrain.settlement = False
 				self.settlements[i].terrain.was_settlement = True
 				self.settlements[i].terrain.settlement_territory = True
-				self.dead_settlements.append(self.settlements[i])
 				del self.settlements[i]
 			else:
 				i += 1
