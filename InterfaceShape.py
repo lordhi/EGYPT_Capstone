@@ -242,10 +242,11 @@ def plotData():
 	info.graphs_data[7][1][2].append(min(populations))
 	
 	#Mean min max wealth levels of households
-	info.graphs_data[8][0].append(info.sim.years_passed)
-	info.graphs_data[8][1][0].append(info.sim.years_passed)
-	info.graphs_data[8][1][0].append(info.sim.years_passed)
-	info.graphs_data[8][1][0].append(info.sim.years_passed)
+	# grains = [x.grain for x in info.sim.all_households]
+	# info.graphs_data[8][0].append(info.sim.years_passed)
+	# info.graphs_data[8][1][0].append(max(grains))
+	# info.graphs_data[8][1][0].append(sum(grains)/len(grains))
+	# info.graphs_data[8][1][0].append(min(grains))
 
 	# #Household wealth households 20-24
 	# info.graphs_data[9][0].append(info.sim.years_passed)
@@ -276,25 +277,27 @@ def updateGraphs():
 
 		elif (pointer == 4):
 			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]])
+
 		elif (pointer == 7):
 			plt.plot(xdata,ydata[0],label='max')
 			plt.plot(xdata,ydata[1],label='avg')
 			plt.plot(xdata,ydata[2],label='min')
 			plt.legend()
 
-		elif (pointer == 8):
-			plt.plot(xdata,ydata[0],label='max')
-			plt.plot(xdata,ydata[1],label='avg')
-			plt.plot(xdata,ydata[2],label='min')
-			plt.legend()
+		# elif (pointer == 8):
+		# 	plt.plot(xdata,ydata[0],label='max')
+		# 	plt.plot(xdata,ydata[1],label='avg')
+		# 	plt.plot(xdata,ydata[2],label='min')
+		# 	plt.legend()
 
 		else:
 			for line in ydata:
 				plt.plot(xdata,line)
 		
+
+		plt.title(options[pointer][0])
 		plt.xlabel(options[pointer][1])
 		plt.ylabel(options[pointer][2])
-		plt.title(options[pointer][0])
 		plt.tight_layout()
 
 
@@ -602,7 +605,7 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 
 def mainLoop():
 	time1 = current_milli_time()
-	if (not info.paused): #and not (info.sim.done)):	#if simulation is not paused
+	if (not info.paused and not info.sim.done):	#if simulation is not paused
 	
 		animationEvery = 2#1/(1.0*speed_scale.get())*runRate
 		graphEvery = 30
@@ -614,6 +617,11 @@ def mainLoop():
 			drawGridSimulation(canvas,info)
 
 		info.sim.tick()
+		if (info.sim.done):
+			tk.after(30,mainLoop)
+			return
+
+
 		plotData()
 
 		info.graphcount += 1
@@ -637,8 +645,6 @@ def mainLoop():
 
 
 	time2 = current_milli_time()
-	#print(time2-time1)
-
 
 	sleep = int(1000/(1.0*speed_scale.get())) - time2 + time1
 	if (sleep < 0):
