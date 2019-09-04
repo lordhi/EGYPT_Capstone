@@ -4,6 +4,7 @@ import numpy as np
 import math
 
 class Household:
+	color = None
 	grain = 0
 	workers = 0
 	ambition = 0
@@ -34,6 +35,7 @@ class Household:
 	settled_in = None
 
 	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, x, y, all_terrain, x_size, y_size):
+		self.color = None
 		self.grain = grain
 		self.workers = workers
 		self.ambition = self.randomRange(min_ambition, 1) # min_ambition + (random.random()*(1 - min_ambition))
