@@ -87,8 +87,8 @@ class Household:
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
 		self.grain -= self.workers*160
 		if self.grain < 0:
-			self.grain = 0
 			num_not_supported = math.ceil(-self.grain/160)
+			self.grain = 0
 			#self.grain = 0
 			#self.workers -= 1
 			#self.settled_in.population -= 1
