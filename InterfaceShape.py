@@ -71,7 +71,7 @@ def button_reset_on_click():
 					[[], [[]] ],		[ [], [[]] ],
 					[ [], [[],[],[]] ],
 					[[],[]],			[[],[[],[],[]]],
-					[[],[]],			[[],[]],
+					[[],[[],[],[]]],			[[],[]],
 					[[],[]]
 					]
 
@@ -241,9 +241,11 @@ def plotData():
 	info.graphs_data[7][1][1].append(sum(populations)/len(populations))
 	info.graphs_data[7][1][2].append(min(populations))
 	
-	# #Mean min max wealth levels of households
-	# info.graphs_data[8][0].append(info.sim.years_passed)
-	# info.graphs_data[8][1][0].append(info.sim.years_passed)
+	#Mean min max wealth levels of households
+	info.graphs_data[8][0].append(info.sim.years_passed)
+	info.graphs_data[8][1][0].append(info.sim.years_passed)
+	info.graphs_data[8][1][0].append(info.sim.years_passed)
+	info.graphs_data[8][1][0].append(info.sim.years_passed)
 
 	# #Household wealth households 20-24
 	# info.graphs_data[9][0].append(info.sim.years_passed)
@@ -279,10 +281,17 @@ def updateGraphs():
 			plt.plot(xdata,ydata[1],label='avg')
 			plt.plot(xdata,ydata[2],label='min')
 			plt.legend()
+
+		elif (pointer == 8):
+			plt.plot(xdata,ydata[0],label='max')
+			plt.plot(xdata,ydata[1],label='avg')
+			plt.plot(xdata,ydata[2],label='min')
+			plt.legend()
+
 		else:
 			for line in ydata:
 				plt.plot(xdata,line)
-				
+		
 		plt.xlabel(options[pointer][1])
 		plt.ylabel(options[pointer][2])
 		plt.title(options[pointer][0])
