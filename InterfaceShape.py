@@ -45,17 +45,17 @@ def button_reset_on_click():
 
 	#Barley images
 	info.barley_images = [None,None,None]
-	info.barley_images[PINK] = Image.open("pink_background_barley.png")
-	info.barley_images[BLUE] = Image.open("blue_background_barley.png")
-	info.barley_images[YELLOW] = Image.open("yellow_background_barley.png")
+	info.barley_images[PINK] = Image.open("images/pink_background_barley.png")
+	info.barley_images[BLUE] = Image.open("images/blue_background_barley.png")
+	info.barley_images[YELLOW] = Image.open("images/yellow_background_barley.png")
 
 	info.barley_images = [ImageTk.PhotoImage(resizeImage(img,int(xstep*4/5.0))) for img in info.barley_images]
 
 	#House images
 	info.house_images = [None,None,None]
-	info.house_images[PINK] = Image.open("pink_background_house.png")
-	info.house_images[BLUE] = Image.open("blue_background_house.png")
-	info.house_images[YELLOW] = Image.open("yellow_background_house.png")
+	info.house_images[PINK] = Image.open("images/pink_background_house.png")
+	info.house_images[BLUE] = Image.open("images/blue_background_house.png")
+	info.house_images[YELLOW] = Image.open("images/yellow_background_house.png")
 
 	info.house_images = [ImageTk.PhotoImage(resizeImage(img,int(2/3.0*xstep))) for img in info.house_images]
 
