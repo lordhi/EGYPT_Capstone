@@ -190,8 +190,6 @@ def plotData():
 
 		gini_index_reserve += (index/total_households) - (wealth_so_far/total_grain)
 
-
-
 	#Total Grain
 	info.graphs_data[0][0].append(info.sim.years_passed)
 	info.graphs_data[0][1][0].append(info.sim.total_grain)
@@ -206,7 +204,7 @@ def plotData():
 
 	#Gini-index
 	info.graphs_data[3][0].append(info.sim.years_passed)
-	info.graphs_data[3][1][0].append(gini_index_reserve/total_households/0.5)
+	info.graphs_data[3][1][0].append(gini_index_reserve/total_households/2)
 
 	#Grain-equality
 	info.graphs_data[4][0].append(info.sim.years_passed)
@@ -364,7 +362,7 @@ def drawGridSimulation(canvas,info):
 				 	drawCircle(canvas,(field.x+0.5)*xstep,(field.y+0.5)*xstep,xstep/5,color_hexes[main_color])
 		#draw settlements
 		temp = settlement.population//50
-		print(settlement.population)
+		#print(settlement.population)
 		if temp > 2:
 			temp = 2
 		radius = ((temp+1)*xstep)/2
