@@ -33,7 +33,7 @@ class Household:
 
 	settled_in = None
 
-	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, x, y, all_terrain, x_size, y_size):
+	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, x, y, all_terrain, x_size, y_size):
 		self.grain = grain
 		self.workers = workers
 		self.ambition = self.randomRange(min_ambition, 1) # min_ambition + (random.random()*(1 - min_ambition))
@@ -46,6 +46,7 @@ class Household:
 		self.knowledge_radius = knowledge_radius
 		self.distance_cost = distance_cost
 		self.land_rental_rate = land_rental_rate
+		self.fallow_limit = fallow_limit
 		self.x = x
 		self.y = y
 		self.x_size = x_size
