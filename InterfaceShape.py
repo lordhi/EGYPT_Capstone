@@ -207,8 +207,8 @@ def plotData():
 	info.graphs_data[3][1][0].append(gini_index_reserve/total_households/2)
 
 	#Grain-equality
-	info.graphs_data[4] = range(len(lorenz_points))
-	info.graphs_data[4][1]= lorenz_points
+	info.graphs_data[4].append(range(len(lorenz_points)))
+	info.graphs_data[4][1].append(lorenz_points)
 
 	# #Households holding
 	# info.graphs_data[5][0].append(info.sim.years_passed)
