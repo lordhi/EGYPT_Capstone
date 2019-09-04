@@ -262,7 +262,6 @@ def plotData():
 
 	#Settlements population
 	info.graphs_data[6][0].append(info.sim.years_passed)
-	print(len(info.graphs_data[6][0]))
 	for i in range(len(info.sim.all_settlements)):
 		info.graphs_data[6][1][i].append(info.sim.all_settlements[i].population)
 	
