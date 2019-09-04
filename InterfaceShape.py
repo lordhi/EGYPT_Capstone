@@ -207,8 +207,8 @@ def plotData():
 	info.graphs_data[3][1][0].append(gini_index_reserve/total_households/2)
 
 	#Grain-equality
-	info.graphs_data[4][0].append(info.sim.years_passed)
-	info.graphs_data[4][1][0].append(info.sim.years_passed)
+	info.graphs_data[4][0].append(range(len(lorenz_points)))
+	info.graphs_data[4][1][0].append(lorenz_points)
 
 	# #Households holding
 	# info.graphs_data[5][0].append(info.sim.years_passed)
@@ -341,13 +341,11 @@ def drawGridSimulation(canvas,info):
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 
 	for settlement in info.sim.settlements:
-		biggest_household_grain = max([x.grain for x in settlement.households])
-		main_color = getColor(overall_biggest_grain,biggest_household_grain)
-
 		row = settlement.x
 		col = settlement.y
 		for household in settlement.households:
 			for field in household.fields_owned:
+				main_color = getColor(overall_biggest_grain,household.grain)
 				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(field.x+0.5)*xstep,(field.y+0.5)*ystep,fill=color_hexes[main_color])		
 
 
@@ -355,16 +353,15 @@ def drawGridSimulation(canvas,info):
 		row = settlement.x
 		col = settlement.y
 
-		biggest_household_grain = max([x.grain for x in settlement.households])
-		main_color = getColor(overall_biggest_grain,biggest_household_grain)
-
 		#draw lines
 		for household in settlement.households:
 			for field in household.fields_owned:	
 				if field.harvested:
 					canvas.create_image(((field.x+0.5)*xstep,(field.y+0.5)*xstep),image=info.barley_images[main_color])
 				else:
-				 	drawCircle(canvas,(field.x+0.5)*xstep,(field.y+0.5)*xstep,xstep/5,color_hexes[main_color])
+					main_color = getColor(overall_biggest_grain,household.grain)
+					drawCircle(canvas,(field.x+0.5)*xstep,(field.y+0.5)*xstep,xstep/5,color_hexes[main_color])
+		
 		#draw settlements
 		temp = settlement.population//50
 		#print(settlement.population)
@@ -372,6 +369,9 @@ def drawGridSimulation(canvas,info):
 			temp = 2
 		radius = ((temp+1)*xstep)/2
 
+		biggest_household_grain = max([x.grain for x in settlement.households])
+		main_color = getColor(overall_biggest_grain,biggest_household_grain)
+		
 		drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,radius)
 		canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])	
 
