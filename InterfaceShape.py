@@ -95,7 +95,7 @@ def button_play_pause_on_click():
 	info.paused = not info.paused
 
 	if info.paused:
-		info.pause_play_text.set("Play ")
+		info.pause_play_text.set("Play   ")
 	else:
 		info.pause_play_text.set("Pause")
 		plotData()
@@ -473,7 +473,7 @@ button_reset = Button(topframe,text='Reset',bg=button_color,command = button_res
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
 pause_play_text = StringVar()
-pause_play_text.set("Play ")
+pause_play_text.set("Play   ")
 button_play_pause = Button(topframe,textvariable=pause_play_text,bg=button_color,command = button_play_pause_on_click)
 button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
 
