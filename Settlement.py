@@ -37,10 +37,16 @@ class Settlement:
 		while (i < len(self.households)):
 			if self.households[i].workers == 0:
 				self.households[i].clearUp()
+
+				self.parent.all_households.remove(self.households[i])
+
 				del self.households[i]
+
 			else:
 				i += 1
-		self.fission()
+		
+		if self.parent.fission_enabled:
+			self.fission()
 
 	def fission(self):
 		for i in range(len(self.households)):

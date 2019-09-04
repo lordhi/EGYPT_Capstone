@@ -125,7 +125,6 @@ class Simulation:
 				settlement.households.append(new_household)
 				self.all_households.append(new_household)
 
-			settlement.population += starting_households*starting_household_size
 
 	def run(self):
 		while self.years_passed < self.time_span:
