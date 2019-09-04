@@ -28,8 +28,10 @@ def resizeImage(img,basewidth):
 
 #Button functions
 #############################################################################
-def button_pause_on_click():
-	info.paused = True
+def button_step_on_click():
+	info.paused = False
+	info.stepping = True
+	mainLoop
 
 def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
@@ -80,11 +82,20 @@ def button_reset_on_click():
 	info.chosen_households_one = info.sim.all_households[20:25]
 	info.chosen_households_two = info.sim.all_households[25:30]
 
-def button_go_on_click():
+	#info.sim.tick()
+	drawGridSimulation(canvas,info)
+
+def button_play_pause_on_click():
 	if (not info.clicked_go_once):
 		button_reset_on_click()
 		info.clicked_go_once = True
-	info.paused = False
+	info.paused = not info.paused
+
+	if info.paused:
+		info.pause_play_text.set("Play")
+	else:
+		info.pause_play_text.set("Pause")
+
 
 def popup_window():
 	if check_var[0].get():
@@ -95,12 +106,16 @@ def graphMenuOneClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
 	info.changed[0] = True
+	updateGraphs()
+	showGraphs()
 
 def graphMenuTwoClick(selection):
 	print("Menu two clicked"+ str(selection))
 	names = [x[0] for x in options]
 	info.pointers[1] = names.index(selection)
 	info.changed[1] = True
+	updateGraphs()
+	showGraphs()
 
 ############################################################################
 #Colors
@@ -123,16 +138,13 @@ grey_hex = '#8d8d8d'
 
 color_hexes = [pink_hex,blue_hex,yellow_hex,grey_hex] 
 
-
-
-
 #Parameters:
 ############################################################################
 
 w1 = 2 	#slider frame width
 w2 = 6 	#animation frame + graphs frame width
 w3 = 8	#graphs2 frame width
-h1 = 1 	#top frame height
+h1 = 0.6 	#top frame height
 h2 = 6	#animation frame height
 h3 = 2  #graphs 1 frame height
 		#graphs 2 frame height is h2 + h3
@@ -144,7 +156,7 @@ sfHeight = 70 #the heights of the side slider blocks
 sliHeight = sfHeight - 2*pady #slider heights
 sliWidth = w1*s-2*padx-5
 chkHeight = 40 #the heights of the check boxes
-graphW = 75
+graphW = 73
 
 #Functions:
 ############################################################################
@@ -163,9 +175,6 @@ def padListWithZeros(l,length):
 
 
 def plotData():
-	#print(info.graphs_data)
-	#
-
 	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
 		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),
 		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
@@ -318,6 +327,14 @@ def updateGraphs():
 		plt.ylabel(options[pointer][2])
 		plt.tight_layout()
 
+def showGraphs():
+	if agg:
+		graph1.show()
+		graph2.show()
+	else:
+		graph1.draw()
+		graph2.draw()
+
 
 def drawCircle(canvas,x,y,r,color=False):
 	if (not color):
@@ -410,39 +427,39 @@ tk.protocol('WM_DELETE_WINDOW', onClose)
 
 #GUI setup frames:
 ############################################################################
-topframe = Frame(tk,bg=top_panel_color,width=(w1+w2+w3)*s,height=h1*s,relief='raised')
+topframe = Frame(tk,bg=top_panel_color,width=int((w1+w2+w3)*s),height=int(h1*s),relief='raised')
 topframe.grid(row=0,column=0,columnspan=7,rowspan=1,sticky=N+S+E+W)
 topframe.grid_propagate(False)
 
-sliderframe = Frame(tk,bg=general_background,width=w1*s,height=(h2+h3)*s)
+sliderframe = Frame(tk,bg=general_background,width=int(w1*s),height=int((h2+h3)*s))
 sliderframe.grid(row=1,column=0,columnspan=1,rowspan=6,sticky=N+S+E+W)
 sliderframe.grid_rowconfigure(0,weight=1)
 sliderframe.grid_columnconfigure(0,weight=1)
 
-animationframe = Frame(tk,bg=general_background,width=w2*s,height=h2*s)
+animationframe = Frame(tk,bg=general_background,width=int(w2*s),height=int(h2*s))
 animationframe.grid(row=1,column=1,columnspan=3,rowspan=3,sticky=N+S+E+W,padx=padx,pady=pady)
 animationframe.grid_propagate(False)
 
-bottomframe = Frame(tk,bg=general_background,width=w2*s,height=h3*s)
+bottomframe = Frame(tk,bg=general_background,width=int(w2*s),height=int(h3*s))
 bottomframe.grid(row=4,column=1,columnspan=3,rowspan=3,sticky=N+S+E+W)
 bottomframe.grid_propagate(False)
 
-graphsframe = Frame(tk,bg=general_background,width=w3*s,height=(h2+h3)*s)
+graphsframe = Frame(tk,bg=general_background,width=int(w3*s),height=int((h2+h3)*s))
 graphsframe.grid(row=1,column=4,columnspan=3,rowspan=6,sticky=N+S+E+W)
 graphsframe.grid_propagate(False)
 
-tk.grid_columnconfigure(4,weight=1,minsize=w2*s)
-tk.grid_rowconfigure(4,weight=1,minsize=h3*s)
-tk.grid_columnconfigure(1,weight=1,minsize=w2*s)
-tk.grid_rowconfigure(1,weight=1,minsize=h2*s)
-tk.grid_columnconfigure(4,weight=1,minsize=w2*s)
-tk.grid_rowconfigure(4,weight=1,minsize=h3*s)
-tk.grid_columnconfigure(0,weight=1,minsize=w1*s)
-tk.grid_rowconfigure(0,weight=1,minsize=h1*s)	
+tk.grid_columnconfigure(4,weight=1,minsize=int(w2*s))
+tk.grid_rowconfigure(4,weight=1,minsize=int(h3*s))
+tk.grid_columnconfigure(1,weight=1,minsize=int(w2*s))
+tk.grid_rowconfigure(1,weight=1,minsize=int(h2*s))
+tk.grid_columnconfigure(4,weight=1,minsize=int(w2*s))
+tk.grid_rowconfigure(4,weight=1,minsize=int(h3*s))
+tk.grid_columnconfigure(0,weight=1,minsize=int(w1*s))
+tk.grid_rowconfigure(0,weight=1,minsize=int(h1*s))
 
-tk.minsize((w1+w2+w3)*s,(h1+h2+h3)*s)
+tk.minsize(int((w1+w2+w3)*s),int((h1+h2+h3)*s))
 
-canvas = Canvas(animationframe,width=w2*s,height=h2*s,bg=general_background)
+canvas = Canvas(animationframe,width=int(w2*s),height=int(h2*s),bg=general_background)
 canvas.grid(row=0,column=0)
 
 #Top panel
@@ -450,11 +467,13 @@ canvas.grid(row=0,column=0)
 button_reset = Button(topframe,text='Reset',bg=button_color,command = button_reset_on_click)
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
-button_go = Button(topframe,text='Go',bg=button_color,command = button_go_on_click)
-button_go.grid(row=0,column=1,padx=padx,pady=pady)
+pause_play_text = StringVar()
+pause_play_text.set("Play")
+button_play_pause = Button(topframe,textvariable=pause_play_text,bg=button_color,command = button_play_pause_on_click)
+button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
 
-button_pause = Button(topframe,text='Pause',bg=button_color,command = button_pause_on_click)
-button_pause.grid(row=0,column=2,padx=padx,pady=pady)
+button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click)
+button_step.grid(row=0,column=2,padx=padx,pady=pady)
 
 speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(w2*s),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 speed_scale.grid(row=0,column=3,padx=padx*5)
@@ -462,13 +481,13 @@ speed_scale.grid(row=0,column=3,padx=padx*5)
 #Slider panel
 ############################################################################
 
-slider_canvas = Canvas(sliderframe,bg='white smoke',width=w1*s,height=(h2+h3)*s)
+slider_canvas = Canvas(sliderframe,bg='white smoke',width=int(w1*s),height=int((h2+h3)*s))
 slider_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
 yscrollbar = Scrollbar(sliderframe,command=slider_canvas.yview)
 yscrollbar.grid(row=0,column=1,sticky=N+S+E+W)
 
-frame_in_canvas = Frame(slider_canvas,bg='white smoke',width = w1*s,height=(h2+h3)*s)
+frame_in_canvas = Frame(slider_canvas,bg='white smoke',width = int(w1*s),height=int((h2+h3)*s))
 frame_in_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
 slider_info = [("model-time-span",500,100,500,50),
@@ -491,7 +510,7 @@ sliders = []
 currentRow = 0
 pos = 0
 for name in slider_info:
-	slider_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=w1*s-2*padx,height=sfHeight+pady))
+	slider_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=int(w1*s-2*padx),height=int(sfHeight+pady)))
 	slider_frames[-1].grid(row=currentRow,column=0,padx=padx)
 	slider_frames[-1].grid_propagate(False)
 	sliders.append(Scale(slider_frames[-1],from_=slider_info[pos][2],
@@ -512,7 +531,7 @@ check_var = []
 
 pos = 0
 for name in check_box_info:
-	check_box_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=w1*s-2*padx,height=chkHeight+pady))
+	check_box_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=int(w1*s-2*padx),height=int(chkHeight+pady)))
 	check_box_frames[-1].grid(row=currentRow,column=0,padx=padx)
 	check_box_frames[-1].grid_propagate(False)
 
@@ -532,7 +551,7 @@ for name in check_box_info:
 
 slider_canvas.create_window(0, 0, anchor='nw', window=frame_in_canvas)
 slider_canvas.update_idletasks()
-slider_canvas.configure(scrollregion=(0,0,w1*s,(sfHeight + pady)*len(slider_info)+(chkHeight+pady)*len(check_box_info)), 
+slider_canvas.configure(scrollregion=(0,0,int(w1*s),(sfHeight + pady)*len(slider_info)+(chkHeight+pady)*len(check_box_info)), 
                  yscrollcommand=yscrollbar.set)
 
 
@@ -549,7 +568,7 @@ options = [("Total Grain","Years","Total grain"),("Total Population","Years","Po
 
 ###############
 #Graph 1
-graph1frame = Frame(graphsframe,bg=general_background,width=w3*s)
+graph1frame = Frame(graphsframe,bg=general_background,width=int(w3*s))
 graph1frame.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
 plt.figure(num=0,figsize=(2*4,1*4),dpi=graphW)
@@ -559,11 +578,11 @@ graph1.get_tk_widget().configure(background = 'BLACK', borderwidth = 1, relief =
 
 graph1var = StringVar(graph1frame)
 graph1menu = OptionMenu(graph1frame,graph1var,*[x[0] for x in options],command=graphMenuOneClick)
-graph1menu.config(width=int(graphW/4))
-graph1menu.grid(row=1,column=1,columnspan=1,rowspan=1,padx=padx,pady=pady)
+graph1menu.config(width=int(graphW))
+graph1menu.grid(row=2,column=0,columnspan=1,rowspan=1,padx=padx,sticky='W')
 
 toolbarframe1 = Frame(graph1frame)
-toolbarframe1.grid(row=1,column=0)
+toolbarframe1.grid(row=1,column=0,stick='W',padx=padx)
 
 toolbar1 = NavigationToolbar2Tk(graph1, toolbarframe1)
 toolbar1.update()
@@ -571,7 +590,7 @@ toolbarframe1.grid_propagate(False)
 
 ################
 #Graph 2
-graph2frame = Frame(graphsframe,bg=general_background,width=w3*s)
+graph2frame = Frame(graphsframe,bg=general_background,width=int(w3*s))
 graph2frame.grid(row=1,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
 plt.figure(num=1,figsize=(2*4,1*4),dpi=graphW)
@@ -581,11 +600,11 @@ graph2.get_tk_widget().configure(background = 'BLACK', borderwidth = 1, relief =
 
 graph2var = StringVar(graph2frame)
 graph2menu = OptionMenu(graph2frame,graph2var,*[x[0] for x in options],command=graphMenuTwoClick)
-graph2menu.config(width=int(graphW/4))
-graph2menu.grid(row=1,column=1,columnspan=1,rowspan=1,padx=padx,pady=pady)
+graph2menu.config(width=int(graphW))
+graph2menu.grid(row=2,column=0,columnspan=1,rowspan=1,padx=padx,sticky='W')
 
-toolbarframe2 = Frame(graph2frame,width=w3,bg='red')
-toolbarframe2.grid(row=1,column=0)
+toolbarframe2 = Frame(graph2frame,width=int(w3),bg='red')
+toolbarframe2.grid(row=1,column=0,sticky='W',padx=padx)
 
 
 toolbar2 = NavigationToolbar2Tk(graph2, toolbarframe2)
@@ -610,6 +629,8 @@ class Info:
 	pointers = None
 	chosen_households_one = None
 	chosen_households_two = None
+	pause_play_text = None
+	stepping = None
 
 info = Info()
 info.clicked_go_once = False
@@ -618,18 +639,25 @@ info.ending = False
 info.graphs_data = []
 info.pointers = [0,1] #what does each graph point to 
 info.changed = [False,False]
+info.pause_play_text = pause_play_text
+info.stepping = False
 
 #Mainloop:
 #############################################################################
 current_milli_time = lambda: int(round(time.time() * 1000))
 
+
 def mainLoop():
 	time1 = current_milli_time()
 	if (not info.paused): #and not info.sim.done):	#if simulation is not paused
+
+		if info.stepping:
+			info.paused = True
+			info.stepping = False
 	
 		animationEvery = 2#1/(1.0*speed_scale.get())*runRate
 		graphEvery = 30
-		
+
 		info.animationcount += 1
 		if (info.animationcount >= animationEvery):
 			info.animationcount = 0
@@ -646,21 +674,14 @@ def mainLoop():
 		info.graphcount += 1
 		if (info.graphcount >= graphEvery):
 			info.graphcount=0
-			
 			updateGraphs()
-
-			#Show the graphs
-			if agg:
-				graph1.show()
-				graph2.show()
-			else:
-				graph1.draw()
-				graph2.draw()
+			showGraphs()
+				
 
 	if info.ending: #user has closed the program 
 		tk.destroy()
 		sys.exit()
-		return
+		return	
 
 
 	time2 = current_milli_time()
@@ -669,6 +690,9 @@ def mainLoop():
 	if (sleep < 0):
 		sleep = 0
 	tk.after(sleep,mainLoop)
+
+graph1var.set(options[info.pointers[0]][0])
+graph2var.set(options[info.pointers[1]][0])
 
 tk.after(30,mainLoop)
 tk.mainloop()
