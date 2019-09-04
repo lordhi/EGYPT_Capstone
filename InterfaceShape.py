@@ -168,9 +168,10 @@ def plotData():
 	total_population = info.sim.total_population
 
 
+
 	#Total Grain
 	info.graphs_data[0][0].append(info.sim.years_passed)
-	info.graphs_data[0][1][0].append(info.sim.total_population)
+	info.graphs_data[0][1][0].append(info.sim.total_grain)
 
 	#Total Population
 	info.graphs_data[1][0].append(info.sim.years_passed)
@@ -435,7 +436,7 @@ slider_info = [("model-time-span",500,100,500,50),
 				("min-ambition",0.1,0,1,0.1),
 				("min-competency",0.5,0,1,0.1),
 				("generational-variation",0.9,0,1,0.1),
-				("knowledge-radius",20,5,40,5),
+				("knowledge-radius",20,5,40,1),
 				("distance-cost",10,1,15,1),
 				("fallow-limit",4,0,10,1),
 				("pop-growth-rate",0.1,0,0.5,0.01),
