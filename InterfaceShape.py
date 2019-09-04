@@ -311,8 +311,13 @@ def updateGraphs():
 		ydata = data[1]
 
 		plt.figure(fig)
-		
-		if (info.changed[fig]):
+		if (pointer == 4):
+			plt.clf()
+			plt.plot(xdata,ydata[0],label='Wealth',color=info.colors[0])
+			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality',color=info.colors[1])
+			plt.legend()
+
+		elif (info.changed[fig]):
 			info.changed[fig] = False
 			plt.clf()
 
@@ -325,20 +330,17 @@ def updateGraphs():
 				line.set_color(color_hexes[BLUE])
 				plt.legend()
 
-			elif (pointer == 4):
-				plt.plot(xdata,ydata[0],label='Wealth')
-				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality')
-				plt.legend()
-
 			elif (pointer == 7 or pointer == 8):
-				plt.plot(xdata,ydata[0],label='max')
-				plt.plot(xdata,ydata[1],label='avg')
-				plt.plot(xdata,ydata[2],label='min') 
+				plt.plot(xdata,ydata[0],label='max',color=info.colors[0])
+				plt.plot(xdata,ydata[1],label='avg',color=info.colors[1])
+				plt.plot(xdata,ydata[2],label='min',color=info.colors[2]) 
 				plt.legend()
 
 			else: #pointer = 0,1,2,3,6,9,10
-				for line in ydata:
-					plt.plot(xdata,line)
+				for i in range(len(ydata)):
+					line = ydata[i]
+					color = info.colors[i]
+					plt.plot(xdata,line,color=color)
 		
 			plt.title(options[pointer][0])
 			plt.xlabel(options[pointer][1])
@@ -349,28 +351,25 @@ def updateGraphs():
 			g = info.graphEvery
 
 			if (pointer == 5):
-				line, = plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],label='>66%')
+				line, = plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1])
 				line.set_color(color_hexes[PINK])
-				line, = plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],label='33-66%')
+				line, = plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1])
 				line.set_color(color_hexes[YELLOW])
-				line, = plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],label='<33%')
+				line, = plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1])
 				line.set_color(color_hexes[BLUE])
 				plt.legend()
 
-			elif (pointer == 4):
-				plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],label='Wealth')
-				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality')
-				plt.legend()
-
 			elif (pointer == 7 or pointer == 8):
-				plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],label='max')
-				plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],label='avg')
-				plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],label='min') 
+				plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],color=info.colors[0])
+				plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],color=info.colors[1])
+				plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],color=info.colors[2]) 
 				plt.legend()
 
 			else: #pointer = 0,1,2,3,6,9,10
-				for line in ydata:
-					plt.plot(xdata[-(g+2):-1],line[-(g+2):-1])
+				for i in range(len(ydata)):
+					line = ydata[i]
+					color = info.colors[i]
+					plt.plot(xdata[-(g+2):-1],line[-(g+2):-1],color=color)
 
 
 
@@ -682,6 +681,7 @@ class Info:
 	stepping = None
 	animationEvery = None
 	graphEvery = None
+	colors = None
 
 info = Info()
 info.clicked_go_once = False
@@ -700,6 +700,9 @@ info.graphs_data = [
 					[[], [[],[],[]] ],			[[],[[],[],[],[],[]]],
 					[[],[[],[],[],[],[]]]
 					]
+
+info.colors = ["blue","red","green","orange","indigo","yellow","purple","darkred","darkgreen",
+				"darkblue","darkgreen","darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown"]
 
 info.graphEvery = 30
 info.animationEvery = 1
