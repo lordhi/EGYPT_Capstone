@@ -67,10 +67,10 @@ def button_reset_on_click():
 		("Household wealth households 25-29","Years","Wealth")]
 
 	info.graphs_data = [
-					[[], [[]] ],		[[],[[]] ],		[[], [[]] ],
-					[[], [[]] ],		[[],[[]] ],
-					[[],[[],[],[]]],
-					[[],[]],			[[],[]],
+					[ [], [[]] ],		[ [], [[]] ],		[ [], [[]] ],
+					[[], [[]] ],		[ [], [[]] ],
+					[ [], [[],[],[]] ],
+					[[],[]],			[[],[[],[],[]]],
 					[[],[]],			[[],[]],
 					[[],[]]
 					]
@@ -215,7 +215,7 @@ def plotData():
 	t_pink = 0
 	t_blue = 0
 	t_yellow = 0
-	info.graphs_data[5] = info.graphs_data[3]
+	info.graphs_data[5][0] = info.graphs_data[3][0]
 	for settlement in info.sim.settlements:
 	 	for household in settlement.households:
 	 		if household.color == PINK:
@@ -224,7 +224,6 @@ def plotData():
 	 			t_blue += 1
 	 		if household.color == YELLOW:
 	 			t_yellow += 1
-
 
 	info.graphs_data[5][1][0].append(t_pink)
 	info.graphs_data[5][1][1].append(t_blue)
@@ -235,10 +234,13 @@ def plotData():
 	# info.graphs_data[6][0].append(info.sim.years_passed)
 	# info.graphs_data[6][1][0].append(info.sim.years_passed)
 
-	# #Max mean min settlement popuplation
-	# info.graphs_data[7][0].append(info.sim.years_passed)
-	# info.graphs_data[7][1][0].append(info.sim.years_passed)
-
+	#Max mean min settlement popuplation
+	populations = [x.population for x in info.sim.settlements]
+	info.graphs_data[7][0].append(info.sim.years_passed)
+	info.graphs_data[7][1][0].append(max(populations))
+	info.graphs_data[7][1][1].append(sum(populations)/len(populations))
+	info.graphs_data[7][1][2].append(min(populations))
+	
 	# #Mean min max wealth levels of households
 	# info.graphs_data[8][0].append(info.sim.years_passed)
 	# info.graphs_data[8][1][0].append(info.sim.years_passed)
@@ -251,10 +253,6 @@ def plotData():
 	# info.graphs_data[10][0].append(info.sim.years_passed)
 	# info.graphs_data[10][1][0].append(info.sim.years_passed)
 
-
-
-	
-
 def updateGraphs():
 	for fig in [0,1]:
 		pointer = info.pointers[fig]
@@ -265,63 +263,31 @@ def updateGraphs():
 		plt.figure(fig)
 		plt.clf()
 
-		for line in ydata:
+		if (pointer == 5):
+			line, = plt.plot(xdata,ydata[0],label='>66%')
+			line.set_color(color_hexes[PINK])
+			line, = plt.plot(xdata,ydata[1],label='33-66%')
+			line.set_color(color_hexes[YELLOW])
+			line, = plt.plot(xdata,ydata[2],label='<33%')
+			line.set_color(color_hexes[BLUE])
+			plt.legend()
 
-			plt.plot(xdata,line)
-			plt.xlabel(options[pointer][1])
-			plt.ylabel(options[pointer][2])
-			plt.title(options[pointer][0])
-
-		if (pointer == 4):
+		elif (pointer == 4):
 			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]])
-
+		elif (pointer == 7):
+			plt.plot(xdata,ydata[0],label='max')
+			plt.plot(xdata,ydata[1],label='avg')
+			plt.plot(xdata,ydata[2],label='min')
+			plt.legend()
+		else:
+			for line in ydata:
+				plt.plot(xdata,line)
+				
+		plt.xlabel(options[pointer][1])
+		plt.ylabel(options[pointer][2])
+		plt.title(options[pointer][0])
 		plt.tight_layout()
 
-		# if (pointer==0):
-
-		# elif (pointer==1):
-			
-
-		# 	data = info.graphs_data[pointer]
-
-		# 	xdata = data[0]
-		# 	ydata = data[1]
-
-		# 	print("For pointer: " + str(pointer))
-		# 	print("Xdata " + str(xdata))
-		# 	print("Ydata " + str(ydata))
-
-		# 	# if info.changed[fig]:
-		# 	print("Reset figure")
-		# 	plt.figure(fig)
-		# 	plt.clf()
-		# 	plt.plot(xdata,ydata,'o')
-		# 	plt.tight_layout()
-		# 	info.changed[fig] = False	
-		# 	# else:
-		# 	# 	plt.plot(xdata[-1],ydata[-1],'o')
-		# 	# 	plt.tight_layout()
-
-		# elif (pointer==2):
-		# 	pass
-		# elif (pointer==3):
-		# 	pass
-		# elif (pointer==4):
-		# 	pass
-		# elif (pointer==5):
-		# 	pass
-		# elif (pointer==6):
-		# 	pass
-		# elif (pointer==7):
-		# 	pass
-		# elif (pointer==8):
-		# 	pass
-		# elif (pointer==9):
-		# 	pass
-		# elif (pointer==10):
-		# 	pass
-		# elif (pointer==11):
-		# 	pass
 
 def drawCircle(canvas,x,y,r,color=False):
 	if (not color):
