@@ -31,7 +31,7 @@ def resizeImage(img,basewidth):
 def button_step_on_click():
 	info.paused = False
 	info.stepping = True
-	mainLoop
+	mainLoop()
 
 def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
@@ -84,6 +84,9 @@ def button_reset_on_click():
 
 	#info.sim.tick()
 	drawGridSimulation(canvas,info)
+	updateGraphs()
+	showGraphs()
+
 
 def button_play_pause_on_click():
 	if (not info.clicked_go_once):
@@ -92,9 +95,12 @@ def button_play_pause_on_click():
 	info.paused = not info.paused
 
 	if info.paused:
-		info.pause_play_text.set("Play")
+		info.pause_play_text.set("Play ")
 	else:
 		info.pause_play_text.set("Pause")
+		plotData()
+		updateGraphs()
+		showGraphs()
 
 
 def popup_window():
@@ -172,7 +178,6 @@ def padListWithZeros(l,length):
 	if d > 0:
 		l += [0]*d
 	return l
-
 
 def plotData():
 	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
@@ -468,7 +473,7 @@ button_reset = Button(topframe,text='Reset',bg=button_color,command = button_res
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
 pause_play_text = StringVar()
-pause_play_text.set("Play")
+pause_play_text.set("Play ")
 button_play_pause = Button(topframe,textvariable=pause_play_text,bg=button_color,command = button_play_pause_on_click)
 button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
 
