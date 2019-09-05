@@ -40,7 +40,7 @@ class Simulation:
 						generational_variation, knowledge_radius, distance_cost, fallow_limit, pop_growth_rate, min_fission_chance, land_rental_rate, 
 						fission_enabled, rent_enabled, manual_seed_enabled):
 		self.years_passed = 0
-		
+		legacy_mode = False
 		self.elevation_dataset = []
 		self.flood_level = 0
 		self.total_population = 0
@@ -88,7 +88,7 @@ class Simulation:
 			self.terrain[0][y].river = True
 
 		self.setupSettlements(starting_settlements)
-		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, int(knowledge_radius), distance_cost, land_rental_rate, fallow_limit)
+		self.setupHouseholds(starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, int(knowledge_radius), distance_cost, land_rental_rate, fallow_limit, legacy_mode)
 
 	def setupSettlements(self, starting_settlements):
 		count = 0
@@ -118,10 +118,10 @@ class Simulation:
 				count += 1
 		pass
 
-	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit):
+	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, legacy_mode):
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
-				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size)
+				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size, legacy_mode)
 
 				settlement.households.append(new_household)
 				self.all_households.append(new_household)

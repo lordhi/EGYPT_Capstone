@@ -36,7 +36,7 @@ class Household:
 
 	settled_in = None
 
-	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, x, y, all_terrain, x_size, y_size):
+	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, x, y, all_terrain, x_size, y_size, legacy_mode):
 		self.color = None
 		self.grain = grain
 		self.workers = workers
@@ -60,7 +60,7 @@ class Household:
 		self.fields_owned = []
 		self.fields_harvested = 0
 		self.known_patches = []
-		self.legacy_mode = True
+		self.legacy_mode = legacy_mode
 
 		self.settled_in.population += workers
 

@@ -732,7 +732,7 @@ def mainLoop():
 			if (speed_scale.get()>40):
 				info.animationEvery = 2
 			if (speed_scale.get()>80):
-				info.animationEvery = 3
+				info.animationEvery = 4
 		info.graphEvery = 5
 
 		info.animationcount += 1
