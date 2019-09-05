@@ -69,7 +69,8 @@ def button_step_on_click():
 def button_reset_on_click():
 	button_play_pause['state']='normal'
 	#button_run_all['state']='normal'
-	button_step['state']='normal'
+	if not (info.clicked_once and not info.paused):
+		button_step['state']='normal'
 
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
@@ -128,6 +129,8 @@ def button_reset_on_click():
 
 	#info.sim.tick()
 	drawGridSimulation(canvas,info)
+	info.changed[0] = True
+	info.changed[1] = True
 	updateGraphs()
 	showGraphs()
 
@@ -136,11 +139,12 @@ def button_run_all_on_click():
 		info.sim.tick()
 		plotData()
 
+	info.changed[0] = True
+	info.changed[1] = True
+	drawGridSimulation(canvas,info)
 	updateGraphs()
 	showGraphs()
-	drawGridSimulation(canvas,info)
 	years_label.set("Years passed: " + str(info.sim.years_passed))
-
 	button_run_all['state'] = 'disabled'
 
 
@@ -373,7 +377,9 @@ def updateGraphs():
 				plt.legend()
 
 			else: #pointer = 0,1,2,3,6,9,10
+				#print(len(ydata))
 				for i in range(len(ydata)):
+				#for i in range(len(info.sim.all_settlements)):
 					line = ydata[i]
 					color = info.colors[i]
 					plt.plot(xdata,line,color=color)
@@ -403,6 +409,7 @@ def updateGraphs():
 
 			else: #pointer = 0,1,2,3,6,9,10
 				for i in range(len(ydata)):
+				#for i in range(len(info.sim.all_settlements)):
 					line = ydata[i]
 					color = info.colors[i]
 					plt.plot(xdata[-(g+2):-1],line[-(g+2):-1],color=color)
@@ -743,7 +750,7 @@ info.clicked_once = False
 info.paused = True
 info.ending = False
 info.graphs_data = []
-info.pointers = [0,1] #what does each graph point to 
+info.pointers = [6,7] #what does each graph point to 
 info.changed = [False,False]
 info.pause_play_text = pause_play_text
 info.stepping = False
@@ -757,7 +764,9 @@ info.graphs_data = [
 					]
 info.seed = ""
 info.colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","red","green",
-				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown","purple","gold","violet"]
+				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown","purple","gold","violet","darkorange"]
+
+
 info.animationEvery = 1
 info.count_since_last_graph_draw = 0
 info.force_draw_every = 10
