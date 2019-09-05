@@ -62,6 +62,9 @@ def button_step_on_click():
 	showGraphs()
 	drawGridSimulation(canvas,info)
 
+	if (info.sim.done):
+			button_run_all['state'] = 'disabled'
+
 def button_reset_on_click():
 	button_play_pause['state']='normal'
 	#button_run_all['state']='normal'
@@ -159,6 +162,9 @@ def button_play_pause_on_click():
 		plotData()
 		updateGraphs()
 		showGraphs()
+
+	if (info.sim.done):
+			button_run_all['state'] = 'disabled'
 
 
 def popup_window():
@@ -790,6 +796,8 @@ def mainLoop():
 			drawGridSimulation(canvas,info)
 			tk.after(30,mainLoop)
 			return
+
+		
 
 
 		plotData()
