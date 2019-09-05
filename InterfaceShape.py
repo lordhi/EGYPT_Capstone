@@ -119,9 +119,9 @@ def button_reset_on_click():
 
 
 def button_play_pause_on_click():
-	if (not info.clicked_go_once):
+	if (not info.clicked_once):
 		button_reset_on_click()
-		info.clicked_go_once = True
+		info.clicked_once = True
 	info.paused = not info.paused
 
 	if info.paused:
@@ -141,15 +141,17 @@ def graphMenuOneClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
 	info.changed[0] = True
-	updateGraphs()
-	showGraphs()
+	if info.clicked_once:
+		updateGraphs()
+		showGraphs()
 
 def graphMenuTwoClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[1] = names.index(selection)
 	info.changed[1] = True
-	updateGraphs()
-	showGraphs()
+	if info.clicked_once:
+		updateGraphs()
+		showGraphs()
 
 #Parameters:
 ############################################################################
@@ -310,15 +312,21 @@ def updateGraphs():
 		data = info.graphs_data[pointer]
 		xdata = data[0]
 		ydata = data[1]
+		redraw_graph = info.count_since_last_graph_draw >= info.force_draw_every
+		
+		print(info.count_since_last_graph_draw)
 
 		plt.figure(fig)
 		if (pointer == 4):
 			plt.clf()
-			plt.plot(xdata,ydata[0],label='Wealth',color=info.colors[0])
-			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality',color=info.colors[1])
-			plt.legend()
+			if (len(xdata)>1):
+				plt.plot(xdata,ydata[0],label='Wealth',color=info.colors[0])
+				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality',color=info.colors[1])
+				plt.legend()
 
-		elif (info.changed[fig]):
+		elif (info.changed[fig] or redraw_graph):
+			if redraw_graph:
+				info.count_since_last_graph_draw = 0
 			info.changed[fig] = False
 			plt.clf()
 
@@ -376,6 +384,9 @@ def updateGraphs():
 
 def showGraphs():
 	current_milli_time = lambda: int(round(time.time() * 1000))
+
+	info.count_since_last_graph_draw += 1
+
 	time1 = current_milli_time()
 	graph1.draw()
 	graph2.draw()
@@ -682,9 +693,11 @@ class Info:
 	animationEvery = None
 	graphEvery = None
 	colors = None
+	count_since_last_graph_draw = None
+	force_draw_every = None
 
 info = Info()
-info.clicked_go_once = False
+info.clicked_once = False
 info.paused = True
 info.ending = False
 info.graphs_data = []
@@ -704,6 +717,8 @@ info.seed = ""
 info.colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","red","green",
 				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown"]
 info.animationEvery = 1
+info.count_since_last_graph_draw = 0
+info.force_draw_every = 10
 
 updateGraphs()
 showGraphs()
@@ -746,11 +761,11 @@ def mainLoop():
 
 
 		plotData()
-		updateGraphs()
-
+	
 		info.graphcount += 1
 		if (info.graphcount >= info.graphEvery):
 			info.graphcount = 0
+			updateGraphs()
 			showGraphs()
 			
 				
