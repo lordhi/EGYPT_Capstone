@@ -60,7 +60,6 @@ def button_step_on_click():
 def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
-	print(check_values)
 	info.sim = Simulation(*slider_values,*check_values,info.seed)
 
 	info.animationcount = 0
@@ -313,8 +312,6 @@ def updateGraphs():
 		xdata = data[0]
 		ydata = data[1]
 		redraw_graph = info.count_since_last_graph_draw >= info.force_draw_every
-		
-		print(info.count_since_last_graph_draw)
 
 		plt.figure(fig)
 		if (pointer == 4):
