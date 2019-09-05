@@ -25,6 +25,8 @@ class Household:
 	distance_cost = 0
 	land_rental_rate = 0
 
+	legacy_mode = False
+
 	all_terrain = None
 	x_size = 0
 	y_size = 0
@@ -58,6 +60,7 @@ class Household:
 		self.fields_owned = []
 		self.fields_harvested = 0
 		self.known_patches = []
+		self.legacy_mode = True
 
 		self.settled_in.population += workers
 
@@ -74,7 +77,7 @@ class Household:
 		for x in range(min_x, max_x):
 			for y in range(min_y, max_y):
 				distance = ((x-self.x)**2 + (y-self.y)**2)**0.5
-				if distance < knowledge_radius and not all_terrain[x][y].river:
+				if not all_terrain[x][y].river and distance < knowledge_radius:
 					self.known_patches.append(all_terrain[x][y])
 
 	def clearUp(self):
@@ -87,23 +90,20 @@ class Household:
 		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
 		self.grain -= self.workers*160
 		if self.grain < 0:
-			num_not_supported = math.ceil(-self.grain/160)
-			self.grain = 0
-			#self.grain = 0
-			#self.workers -= 1
-			#self.settled_in.population -= 1
-			#self.settled_in.parent.total_population -= 1
-			if num_not_supported < self.workers:
-				self.workers -= num_not_supported
-				self.settled_in.population -= num_not_supported
-				self.settled_in.parent.total_population -= num_not_supported
+			if self.legacy_mode:
+				num_not_supported = 1
 			else:
-				self.settled_in.population -= self.workers
-				self.settled_in.parent.total_population -= self.workers
-				self.workers = 0
+				num_not_supported = math.ceil(-self.grain/160)
+				if num_not_supported > self.workers:
+					num_not_supported = self.workers
+
+			self.grain = 0
+			self.workers -= num_not_supported
+			self.settled_in.population -= num_not_supported
+			self.settled_in.parent.total_population -= num_not_supported
+
 		self.grain = self.grain * 0.9	#accounts for loss due to storage
 		self.settled_in.parent.total_grain += self.grain
-
 
 	def populationIncrease(self):
 		populate_chance = random.random()
@@ -154,16 +154,15 @@ class Household:
 		### TODO: Ask Kiara if this is correct. Takes 2 workers to farm field, fields can grow up to worker number?
 		### TODO: Implement known_patches
 		if (claim_chance < self.ambition and self.workers > len(self.fields_owned)) or (len(self.fields_owned) <= 1 and self.workers > 0):
-			best_x = -1
-			best_y = -1
+			best_x = None
+			best_y = None
 			best_fertility = -1
 			for patch in self.known_patches:
 				if patch.fertility > best_fertility and not patch.owned and not patch.settlement and not patch.settlement_territory:
 					best_x = patch.x
 					best_y = patch.y
 					best_fertility = patch.fertility
-
-			if self.all_terrain[best_x][best_y].claim(self):
+			if best_fertility != -1 and self.all_terrain[best_x][best_y].claim(self):
 				self.fields_owned.append(self.all_terrain[best_x][best_y])
 
 	def rentLand(self):
@@ -204,18 +203,13 @@ class Household:
 		if self.generation_countdown <= 0:
 			self.generation_countdown = random.randrange(0,5) + 10
 
-			self.ambition = self.randomRange(max(self.ambition-self.generational_variation, self.minimum_ambition), min(self.ambition+self.generational_variation, 1))
-			#ambition_change = 2*self.generational_variation*(random.random() - 0.5)
-			#while self.ambition + ambition_change > 1 or self.ambition + ambition_change < self.minimum_ambition:
-			#	ambition_change = 2*self.generational_variation*(random.random() - 0.5)
-			#self.ambition += ambition_change
+			self.ambition = self.randomRange(
+				max(self.ambition-self.generational_variation, self.minimum_ambition),
+				min(self.ambition+self.generational_variation, 1))
 
-			self.competency = self.randomRange(max(self.competency-self.generational_variation, self.minimum_competency), min(self.competency+self.generational_variation, 1))
-
-			#competency_change = 2*self.generational_variation*(random.random() - 0.5)
-			#while self.competency + competency_change > 1 or self.competency + competency_change < self.minimum_competency:
-			#	competency_change = 2*self.generational_variation*(random.random() - 0.5)
-			#self.competency += competency_change
+			self.competency = self.randomRange(
+				max(self.competency-self.generational_variation, self.minimum_competency),
+				min(self.competency+self.generational_variation, 1))
 
 	def fission(self):
 		if self.workers > 15 and self.grain > 3 * self.workers * 164:

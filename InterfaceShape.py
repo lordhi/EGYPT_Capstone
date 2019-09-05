@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import numpy
 import random
 import time
+import threading
+
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
 	agg = False
@@ -731,7 +733,7 @@ def mainLoop():
 				info.animationEvery = 2
 			if (speed_scale.get()>80):
 				info.animationEvery = 3
-		info.graphEvery = 30
+		info.graphEvery = 5
 
 		info.animationcount += 1
 
@@ -741,6 +743,7 @@ def mainLoop():
 			#print("draw")
 
 		info.sim.tick()
+
 		if (len(info.sim.settlements)==0):
 			info.paused = True
 			drawGridSimulation(canvas,info)
@@ -753,8 +756,16 @@ def mainLoop():
 		info.graphcount += 1
 		if (info.graphcount >= info.graphEvery):
 			info.graphcount=0
+			time1 = current_milli_time()
+			#def temp():
+			#	updateGraphs()
+			#	showGraphs()
+			#x = threading.Thread(target=temp, daemon=True)
+			#x.start()
 			updateGraphs()
 			showGraphs()
+			time2 = current_milli_time()
+			print("Time to render graphs: " + str(time2-time1) + "ms")
 				
 
 	if info.ending: #user has closed the program 
@@ -768,6 +779,9 @@ def mainLoop():
 	sleep = int(1000/(1.0*speed_scale.get())) - time2 + time1
 	if (sleep < 0):
 		sleep = 0
+	else:
+		print("Sleeping for: " + str(sleep) + "ms")
+	
 	tk.after(sleep,mainLoop)
 
 graph1var.set(options[info.pointers[0]][0])
