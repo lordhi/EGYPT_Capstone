@@ -56,6 +56,9 @@ def resizeImage(img,basewidth):
 def button_step_on_click():
 	info.paused = False
 	info.stepping = True
+	updateGraphs()
+	showGraphs()
+	drawGridSimulation(canvas,info)
 
 def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
@@ -110,6 +113,8 @@ def button_reset_on_click():
 
 	info.chosen_households_one = info.sim.all_households[20:25]
 	info.chosen_households_two = info.sim.all_households[25:30]
+
+	years_label.set("")
 
 	#info.sim.tick()
 	drawGridSimulation(canvas,info)
@@ -514,6 +519,15 @@ tk.minsize(int((w1+w2+w3)*s),int((h1+h2+h3)*s))
 canvas = Canvas(animationframe,width=int(w2*s),height=int(h2*s),bg=general_background)
 canvas.grid(row=0,column=0)
 
+labelFrame = Frame(bottomframe,bg=general_background,width=int(2*s),height=int(s/3))
+labelFrame.grid(row=1,column=0,padx=padx,pady=pady)
+labelFrame.grid_propagate(False)
+
+years_label = StringVar()
+years = Label(labelFrame,textvariable=years_label,bg=general_background,)
+years_label.set("")
+years.grid(row=0,column=0)
+
 #Top panel
 ############################################################################
 button_reset = Button(topframe,text='Reset',bg=button_color,command = button_reset_on_click)
@@ -746,6 +760,7 @@ def mainLoop():
 			drawGridSimulation(canvas,info)
 
 		info.sim.tick()
+		years_label.set("Years passed: " + str(info.sim.years_passed))
 
 		if (len(info.sim.settlements)==0):
 			info.paused = True
@@ -781,5 +796,5 @@ def mainLoop():
 graph1var.set(options[info.pointers[0]][0])
 graph2var.set(options[info.pointers[1]][0])
 
-tk.after(30,mainLoop)
+mainLoop()
 tk.mainloop()
