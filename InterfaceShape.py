@@ -736,10 +736,7 @@ def mainLoop():
 		info.animationEvery = 1
 
 		if not info.stepping:
-			if (simulation_speed_scale.get()>40):
-				info.animationEvery = 2
-			if (simulation_speed_scale.get()>80):
-				info.animationEvery = 8
+			info.animationEvery = int(simulation_speed_scale.get()//10)+1
 
 		info.graphEvery = graph_speed_scale.get()
 
