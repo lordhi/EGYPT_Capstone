@@ -169,7 +169,7 @@ class Household:
 		self.known_patches.sort(key = lambda x: x.harvest*self.competency - (((self.x - x.x)**2 + (self.y - x.y)**2)**0.5)*self.distance_cost if not x.harvested else 0)
 
 		total_harvest = 0
-		max_fields_to_work = (self.workers - self.workers_worked)//2
+		max_fields_to_work = int((self.workers - self.workers_worked)//2)
 		num_fields_rented = 0
 
 		for i in range(max_fields_to_work):

@@ -177,7 +177,8 @@ class Simulation:
 			#get plot values
 
 	def rentLand(self):
-		for household in self.all_households.sort(key=lambda x: x.ambition, reverse=True):
+		self.all_households.sort(key=lambda x: x.ambition, reverse=True)
+		for household in self.all_households:
 			household.rentLand() # Move land_rental_rate inside household or not? (Thinking about extensibility)
 	
 
