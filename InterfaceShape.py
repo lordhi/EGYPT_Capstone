@@ -17,6 +17,32 @@ import sys
 
 from PIL import Image, ImageTk
 
+############################################################################
+#Colors
+bg_slider_color = '#82bcb7'
+trough_color = '#415e5b'
+slider_knob_color = '#c86767'
+top_panel_color = '#f0f0f0'
+button_color = '#bcbce6'
+general_background = '#ffffff'
+circle_border_outline = '#9d6e48'
+PINK = 0
+BLUE = 1
+YELLOW = 2
+GREY = 3
+
+pink_hex = '#a71b6a'
+blue_hex = '#294b89'
+yellow_hex = '#f0f05a'
+grey_hex = '#8d8d8d'
+
+color_hexes = [pink_hex,blue_hex,yellow_hex,grey_hex] 
+
+############################################################################
+#Set up root
+tk = Tk()
+tk.configure(background=general_background)
+
 #Imported functions
 #############################################################################
 def resizeImage(img,basewidth):
@@ -24,7 +50,6 @@ def resizeImage(img,basewidth):
 	hsize = int((float(img.size[1])*float(wpercent)))
 	img = img.resize((basewidth,hsize), Image.ANTIALIAS)
 	return img
-
 
 #Button functions
 #############################################################################
@@ -36,7 +61,7 @@ def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
 	print(check_values)
-	info.sim = Simulation(*slider_values,*check_values)
+	info.sim = Simulation(*slider_values,*check_values,info.seed)
 
 	info.animationcount = 0
 	info.xpos = 0
@@ -126,27 +151,6 @@ def graphMenuTwoClick(selection):
 	updateGraphs()
 	showGraphs()
 
-############################################################################
-#Colors
-bg_slider_color = '#82bcb7'
-trough_color = '#415e5b'
-slider_knob_color = '#c86767'
-top_panel_color = '#f0f0f0'
-button_color = '#bcbce6'
-general_background = '#ffffff'
-circle_border_outline = '#9d6e48'
-PINK = 0
-BLUE = 1
-YELLOW = 2
-GREY = 3
-
-pink_hex = '#a71b6a'
-blue_hex = '#294b89'
-yellow_hex = '#f0f05a'
-grey_hex = '#8d8d8d'
-
-color_hexes = [pink_hex,blue_hex,yellow_hex,grey_hex] 
-
 #Parameters:
 ############################################################################
 
@@ -157,15 +161,16 @@ h1 = 0.6 	#top frame height
 h2 = 6	#animation frame height
 h3 = 2  #graphs 1 frame height
 		#graphs 2 frame height is h2 + h3
-s = 93  #how many pixels is the side of one cell worth
 
-padx = 10
-pady = 5
-sfHeight = 70 #the heights of the side slider blocks
+s = 90 / 864 * tk.winfo_screenheight() #how many pixels is the side of one cell worth
+ 
+padx = int(s/9)
+pady = int(s/18)
+sfHeight = s*0.95 #the heights of the side slider blocks
 sliHeight = sfHeight - 2*pady #slider heights
 sliWidth = w1*s-2*padx-5
-chkHeight = 40 #the heights of the check boxes
-graphW = 73
+chkHeight = s/2 #the heights of the check boxes
+graphW = 0.8*s
 
 #Functions:
 ############################################################################
@@ -456,10 +461,7 @@ def drawGridSimulation(canvas,info):
 	canvas.create_rectangle(0,ystep*rows,xstep*(columns+2),ystep*(rows+2),fill=general_background,outline=general_background)
 
 
-############################################################################
-#Set up root
-tk = Tk()
-tk.configure(background=general_background)
+
 
 ############################################################################
 #Close window behaviour
@@ -471,7 +473,7 @@ tk.protocol('WM_DELETE_WINDOW', onClose)
 ############################################################################
 topframe = Frame(tk,bg=top_panel_color,width=int((w1+w2+w3)*s),height=int(h1*s),relief='raised')
 topframe.grid(row=0,column=0,columnspan=7,rowspan=1,sticky=N+S+E+W)
-topframe.grid_propagate(False)
+#topframe.grid_propagate(False)
 
 sliderframe = Frame(tk,bg=general_background,width=int(w1*s),height=int((h2+h3)*s))
 sliderframe.grid(row=1,column=0,columnspan=1,rowspan=6,sticky=N+S+E+W)
@@ -556,7 +558,7 @@ sliders = []
 currentRow = 0
 pos = 0
 for name in slider_info:
-	slider_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=int(w1*s-2*padx),height=int(sfHeight+pady)))
+	slider_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=int(w1*s-2*padx),height=int(sliHeight)))
 	slider_frames[-1].grid(row=currentRow,column=0,padx=padx)
 	slider_frames[-1].grid_propagate(False)
 	sliders.append(Scale(slider_frames[-1],from_=slider_info[pos][2],
@@ -577,7 +579,7 @@ check_var = []
 
 pos = 0
 for name in check_box_info:
-	check_box_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=int(w1*s-2*padx),height=int(chkHeight+pady)))
+	check_box_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=int(w1*s-2*padx),height=int(chkHeight)))
 	check_box_frames[-1].grid(row=currentRow,column=0,padx=padx)
 	check_box_frames[-1].grid_propagate(False)
 
@@ -597,7 +599,7 @@ for name in check_box_info:
 
 slider_canvas.create_window(0, 0, anchor='nw', window=frame_in_canvas)
 slider_canvas.update_idletasks()
-slider_canvas.configure(scrollregion=(0,0,int(w1*s),(sfHeight + pady)*len(slider_info)+(chkHeight+pady)*len(check_box_info)), 
+slider_canvas.configure(scrollregion=(0,0,int(w1*s),(sliHeight)*len(slider_info)+(chkHeight)*len(check_box_info)), 
                  yscrollcommand=yscrollbar.set)
 
 
