@@ -64,7 +64,7 @@ def button_step_on_click():
 
 def button_reset_on_click():
 	button_play_pause['state']='normal'
-	button_run_all['state']='normal'
+	#button_run_all['state']='normal'
 	button_step['state']='normal'
 
 	slider_values = [x.get()*1.0 for x in sliders]
@@ -137,12 +137,16 @@ def button_run_all_on_click():
 	drawGridSimulation(canvas,info)
 	years_label.set("Years passed: " + str(info.sim.years_passed))
 
+	button_run_all['state'] = 'disabled'
+
 
 def button_play_pause_on_click():
 	if (not info.clicked_once):
 		button_reset_on_click()
 		info.clicked_once = True
 	info.paused = not info.paused
+	if info.paused:
+		button_run_all['state']='normal'
 
 	if info.paused:
 		info.pause_play_text.set("Play   ")
