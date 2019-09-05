@@ -355,9 +355,9 @@ def updateGraphs():
 				line, = plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1])
 				line.set_color(color_hexes[PINK])
 				line, = plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1])
-				line.set_color(color_hexes[YELLOW])
-				line, = plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1])
 				line.set_color(color_hexes[BLUE])
+				line, = plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1])
+				line.set_color(color_hexes[YELLOW])
 				plt.legend()
 
 			elif (pointer == 7 or pointer == 8):
