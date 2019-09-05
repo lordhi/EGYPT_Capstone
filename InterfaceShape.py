@@ -6,6 +6,7 @@ import numpy
 import random
 import time
 import threading
+from CreateToolTip import CreateToolTip
 
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
@@ -543,10 +544,13 @@ button_step.grid(row=0,column=2,padx=padx,pady=pady)
 
 simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
+simulation_speed_scale_tooltip = CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.")
 
 graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/2*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
 graph_speed_scale.grid(row=0,column=4,padx=padx*5)
 graph_speed_scale.set(30)	
+simulation_speed_scale_tooltip = CreateToolTip(graph_speed_scale,"How many updates pass between points being added to the graph")
+
 
 #Slider panel
 ############################################################################
@@ -798,3 +802,4 @@ graph2var.set(options[info.pointers[1]][0])
 
 mainLoop()
 tk.mainloop()
+
