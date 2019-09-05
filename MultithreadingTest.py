@@ -8,6 +8,12 @@ def thread_function():
     logging.info("Thread %s: finishing")
 
 if __name__ == "__main__":
+    import gtk
+    width = gtk.gdk.screen_width()
+    height = gtk.gdk.screen_height()
+    print(width)
+    print(height)
+
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO,
                         datefmt="%H:%M:%S")

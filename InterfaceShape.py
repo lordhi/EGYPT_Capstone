@@ -326,9 +326,9 @@ def updateGraphs():
 				line, = plt.plot(xdata,ydata[0],label='>66%')
 				line.set_color(color_hexes[PINK])
 				line, = plt.plot(xdata,ydata[1],label='33-66%')
-				line.set_color(color_hexes[YELLOW])
-				line, = plt.plot(xdata,ydata[2],label='<33%')
 				line.set_color(color_hexes[BLUE])
+				line, = plt.plot(xdata,ydata[2],label='<33%')
+				line.set_color(color_hexes[YELLOW])
 				plt.legend()
 
 			elif (pointer == 7 or pointer == 8):
