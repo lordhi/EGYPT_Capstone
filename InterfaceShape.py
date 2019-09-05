@@ -6,6 +6,7 @@ import numpy
 import random
 import time
 import threading
+from CreateToolTip import CreateToolTip
 
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
@@ -41,6 +42,7 @@ color_hexes = [pink_hex,blue_hex,yellow_hex,grey_hex]
 ############################################################################
 #Set up root
 tk = Tk()
+tk.title("Egypt simulation")
 tk.configure(background=general_background)
 
 #Imported functions
@@ -56,11 +58,22 @@ def resizeImage(img,basewidth):
 def button_step_on_click():
 	info.paused = False
 	info.stepping = True
+	updateGraphs()
+	showGraphs()
+	drawGridSimulation(canvas,info)
+
+	if (info.sim.done):
+			button_run_all['state'] = 'disabled'
+
 
 def button_reset_on_click():
+	button_play_pause['state']='normal'
+	#button_run_all['state']='normal'
+	if not (info.clicked_once and not info.paused):
+		button_step['state']='normal'
+
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
-	print(check_values)
 	info.sim = Simulation(*slider_values,*check_values,info.seed)
 
 	info.animationcount = 0
@@ -112,25 +125,54 @@ def button_reset_on_click():
 	info.chosen_households_one = info.sim.all_households[20:25]
 	info.chosen_households_two = info.sim.all_households[25:30]
 
+	years_label.set("")
+
 	#info.sim.tick()
 	drawGridSimulation(canvas,info)
+	info.changed[0] = True
+	info.changed[1] = True
 	updateGraphs()
 	showGraphs()
 
+def button_run_all_on_click():
+	while not info.sim.done:
+		info.sim.tick()
+		plotData()
+
+	info.changed[0] = True
+	info.changed[1] = True
+	drawGridSimulation(canvas,info)
+	updateGraphs()
+	showGraphs()
+	years_label.set("Years passed: " + str(info.sim.years_passed))
+	button_run_all['state'] = 'disabled'
+
+
+
 
 def button_play_pause_on_click():
-	if (not info.clicked_go_once):
+	if (not info.clicked_once):
 		button_reset_on_click()
-		info.clicked_go_once = True
+		info.clicked_once = True
 	info.paused = not info.paused
+	if info.paused:
+		button_run_all['state']='normal'
 
 	if info.paused:
 		info.pause_play_text.set("Play   ")
+		button_run_all['state']='normal'
+		button_step['state']='normal'
 	else:
 		info.pause_play_text.set("Pause")
+		button_run_all['state']='disabled'
+		button_step['state']='disabled'
 		plotData()
 		updateGraphs()
 		showGraphs()
+
+	if (info.sim.done):
+		button_run_all['state'] = 'disabled'
+
 
 
 def popup_window():
@@ -188,13 +230,6 @@ def padListWithZeros(l,length):
 	return l
 
 def plotData():
-	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),
-		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
-		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
-		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
-		("Household wealth households 25-29","Years","Wealth")]
-
 	total_grain = info.sim.total_grain
 	total_households = len(info.sim.all_households)
 	total_population = info.sim.total_population
@@ -310,15 +345,19 @@ def updateGraphs():
 		data = info.graphs_data[pointer]
 		xdata = data[0]
 		ydata = data[1]
+		redraw_graph = info.count_since_last_graph_draw >= info.force_draw_every
 
 		plt.figure(fig)
 		if (pointer == 4):
 			plt.clf()
-			plt.plot(xdata,ydata[0],label='Wealth',color=info.colors[0])
-			plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality',color=info.colors[1])
-			plt.legend()
+			if (len(xdata)>1):
+				plt.plot(xdata,ydata[0],label='Wealth',color=info.colors[0])
+				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality',color=info.colors[1])
+				plt.legend()
 
-		elif (info.changed[fig]):
+		elif (info.changed[fig] or redraw_graph):
+			if redraw_graph:
+				info.count_since_last_graph_draw = 0
 			info.changed[fig] = False
 			plt.clf()
 
@@ -326,9 +365,9 @@ def updateGraphs():
 				line, = plt.plot(xdata,ydata[0],label='>66%')
 				line.set_color(color_hexes[PINK])
 				line, = plt.plot(xdata,ydata[1],label='33-66%')
-				line.set_color(color_hexes[YELLOW])
-				line, = plt.plot(xdata,ydata[2],label='<33%')
 				line.set_color(color_hexes[BLUE])
+				line, = plt.plot(xdata,ydata[2],label='<33%')
+				line.set_color(color_hexes[YELLOW])
 				plt.legend()
 
 			elif (pointer == 7 or pointer == 8):
@@ -338,7 +377,9 @@ def updateGraphs():
 				plt.legend()
 
 			else: #pointer = 0,1,2,3,6,9,10
+				#print(len(ydata))
 				for i in range(len(ydata)):
+				#for i in range(len(info.sim.all_settlements)):
 					line = ydata[i]
 					color = info.colors[i]
 					plt.plot(xdata,line,color=color)
@@ -355,9 +396,9 @@ def updateGraphs():
 				line, = plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1])
 				line.set_color(color_hexes[PINK])
 				line, = plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1])
-				line.set_color(color_hexes[YELLOW])
-				line, = plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1])
 				line.set_color(color_hexes[BLUE])
+				line, = plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1])
+				line.set_color(color_hexes[YELLOW])
 				plt.legend()
 
 			elif (pointer == 7 or pointer == 8):
@@ -368,6 +409,7 @@ def updateGraphs():
 
 			else: #pointer = 0,1,2,3,6,9,10
 				for i in range(len(ydata)):
+				#for i in range(len(info.sim.all_settlements)):
 					line = ydata[i]
 					color = info.colors[i]
 					plt.plot(xdata[-(g+2):-1],line[-(g+2):-1],color=color)
@@ -376,6 +418,9 @@ def updateGraphs():
 
 def showGraphs():
 	current_milli_time = lambda: int(round(time.time() * 1000))
+
+	info.count_since_last_graph_draw += 1
+
 	time1 = current_milli_time()
 	graph1.draw()
 	graph2.draw()
@@ -506,6 +551,15 @@ tk.minsize(int((w1+w2+w3)*s),int((h1+h2+h3)*s))
 canvas = Canvas(animationframe,width=int(w2*s),height=int(h2*s),bg=general_background)
 canvas.grid(row=0,column=0)
 
+labelFrame = Frame(bottomframe,bg=general_background,width=int(2*s),height=int(s/3))
+labelFrame.grid(row=1,column=0,padx=padx,pady=pady)
+labelFrame.grid_propagate(False)
+
+years_label = StringVar()
+years = Label(labelFrame,textvariable=years_label,bg=general_background,)
+years_label.set("")
+years.grid(row=0,column=0)
+
 #Top panel
 ############################################################################
 button_reset = Button(topframe,text='Reset',bg=button_color,command = button_reset_on_click)
@@ -513,18 +567,24 @@ button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
 pause_play_text = StringVar()
 pause_play_text.set("Play   ")
-button_play_pause = Button(topframe,textvariable=pause_play_text,bg=button_color,command = button_play_pause_on_click)
+button_play_pause = Button(topframe,textvariable=pause_play_text,bg=button_color,command = button_play_pause_on_click,state='disabled')
 button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
 
-button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click)
+button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click,state='disabled')
 button_step.grid(row=0,column=2,padx=padx,pady=pady)
+
+button_run_all = Button(topframe,text='Run whole simulation',bg=button_color,command = button_run_all_on_click,state='disabled')
+button_run_all.grid(row=0,column=5,padx=padx,pady=pady)
 
 simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
+simulation_speed_scale_tooltip = CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.")
 
 graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/2*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
 graph_speed_scale.grid(row=0,column=4,padx=padx*5)
 graph_speed_scale.set(30)	
+simulation_speed_scale_tooltip = CreateToolTip(graph_speed_scale,"How many updates pass between points being added to the graph")
+
 
 #Slider panel
 ############################################################################
@@ -682,13 +742,15 @@ class Info:
 	animationEvery = None
 	graphEvery = None
 	colors = None
+	count_since_last_graph_draw = None
+	force_draw_every = None
 
 info = Info()
-info.clicked_go_once = False
+info.clicked_once = False
 info.paused = True
 info.ending = False
 info.graphs_data = []
-info.pointers = [0,1] #what does each graph point to 
+info.pointers = [6,7] #what does each graph point to 
 info.changed = [False,False]
 info.pause_play_text = pause_play_text
 info.stepping = False
@@ -702,8 +764,12 @@ info.graphs_data = [
 					]
 info.seed = ""
 info.colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","red","green",
-				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown"]
+				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown","purple","gold","violet","darkorange"]
+
+
 info.animationEvery = 1
+info.count_since_last_graph_draw = 0
+info.force_draw_every = 10
 
 updateGraphs()
 showGraphs()
@@ -724,10 +790,7 @@ def mainLoop():
 		info.animationEvery = 1
 
 		if not info.stepping:
-			if (simulation_speed_scale.get()>40):
-				info.animationEvery = 2
-			if (simulation_speed_scale.get()>80):
-				info.animationEvery = 4
+			info.animationEvery = int(simulation_speed_scale.get()//10)+1
 
 		info.graphEvery = graph_speed_scale.get()
 
@@ -737,6 +800,7 @@ def mainLoop():
 			drawGridSimulation(canvas,info)
 
 		info.sim.tick()
+		years_label.set("Years passed: " + str(info.sim.years_passed))
 
 		if (len(info.sim.settlements)==0):
 			info.paused = True
@@ -744,13 +808,14 @@ def mainLoop():
 			tk.after(30,mainLoop)
 			return
 
+		
 
 		plotData()
-		updateGraphs()
-
+	
 		info.graphcount += 1
 		if (info.graphcount >= info.graphEvery):
 			info.graphcount = 0
+			updateGraphs()
 			showGraphs()
 			
 				
@@ -772,5 +837,9 @@ def mainLoop():
 graph1var.set(options[info.pointers[0]][0])
 graph2var.set(options[info.pointers[1]][0])
 
-tk.after(30,mainLoop)
+button_reset_on_click()
+info.clicked_once = True
+
+mainLoop()
 tk.mainloop()
+
