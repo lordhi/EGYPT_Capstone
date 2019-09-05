@@ -166,32 +166,33 @@ class Household:
 				self.fields_owned.append(self.all_terrain[best_x][best_y])
 
 	def rentLand(self):
-		self.known_patches.sort(key = lambda x: x.harvest*self.competency - (((self.x - x.x)**2 + (self.y - x.y)**2)**0.5)*self.distance_cost if not x.harvested else 0)
+		if self.fields_harvested == len(self.fields_owned):
+			self.known_patches.sort(key = lambda x: x.harvest*self.competency - (((self.x - x.x)**2 + (self.y - x.y)**2)**0.5)*self.distance_cost if not x.harvested else 0)
 
-		total_harvest = 0
-		max_fields_to_work = int((self.workers - self.workers_worked)//2)
-		num_fields_rented = 0
+			total_harvest = 0
+			max_fields_to_work = int((self.workers - self.workers_worked)//2)
+			num_fields_rented = 0
 
-		for i in range(max_fields_to_work):
+			for i in range(max_fields_to_work):
 
-			best_field = self.known_patches[num_fields_rented]
+				best_field = self.known_patches[num_fields_rented]
 
-			harvest_chance = random.random()
+				harvest_chance = random.random()
 
-			if best_field.field and best_field not in self.fields_owned and harvest_chance < (self.ambition * self.competency):
-				best_field.harvested = True
-				# shape
-				# color
-				field_harvest = best_field.harvest*self.competency - (((self.x - best_field.x)**2 + (self.y - best_field.y)**2)**0.5)*self.distance_cost
+				if best_field.field and best_field not in self.fields_owned and harvest_chance < (self.ambition * self.competency):
+					best_field.harvested = True
+					# shape
+					# color
+					field_harvest = best_field.harvest*self.competency - (((self.x - best_field.x)**2 + (self.y - best_field.y)**2)**0.5)*self.distance_cost
 
-				total_harvest += field_harvest * (1 - (self.land_rental_rate/100)) - 300
+					total_harvest += field_harvest * (1 - (self.land_rental_rate/100)) - 300
 
-				best_field.owner.grain += field_harvest * (self.land_rental_rate/100)
+					best_field.owner.grain += field_harvest * (self.land_rental_rate/100)
 
-				num_fields_rented += 1
-				self.fields_harvested += 1
+					num_fields_rented += 1
+					self.fields_harvested += 1
 
-		self.grain += total_harvest
+			self.grain += total_harvest
 
 	def randomRange(self, minimum, maximum):
 		if maximum == minimum:
