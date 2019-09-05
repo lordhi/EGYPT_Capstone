@@ -36,7 +36,7 @@ def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
 	print(check_values)
-	info.sim = Simulation(*slider_values,*check_var)
+	info.sim = Simulation(*slider_values,*check_values)
 
 	info.animationcount = 0
 	info.xpos = 0
@@ -698,10 +698,9 @@ info.graphs_data = [
 					[[], [[],[],[]] ],			[[],[[],[],[],[],[]]],
 					[[],[[],[],[],[],[]]]
 					]
-
+info.seed = ""
 info.colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","red","green",
 				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown"]
-
 info.animationEvery = 1
 
 updateGraphs()
