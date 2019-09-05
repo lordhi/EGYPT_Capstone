@@ -9,10 +9,8 @@ import threading
 
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
-	agg = False
 except:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
-	agg = True
 
 from Simulation import Simulation
 import sys
@@ -36,7 +34,9 @@ def button_step_on_click():
 
 def button_reset_on_click():
 	slider_values = [x.get()*1.0 for x in sliders]
-	info.sim = Simulation(*slider_values, 0, 0, 0)
+	check_values = [x.get() for x in check_var]
+	print(check_values)
+	info.sim = Simulation(*slider_values,*check_var)
 
 	info.animationcount = 0
 	info.xpos = 0
@@ -113,19 +113,15 @@ def popup_window():
 		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
 
 def graphMenuOneClick(selection):
-	print("Menu one clicked" + str(selection))
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
-	print("Pointer is " +str(info.pointers[0]))
 	info.changed[0] = True
 	updateGraphs()
 	showGraphs()
 
 def graphMenuTwoClick(selection):
-	print("Menu two clicked"+ str(selection))
 	names = [x[0] for x in options]
 	info.pointers[1] = names.index(selection)
-	print("Pointer is " + str(info.pointers[1]))
 	info.changed[1] = True
 	updateGraphs()
 	showGraphs()
@@ -306,8 +302,6 @@ def plotData():
 def updateGraphs():
 	for fig in [0,1]:
 		pointer = info.pointers[fig]
-		#print(info.graphs_data)
-		#print("Important pointer " + str(pointer))
 		data = info.graphs_data[pointer]
 		xdata = data[0]
 		ydata = data[1]
@@ -376,12 +370,11 @@ def updateGraphs():
 
 
 def showGraphs():
-	if agg:
-		graph1.show()
-		graph2.show()
-	else:
-		graph1.draw()
-		graph2.draw()
+	current_milli_time = lambda: int(round(time.time() * 1000))
+	time1 = current_milli_time()
+	graph1.draw()
+	graph2.draw()
+	time2 = current_milli_time()
 
 
 def drawCircle(canvas,x,y,r,color=False):
@@ -447,7 +440,6 @@ def drawGridSimulation(canvas,info):
 		
 		#draw settlements
 		temp = settlement.population//50
-		#print(settlement.population)
 		if temp > 2:
 			temp = 2
 		radius = ((temp+1)*xstep)/2
@@ -525,8 +517,12 @@ button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
 button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click)
 button_step.grid(row=0,column=2,padx=padx,pady=pady)
 
-speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(w2*s),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
-speed_scale.grid(row=0,column=3,padx=padx*5)
+simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
+simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
+
+graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/2*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
+graph_speed_scale.grid(row=0,column=4,padx=padx*5)
+graph_speed_scale.set(30)	
 
 #Slider panel
 ############################################################################
@@ -574,7 +570,7 @@ for name in slider_info:
 
 
 
-check_box_info = [("manual-seed"),("allow-household-fission"),("allow-land-rental")]
+check_box_info = [("manual-seed"),("allow-household-fission"),("allow-land-rental"),("legacy-mode")]
 check_box_frames = []
 check_boxes = []
 check_var = []
@@ -706,7 +702,6 @@ info.graphs_data = [
 info.colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","red","green",
 				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown"]
 
-info.graphEvery = 30
 info.animationEvery = 1
 
 updateGraphs()
@@ -720,7 +715,6 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 def mainLoop():
 	time1 = current_milli_time()
 	if (not info.paused): #and not info.sim.done):	#if simulation is not paused
-		#print("enter")
 
 		if info.stepping:
 			info.paused = True
@@ -729,18 +723,17 @@ def mainLoop():
 		info.animationEvery = 1
 
 		if not info.stepping:
-			if (speed_scale.get()>40):
+			if (simulation_speed_scale.get()>40):
 				info.animationEvery = 2
-			if (speed_scale.get()>80):
+			if (simulation_speed_scale.get()>80):
 				info.animationEvery = 4
-		info.graphEvery = 5
+
+		info.graphEvery = graph_speed_scale.get()
 
 		info.animationcount += 1
-
 		if (info.animationcount >= info.animationEvery):
 			info.animationcount = 0
 			drawGridSimulation(canvas,info)
-			#print("draw")
 
 		info.sim.tick()
 
@@ -756,10 +749,7 @@ def mainLoop():
 
 		info.graphcount += 1
 		if (info.graphcount >= info.graphEvery):
-			info.graphcount=0
-			#time1 = current_milli_time()
-			#x = threading.Thread(target=showGraphs, daemon=True)
-			#x.start()
+			info.graphcount = 0
 			showGraphs()
 			
 				
@@ -772,12 +762,9 @@ def mainLoop():
 
 	time2 = current_milli_time()
 
-	sleep = int(1000/(1.0*speed_scale.get())) - time2 + time1
+	sleep = int(1000/(1.0*simulation_speed_scale.get())) - time2 + time1
 	if (sleep < 0):
 		sleep = 0
-	else:
-		pass
-		print("Sleeping for: " + str(sleep) + "ms")
 	
 	tk.after(sleep,mainLoop)
 
