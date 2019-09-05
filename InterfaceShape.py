@@ -42,6 +42,7 @@ color_hexes = [pink_hex,blue_hex,yellow_hex,grey_hex]
 ############################################################################
 #Set up root
 tk = Tk()
+tk.title("Egypt simulation")
 tk.configure(background=general_background)
 
 #Imported functions
@@ -62,6 +63,10 @@ def button_step_on_click():
 	drawGridSimulation(canvas,info)
 
 def button_reset_on_click():
+	button_play_pause['state']='normal'
+	button_run_all['state']='normal'
+	button_step['state']='normal'
+
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
 	info.sim = Simulation(*slider_values,*check_values,info.seed)
@@ -122,6 +127,16 @@ def button_reset_on_click():
 	updateGraphs()
 	showGraphs()
 
+def button_run_all_on_click():
+	while not info.sim.done:
+		info.sim.tick()
+		plotData()
+
+	updateGraphs()
+	showGraphs()
+	drawGridSimulation(canvas,info)
+	years_label.set("Years passed: " + str(info.sim.years_passed))
+
 
 def button_play_pause_on_click():
 	if (not info.clicked_once):
@@ -131,8 +146,12 @@ def button_play_pause_on_click():
 
 	if info.paused:
 		info.pause_play_text.set("Play   ")
+		button_run_all['state']='normal'
+		button_step['state']='normal'
 	else:
 		info.pause_play_text.set("Pause")
+		button_run_all['state']='disabled'
+		button_step['state']='disabled'
 		plotData()
 		updateGraphs()
 		showGraphs()
@@ -195,13 +214,6 @@ def padListWithZeros(l,length):
 	return l
 
 def plotData():
-	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),
-		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
-		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
-		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
-		("Household wealth households 25-29","Years","Wealth")]
-
 	total_grain = info.sim.total_grain
 	total_households = len(info.sim.all_households)
 	total_population = info.sim.total_population
@@ -536,11 +548,14 @@ button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
 pause_play_text = StringVar()
 pause_play_text.set("Play   ")
-button_play_pause = Button(topframe,textvariable=pause_play_text,bg=button_color,command = button_play_pause_on_click)
+button_play_pause = Button(topframe,textvariable=pause_play_text,bg=button_color,command = button_play_pause_on_click,state='disabled')
 button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
 
-button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click)
+button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click,state='disabled')
 button_step.grid(row=0,column=2,padx=padx,pady=pady)
+
+button_run_all = Button(topframe,text='Run whole simulation',bg=button_color,command = button_run_all_on_click,state='disabled')
+button_run_all.grid(row=0,column=5,padx=padx,pady=pady)
 
 simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
@@ -730,7 +745,7 @@ info.graphs_data = [
 					]
 info.seed = ""
 info.colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","red","green",
-				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown"]
+				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown","purple","gold","violet"]
 info.animationEvery = 1
 info.count_since_last_graph_draw = 0
 info.force_draw_every = 10

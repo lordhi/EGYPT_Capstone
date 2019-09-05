@@ -22,7 +22,7 @@ class CreateToolTip(object):
         self.tw.wm_geometry("+%d+%d" % (x, y))
         label = tk.Label(self.tw, text=self.text, justify='left',
                        background=general_background, relief='solid', borderwidth=1,
-                       font=("times", "8", "normal"))
+                       font=("times", "10", "normal"))
         label.pack(ipadx=1)
  
     def close(self, event=None):
