@@ -169,7 +169,7 @@ class Household:
 		self.known_patches.sort(key = lambda x: x.harvest*self.competency - (((self.x - x.x)**2 + (self.y - x.y)**2)**0.5)*self.distance_cost if not x.harvested else 0)
 
 		total_harvest = 0
-		max_fields_to_work = (self.workers - self.workers_worked)//2
+		max_fields_to_work = int((self.workers - self.workers_worked)//2)
 		num_fields_rented = 0
 
 		for i in range(max_fields_to_work):
@@ -219,7 +219,7 @@ class Household:
 				workers = 5
 
 				# Think which variables should be inherited from the previous household for extensibility purposes
-				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.land_rental_rate, self.x, self.y, self.all_terrain, self.x_size, self.y_size)
+				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.land_rental_rate, self.fallow_limit, self.x, self.y, self.all_terrain, self.x_size, self.y_size, self.legacy_mode)
 
 				self.settled_in.households.append(new_household)
 				self.settled_in.parent.all_households.append(new_household)
