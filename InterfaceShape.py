@@ -777,7 +777,7 @@ def mainLoop():
 		sleep = 0
 	else:
 		pass
-		#print("Sleeping for: " + str(sleep) + "ms")
+		print("Sleeping for: " + str(sleep) + "ms")
 	
 	tk.after(sleep,mainLoop)
 
