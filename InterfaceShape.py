@@ -703,8 +703,8 @@ info.graphs_data = [
 					[[],[[],[],[],[],[]]]
 					]
 
-info.colors = ["blue","red","green","orange","indigo","yellow","purple","darkred","darkgreen",
-				"darkblue","darkgreen","darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown"]
+info.colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","red","green",
+				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown"]
 
 info.graphEvery = 30
 info.animationEvery = 1
