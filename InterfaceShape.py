@@ -838,6 +838,7 @@ graph1var.set(options[info.pointers[0]][0])
 graph2var.set(options[info.pointers[1]][0])
 
 button_reset_on_click()
+info.clicked_once = True
 
 mainLoop()
 tk.mainloop()
