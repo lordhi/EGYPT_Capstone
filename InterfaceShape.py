@@ -752,20 +752,16 @@ def mainLoop():
 
 
 		plotData()
+		updateGraphs()
 
 		info.graphcount += 1
 		if (info.graphcount >= info.graphEvery):
 			info.graphcount=0
-			time1 = current_milli_time()
-			#def temp():
-			#	updateGraphs()
-			#	showGraphs()
-			#x = threading.Thread(target=temp, daemon=True)
+			#time1 = current_milli_time()
+			#x = threading.Thread(target=showGraphs, daemon=True)
 			#x.start()
-			updateGraphs()
 			showGraphs()
-			time2 = current_milli_time()
-			print("Time to render graphs: " + str(time2-time1) + "ms")
+			
 				
 
 	if info.ending: #user has closed the program 
@@ -780,7 +776,8 @@ def mainLoop():
 	if (sleep < 0):
 		sleep = 0
 	else:
-		print("Sleeping for: " + str(sleep) + "ms")
+		pass
+		#print("Sleeping for: " + str(sleep) + "ms")
 	
 	tk.after(sleep,mainLoop)
 
