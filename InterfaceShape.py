@@ -65,6 +65,7 @@ def button_step_on_click():
 	if (info.sim.done):
 			button_run_all['state'] = 'disabled'
 
+
 def button_reset_on_click():
 	button_play_pause['state']='normal'
 	#button_run_all['state']='normal'
@@ -143,6 +144,8 @@ def button_run_all_on_click():
 	button_run_all['state'] = 'disabled'
 
 
+
+
 def button_play_pause_on_click():
 	if (not info.clicked_once):
 		button_reset_on_click()
@@ -164,7 +167,8 @@ def button_play_pause_on_click():
 		showGraphs()
 
 	if (info.sim.done):
-			button_run_all['state'] = 'disabled'
+		button_run_all['state'] = 'disabled'
+
 
 
 def popup_window():
@@ -175,17 +179,15 @@ def graphMenuOneClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
 	info.changed[0] = True
-	if info.clicked_once:
-		updateGraphs()
-		showGraphs()
+	updateGraphs()
+	showGraphs()
 
 def graphMenuTwoClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[1] = names.index(selection)
 	info.changed[1] = True
-	if info.clicked_once:
-		updateGraphs()
-		showGraphs()
+	updateGraphs()
+	showGraphs()
 
 #Parameters:
 ############################################################################
@@ -799,7 +801,6 @@ def mainLoop():
 
 		
 
-
 		plotData()
 	
 		info.graphcount += 1
@@ -826,6 +827,8 @@ def mainLoop():
 
 graph1var.set(options[info.pointers[0]][0])
 graph2var.set(options[info.pointers[1]][0])
+
+button_reset_on_click()
 
 mainLoop()
 tk.mainloop()
