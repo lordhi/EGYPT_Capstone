@@ -38,7 +38,7 @@ class Simulation:
 
 	def __init__(self, model_time_span, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, 
 						generational_variation, knowledge_radius, distance_cost, fallow_limit, pop_growth_rate, min_fission_chance, land_rental_rate, 
-						fission_enabled, rent_enabled, manual_seed_enabled, legacy_mode, seed = ''):
+						 manual_seed_enabled,fission_enabled, rent_enabled, legacy_mode, seed = ''):
 		self.years_passed = 0
 		self.legacy_mode = legacy_mode
 		self.elevation_dataset = []
