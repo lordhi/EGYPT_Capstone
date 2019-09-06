@@ -1,18 +1,20 @@
+#External imports
 from tkinter import *
 import tkinter.simpledialog as simpledialog
 import time
 import matplotlib.pyplot as plt
-from CreateToolTip import CreateToolTip
-import Helper as Hp
+import sys
 
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
 except:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg as NavigationToolbar2Tk
 
+#Imports from our own classes
+from CreateToolTip import CreateToolTip
 from Simulation import Simulation
-import sys
-from Info import *
+from Info import Info
+from Constants import *
 
 ############################################################################
 #Set up root
@@ -31,7 +33,6 @@ h3 = 2  #graphs 1 frame height
 		#graphs 2 frame height is h2 + h3
 
 s = 90 / 864 * tk.winfo_screenheight() #how many pixels is the side of one cell worth
- 
 padx = int(s/9)
 pady = int(s/18)
 sfHeight = s*0.95 #the heights of the side slider blocks
@@ -45,9 +46,9 @@ graphW = 0.8*s
 def button_step_on_click():
 	info.paused = False
 	info.stepping = True
-	updateGraphs()
-	showGraphs()
-	drawGridSimulation(canvas,info)
+	info.animate.updateGraphs()
+	info.animate.showGraphs()
+	info.animate.drawGridSimulation()
 
 	if (info.sim.done):
 			button_run_all['state'] = 'disabled'
@@ -96,22 +97,22 @@ def button_reset_on_click():
 	years_label.set("")
 
 	#info.sim.tick()
-	drawGridSimulation(canvas,info)
+	info.animate.drawGridSimulation()
 	info.changed[0] = True
 	info.changed[1] = True
-	updateGraphs()
-	showGraphs()
+	info.animate.updateGraphs()
+	info.animate.showGraphs()
 
 def button_run_all_on_click():
 	while not info.sim.done:
 		info.sim.tick()
-		plotData()
+		info.animate.plotData()
 
 	info.changed[0] = True
 	info.changed[1] = True
-	drawGridSimulation(canvas,info)
-	updateGraphs()
-	showGraphs()
+	info.animate.drawGridSimulation()
+	info.animate.updateGraphs()
+	info.animate.showGraphs()
 	years_label.set("Years passed: " + str(info.sim.years_passed))
 	button_run_all['state'] = 'disabled'
 
@@ -131,9 +132,9 @@ def button_play_pause_on_click():
 		info.pause_play_text.set("Pause")
 		button_run_all['state']='disabled'
 		button_step['state']='disabled'
-		plotData()
-		updateGraphs()
-		showGraphs()
+		info.animate.plotData()
+		info.animate.updateGraphs()
+		info.animate.showGraphs()
 
 	if (info.sim.done):
 		button_run_all['state'] = 'disabled'
@@ -142,306 +143,25 @@ def graphMenuOneClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
 	info.changed[0] = True
-	updateGraphs()
-	showGraphs()
+	info.animate.updateGraphs()
+	info.animate.showGraphs()
 
 def graphMenuTwoClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[1] = names.index(selection)
 	info.changed[1] = True
-	updateGraphs()
-	showGraphs()
+	info.animate.updateGraphs()
+	info.animate.showGraphs()
 
 def popup_window():
 	if check_var[0].get():
 		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
 
-
-
-#Functions:
-############################################################################
-
-def plotData():
-	total_grain = info.sim.total_grain
-	total_households = len(info.sim.all_households)
-	total_population = info.sim.total_population
-	total_ambition = max([x.ambition for x in info.sim.all_households])
-	total_competency = max([x.competency for x in info.sim.all_households])
-	start_population = info.sim.starting_population
-	
-	average_ambition = total_ambition/total_households
-	average_competency = total_competency/total_households
-
-	sorted_grain = sorted([x.grain for x in info.sim.all_households])
-	wealth_so_far = 0
-	index = 0
-	gini_index_reserve = 0
-
-	lorenz_points = []
-
-
-	for i in range(total_households):
-		wealth_so_far += sorted_grain[0]
-		sorted_grain = sorted_grain[1:]
-
-		if total_grain > 0:
-			lorenz_points += [(wealth_so_far/total_grain)*100]
-			index += 1
-			if (total_households>0):
-				gini_index_reserve += (index/total_households) - (wealth_so_far/total_grain)
-
-
-	#Total Grain
-	info.graphs_data[0][0].append(info.sim.years_passed)
-	info.graphs_data[0][1][0].append(info.sim.total_grain)
-
-	#Total Population
-	info.graphs_data[1][0].append(info.sim.years_passed)
-	info.graphs_data[1][1][0].append(info.sim.total_population)
-
-	#Total households and settlements
-	info.graphs_data[2][0].append(info.sim.years_passed)
-	info.graphs_data[2][1][0].append(len(info.sim.settlements) + len(info.sim.all_households))
-
-	#Gini-index
-	info.graphs_data[3][0].append(info.sim.years_passed)
-	info.graphs_data[3][1][0].append(gini_index_reserve/total_households/2)
-
-	#Grain-equality
-	x = range(len(lorenz_points))
-	info.graphs_data[4][0]= x
-	info.graphs_data[4][1][0]=lorenz_points
-
-	#Households holding
-	t_pink = 0
-	t_blue = 0
-	t_yellow = 0
-	info.graphs_data[5][0] = info.graphs_data[3][0]
-	for settlement in info.sim.settlements:
-	 	for household in settlement.households:
-	 		if household.color == PINK:
-	 			t_pink += 1
-	 		if household.color == BLUE:
-	 			t_blue += 1
-	 		if household.color == YELLOW:
-	 			t_yellow += 1
-
-	info.graphs_data[5][1][0].append(t_pink)
-	info.graphs_data[5][1][1].append(t_blue)
-	info.graphs_data[5][1][2].append(t_yellow)
-	 
-
-	#Settlements population
-	info.graphs_data[6][0].append(info.sim.years_passed)
-	for i in range(len(info.sim.all_settlements)):
-		info.graphs_data[6][1][i].append(info.sim.all_settlements[i].population)
-	
-
-	#Max mean min settlement popuplation
-	populations = [x.population for x in info.sim.settlements]
-	info.graphs_data[7][0].append(info.sim.years_passed)
-	info.graphs_data[7][1][0].append(max(populations))
-	info.graphs_data[7][1][1].append(sum(populations)/len(populations))
-	info.graphs_data[7][1][2].append(min(populations))
-	
-	#Mean min max wealth levels of households
-	grains = [x.grain for x in info.sim.all_households]
-	info.graphs_data[8][0].append(info.sim.years_passed)
-	info.graphs_data[8][1][0].append(max(grains))
-	info.graphs_data[8][1][1].append(sum(grains)/len(grains))
-	info.graphs_data[8][1][2].append(min(grains))
-
-	#Household wealth households 20-24
-	chosen_households = info.chosen_households_one
-
-	info.graphs_data[9][0].append(info.sim.years_passed)
-	length=len(chosen_households)
-	for household,  i   in zip(chosen_households,  range(length)):
-		info.graphs_data[9][1][i].append(household.grain)
-	for j in range(length,5):
-		info.graphs_data[9][1][i].append(0)
-
-	#Household wealth households 25-29
-	chosen_households = info.chosen_households_two
-
-	info.graphs_data[10][0].append(info.sim.years_passed)
-	length=len(chosen_households)
-	for household,  i in zip(chosen_households,  range(length)):
-		info.graphs_data[10][1][i].append(household.grain)
-	for j in range(length,5):
-		info.graphs_data[10][1][i].append(0)
-
-def updateGraphs():
-	for fig in [0,1]:
-		pointer = info.pointers[fig]
-		data = info.graphs_data[pointer]
-		xdata = data[0]
-		ydata = data[1]
-		redraw_graph = info.count_since_last_graph_draw >= info.force_draw_every
-
-		plt.figure(fig)
-		if (pointer == 4):
-			plt.clf()
-			if (len(xdata)>1):
-				plt.plot(xdata,ydata[0],label='Wealth',color=colors[0])
-				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality',color=colors[1])
-				plt.legend()
-
-		elif (info.changed[fig] or redraw_graph):
-			if redraw_graph:
-				info.count_since_last_graph_draw = 0
-			info.changed[fig] = False
-			plt.clf()
-
-			if (pointer == 5):
-				line, = plt.plot(xdata,ydata[0],label='>66%')
-				line.set_color(color_hexes[PINK])
-				line, = plt.plot(xdata,ydata[1],label='33-66%')
-				line.set_color(color_hexes[BLUE])
-				line, = plt.plot(xdata,ydata[2],label='<33%')
-				line.set_color(color_hexes[YELLOW])
-				plt.legend()
-
-			elif (pointer == 7 or pointer == 8):
-				plt.plot(xdata,ydata[0],label='max',color=colors[0])
-				plt.plot(xdata,ydata[1],label='avg',color=colors[1])
-				plt.plot(xdata,ydata[2],label='min',color=colors[2]) 
-				plt.legend()
-
-			else: #pointer = 0,1,2,3,6,9,10
-				#print(len(ydata))
-				for i in range(len(ydata)):
-				#for i in range(len(info.sim.all_settlements)):
-					line = ydata[i]
-					color = colors[i]
-					plt.plot(xdata,line,color=color)
-		
-			plt.title(options[pointer][0])
-			plt.xlabel(options[pointer][1])
-			plt.ylabel(options[pointer][2])
-			plt.tight_layout()
-
-		elif (len(xdata)>1):	
-			g = info.graphEvery
-
-			if (pointer == 5):
-				line, = plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1])
-				line.set_color(color_hexes[PINK])
-				line, = plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1])
-				line.set_color(color_hexes[BLUE])
-				line, = plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1])
-				line.set_color(color_hexes[YELLOW])
-				plt.legend()
-
-			elif (pointer == 7 or pointer == 8):
-				plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],color=colors[0])
-				plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],color=colors[1])
-				plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],color=colors[2]) 
-				plt.legend()
-
-			else: #pointer = 0,1,2,3,6,9,10
-				for i in range(len(ydata)):
-				#for i in range(len(info.sim.all_settlements)):
-					line = ydata[i]
-					color = colors[i]
-					plt.plot(xdata[-(g+2):-1],line[-(g+2):-1],color=color)
-
-
-
-def showGraphs():
-	current_milli_time = lambda: int(round(time.time() * 1000))
-
-	info.count_since_last_graph_draw += 1
-
-	time1 = current_milli_time()
-	graph1.draw()
-	graph2.draw()
-	time2 = current_milli_time()
-
-
-def drawCircle(canvas,x,y,r,color=False):
-	if (not color):
-		canvas.create_oval(x-r,y-r,x+r,y+r,fill='black',outline=circle_border_outline,width=r/6)
-	else:
-		canvas.create_oval(x-r,y-r,x+r,y+r,fill=color,width=0)
-
-def getColor(max_grain,grain):
-	if (grain > 2/3*max_grain):
-		return PINK
-	elif (grain > 1/3*max_grain):
-		return BLUE
-	else:
-		return YELLOW
-
-def drawGridSimulation(canvas,info):
-	simulation = info.sim
-	width, height = canvas.winfo_width(),canvas.winfo_height()
-	overallterrain = simulation.terrain
-
-	rows,columns = len(overallterrain),len(overallterrain[0])
-	xstep = width/columns - 1
-	ystep = height/rows - 1
-	canvas.delete('all')
-	if (len(info.sim.all_households)>0):
-		overall_biggest_grain = max([x.grain for x in info.sim.all_households])
-	else:
-		overall_biggest_grain = 0
-
-	for row in range(0,rows):
-		for col in range(0,columns):
-			block = overallterrain[row][col]		
-			fertility = block.fertility/2 #still need to fix this!
-			if block.river:
-				color = 'blue'
-			else:
-				color = info.greeness(int(245-fertility*205))
-			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
-
-	for settlement in info.sim.settlements:
-		row = settlement.x
-		col = settlement.y
-		for household in settlement.households:
-			main_color = getColor(overall_biggest_grain,household.grain)
-			household.color = main_color
-			for field in household.fields_owned:
-				canvas.create_line((row+0.5)*xstep,(col+0.5)*ystep,(field.x+0.5)*xstep,(field.y+0.5)*ystep,fill=color_hexes[main_color])		
-
-
-	for settlement in info.sim.settlements:
-		row = settlement.x
-		col = settlement.y
-
-		#draw lines
-		for household in settlement.households:
-			main_color = household.color#getColor(overall_biggest_grain,household.grain)
-			for field in household.fields_owned:	
-				if field.harvested:
-					canvas.create_image(((field.x+0.5)*xstep,(field.y+0.5)*xstep),image=info.barley_images[main_color])
-				else: 	
-					drawCircle(canvas,(field.x+0.5)*xstep,(field.y+0.5)*xstep,xstep/5,color_hexes[main_color])
-		
-		#draw settlements
-		temp = settlement.population//50
-		if temp > 2:
-			temp = 2
-		radius = ((temp+1)*xstep)/2
-
-		biggest_household_grain = max([x.grain for x in settlement.households])
-		main_color = getColor(overall_biggest_grain,biggest_household_grain)
-		
-		drawCircle(canvas,(row+0.5)*xstep,(col+0.5)*xstep,radius)
-		canvas.create_image(((row+0.5)*xstep,(col+0.5)*xstep),image=info.house_images[main_color])	
-
-
-	#create rectangles at edges to prevent ugly stuff
-	canvas.create_rectangle(xstep*columns,0,xstep*(columns+2),ystep*rows,fill=general_background,outline=general_background)
-	canvas.create_rectangle(0,ystep*rows,xstep*(columns+2),ystep*(rows+2),fill=general_background,outline=general_background)
-
 ############################################################################
 #Close window behaviour
 def onClose():
 	info.ending = True
-tk.protocol('WM_DELETE_WINDOW', onClose)  
+tk.protocol('WM_DELETE_WINDOW', onClose)
 
 #GUI setup frames:
 ############################################################################
@@ -639,15 +359,14 @@ toolbarframe2.grid_propagate(False)
 
 #Info initialisation
 #############################################################################
-info = Info(plt)
-updateGraphs()
-showGraphs()
+info = Info(plt,canvas,graph1,graph2)
+info.animate.updateGraphs()
+info.animate.showGraphs()
+
 
 #Mainloop:
 #############################################################################
 current_milli_time = lambda: int(round(time.time() * 1000))
-
-
 def mainLoop():
 	time1 = current_milli_time()
 	if (not info.paused): #and not info.sim.done):	#if simulation is not paused
@@ -666,24 +385,24 @@ def mainLoop():
 		info.animationcount += 1
 		if (info.animationcount >= info.animationEvery):
 			info.animationcount = 0
-			drawGridSimulation(canvas,info)
+			info.animate.drawGridSimulation()
 
 		info.sim.tick()
 		years_label.set("Years passed: " + str(info.sim.years_passed))
 
 		if (len(info.sim.settlements)==0):
 			info.paused = True
-			drawGridSimulation(canvas,info)
+			info.animate.drawGridSimulation()
 			tk.after(30,mainLoop)
 			return
 
-		plotData()
+		info.animate.plotData()
 	
 		info.graphcount += 1
 		if (info.graphcount >= info.graphEvery):
 			info.graphcount = 0
-			updateGraphs()
-			showGraphs()
+			info.animate.updateGraphs()
+			info.animate.showGraphs()
 			
 	if info.ending: #user has closed the program 
 		tk.destroy()
