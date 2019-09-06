@@ -13,7 +13,7 @@ except:
 #Imports from our own classes
 from CreateToolTip import CreateToolTip
 from Simulation import Simulation
-from Info import Info
+from Info import info
 from Constants import *
 
 ############################################################################
@@ -262,7 +262,7 @@ yscrollbar.grid(row=0,column=1,sticky=N+S+E+W)
 frame_in_canvas = Frame(slider_canvas,bg='white smoke',width = int(w1*s),height=int((h2+h3)*s))
 frame_in_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
-slider_info = [("model-time-span",5000,100,5000,50),
+slider_info = [("model-time-span",1000,100,1000,50),
 				("starting-settlements",14,5,20,1),
 				("starting-households",7,1,10,1),
 				("starting-household-size",5,2,10,1),
