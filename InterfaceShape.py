@@ -25,7 +25,7 @@ tk.configure(background=general_background)
 #Parameters:
 ############################################################################
 w1 = 2 	#slider frame width
-w2 = 8.3 	#animation frame + graphs frame width
+w2 = 8.9 	#animation frame + graphs frame width
 w3 = 7	#graphs2 frame width
 h1 = 0.6 	#top frame height
 h2 = w2	#animation frame height
