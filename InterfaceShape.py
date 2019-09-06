@@ -25,14 +25,14 @@ tk.configure(background=general_background)
 #Parameters:
 ############################################################################
 w1 = 2 	#slider frame width
-w2 = 6 	#animation frame + graphs frame width
-w3 = 8	#graphs2 frame width
+w2 = 8.3 	#animation frame + graphs frame width
+w3 = 7	#graphs2 frame width
 h1 = 0.6 	#top frame height
-h2 = 6	#animation frame height
-h3 = 2  #graphs 1 frame height
+h2 = w2	#animation frame height
+h3 = 0.4  #graphs 1 frame height
 		#graphs 2 frame height is h2 + h3
 
-s = 90 / 864 * tk.winfo_screenheight() #how many pixels is the side of one cell worth
+s = 80 / 864 * tk.winfo_screenheight() #how many pixels is the side of one cell worth
 padx = int(s/9)
 pady = int(s/18)
 sfHeight = s*0.95 #the heights of the side slider blocks
@@ -203,13 +203,11 @@ graphsframe = Frame(tk,bg=general_background,width=int(w3*s),height=int((h2+h3)*
 graphsframe.grid(row=1,column=4,columnspan=3,rowspan=6,sticky=N+S+E+W)
 graphsframe.grid_propagate(False)
 
-tk.grid_columnconfigure(4,weight=1,minsize=int(w2*s))
-tk.grid_rowconfigure(4,weight=1,minsize=int(h3*s))
 tk.grid_columnconfigure(1,weight=1,minsize=int(w2*s))
 tk.grid_rowconfigure(1,weight=1,minsize=int(h2*s))
-tk.grid_columnconfigure(4,weight=1,minsize=int(w2*s))
+tk.grid_columnconfigure(4,weight=1,minsize=int(w3*s))
 tk.grid_rowconfigure(4,weight=1,minsize=int(h3*s))
-tk.grid_columnconfigure(0,weight=1,minsize=int(w1*s))
+tk.grid_columnconfigure(0,weight=1,minsize=int(w1*s*1.05))
 tk.grid_rowconfigure(0,weight=1,minsize=int(h1*s))
 
 tk.minsize(int((w1+w2+w3)*s),int((h1+h2+h3)*s))
@@ -242,7 +240,7 @@ button_step.grid(row=0,column=2,padx=padx,pady=pady)
 button_run_all = Button(topframe,text='Run whole simulation',bg=button_color,command = button_run_all_on_click,state='disabled')
 button_run_all.grid(row=0,column=5,padx=padx,pady=pady)
 
-simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
+simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(0.87*w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
 simulation_speed_scale_tooltip = CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.")
 
