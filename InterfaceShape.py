@@ -13,7 +13,7 @@ except:
 #Imports from our own classes
 from CreateToolTip import CreateToolTip
 from Simulation import Simulation
-from Info import info
+from Info import *
 from Constants import *
 
 ############################################################################
@@ -52,6 +52,7 @@ def button_step_on_click():
 
 	if (info.sim.done):
 			button_run_all['state'] = 'disabled'
+			button_play_pause['state'] = 'disabled'
 
 def button_reset_on_click():
 	button_play_pause['state'] = 'normal'
@@ -73,8 +74,6 @@ def button_reset_on_click():
 
 	info.barley_images = [info.resizeImage(img,int(xstep*4/5.0)) for img in info.barley_images_permanent]
 	info.house_images = [info.resizeImage(img,int(2/3.0*xstep)) for img in info.house_images_permanent]
-
-
 
 	info.graphs_data = [
 					[ [], [[]] ],		[ [], [[]] ],		[ [], [[]] ],
@@ -155,6 +154,7 @@ def button_play_pause_on_click():
 
 	if (info.sim.done):
 		button_run_all['state'] = 'disabled'
+		button_play_pause['state'] = 'disabled'
 
 def graphMenuOneClick(selection):
 	names = [x[0] for x in options]
