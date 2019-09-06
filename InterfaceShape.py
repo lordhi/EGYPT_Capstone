@@ -119,10 +119,7 @@ def button_run_all_on_click():
 		tk.update()
 		tk.update_idletasks()
 
-	button_run_all['state']='normal'
-	button_play_pause['state']='normal'
 	button_reset['state']='normal'
-	button_step['state']='normal'
 
 	info.changed[0] = True
 	info.changed[1] = True
@@ -130,7 +127,6 @@ def button_run_all_on_click():
 	info.updateGraphs()
 	info.showGraphs()
 	setYearsPassed()
-	button_run_all['state'] = 'disabled'
 
 def button_play_pause_on_click():
 	if (not info.clicked_once):
