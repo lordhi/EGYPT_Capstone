@@ -50,16 +50,16 @@ class Info:
 		self.force_draw_every = 10
 
 		#Barley images
-		self.barley_images = [None,None,None]
-		self.barley_images[PINK] = Image.open("images/pink_background_barley.png")
-		self.barley_images[BLUE] = Image.open("images/blue_background_barley.png")
-		self.barley_images[YELLOW] = Image.open("images/yellow_background_barley.png")
+		self.barley_images_permanent = [None,None,None]
+		self.barley_images_permanent[PINK] = Image.open("images/pink_background_barley.png")
+		self.barley_images_permanent[BLUE] = Image.open("images/blue_background_barley.png")
+		self.barley_images_permanent[YELLOW] = Image.open("images/yellow_background_barley.png")
 
 		#House images
-		self.house_images = [None,None,None]
-		self.house_images[PINK] = Image.open("images/pink_background_house.png")
-		self.house_images[BLUE] = Image.open("images/blue_background_house.png")
-		self.house_images[YELLOW] = Image.open("images/yellow_background_house.png")
+		self.house_images_permanent = [None,None,None]
+		self.house_images_permanent[PINK] = Image.open("images/pink_background_house.png")
+		self.house_images_permanent[BLUE] = Image.open("images/blue_background_house.png")
+		self.house_images_permanent[YELLOW] = Image.open("images/yellow_background_house.png")
 
 		self.animate = Animations(plt,canvas,self,graph1,graph2)
 
@@ -75,6 +75,23 @@ class Info:
 		we=("%02x"%0)
 		ge="#"
 		return ge+de+re+we
+
+	def drawGridSimulation(self):
+		self.animate.drawGridSimulation()
+
+	def plotData(self):
+		self.animate.plotData()
+
+	def showGraphs(self):
+		self.animate.showGraphs()
+
+	def updateGraphs(self):
+		self.animate.updateGraphs()
+
+	def clearCanvas(self):
+		self.animate.clearCanvas()
+
+
 
 	# def padListWithZeros(self,l,length):
 	# 	d = length-len(l)

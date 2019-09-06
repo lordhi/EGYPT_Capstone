@@ -46,9 +46,9 @@ graphW = 0.8*s
 def button_step_on_click():
 	info.paused = False
 	info.stepping = True
-	info.animate.updateGraphs()
-	info.animate.showGraphs()
-	info.animate.drawGridSimulation()
+	info.updateGraphs()
+	info.showGraphs()
+	info.drawGridSimulation()
 
 	if (info.sim.done):
 			button_run_all['state'] = 'disabled'
@@ -71,8 +71,8 @@ def button_reset_on_click():
 	columns = len(info.sim.terrain[0])
 	xstep = int(width/columns - 1)
 
-	info.barley_images = [info.resizeImage(img,int(xstep*4/5.0)) for img in info.barley_images]
-	info.house_images = [info.resizeImage(img,int(2/3.0*xstep)) for img in info.house_images]
+	info.barley_images = [info.resizeImage(img,int(xstep*4/5.0)) for img in info.barley_images_permanent]
+	info.house_images = [info.resizeImage(img,int(2/3.0*xstep)) for img in info.house_images_permanent]
 
 
 
@@ -94,26 +94,43 @@ def button_reset_on_click():
 	info.chosen_households_one = info.sim.all_households[20:25]
 	info.chosen_households_two = info.sim.all_households[25:30]
 
-	years_label.set("")
+	info.years_label.set("")
 
 	#info.sim.tick()
-	info.animate.drawGridSimulation()
+	info.drawGridSimulation()
 	info.changed[0] = True
 	info.changed[1] = True
-	info.animate.updateGraphs()
-	info.animate.showGraphs()
+	info.updateGraphs()
+	info.showGraphs()
 
 def button_run_all_on_click():
+	button_run_all['state']='disabled'
+	button_play_pause['state']='disabled'
+	button_reset['state']='disabled'
+	button_step['state']='disabled'
+	
+	count = 0
 	while not info.sim.done:
+		count += 1
+		if (count >= 100):
+			setYearsPassed()
+			count = 0
 		info.sim.tick()
-		info.animate.plotData()
+		info.plotData()
+		tk.update()
+		tk.update_idletasks()
+
+	button_run_all['state']='normal'
+	button_play_pause['state']='normal'
+	button_reset['state']='normal'
+	button_step['state']='normal'
 
 	info.changed[0] = True
 	info.changed[1] = True
-	info.animate.drawGridSimulation()
-	info.animate.updateGraphs()
-	info.animate.showGraphs()
-	years_label.set("Years passed: " + str(info.sim.years_passed))
+	info.drawGridSimulation()
+	info.updateGraphs()
+	info.showGraphs()
+	setYearsPassed()
 	button_run_all['state'] = 'disabled'
 
 def button_play_pause_on_click():
@@ -132,9 +149,9 @@ def button_play_pause_on_click():
 		info.pause_play_text.set("Pause")
 		button_run_all['state']='disabled'
 		button_step['state']='disabled'
-		info.animate.plotData()
-		info.animate.updateGraphs()
-		info.animate.showGraphs()
+		info.plotData()
+		info.updateGraphs()
+		info.showGraphs()
 
 	if (info.sim.done):
 		button_run_all['state'] = 'disabled'
@@ -143,15 +160,15 @@ def graphMenuOneClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
 	info.changed[0] = True
-	info.animate.updateGraphs()
-	info.animate.showGraphs()
+	info.updateGraphs()
+	info.showGraphs()
 
 def graphMenuTwoClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[1] = names.index(selection)
 	info.changed[1] = True
-	info.animate.updateGraphs()
-	info.animate.showGraphs()
+	info.updateGraphs()
+	info.showGraphs()
 
 def popup_window():
 	if check_var[0].get():
@@ -247,7 +264,7 @@ yscrollbar.grid(row=0,column=1,sticky=N+S+E+W)
 frame_in_canvas = Frame(slider_canvas,bg='white smoke',width = int(w1*s),height=int((h2+h3)*s))
 frame_in_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
-slider_info = [("model-time-span",500,100,500,50),
+slider_info = [("model-time-span",5000,100,5000,50),
 				("starting-settlements",14,5,20,1),
 				("starting-households",7,1,10,1),
 				("starting-household-size",5,2,10,1),
@@ -278,8 +295,6 @@ for name in slider_info:
 	sliders[-1].set(slider_info[pos][1])
 	currentRow += 1
 	pos += 1
-
-
 
 check_box_info = [("manual-seed"),("allow-household-fission"),("allow-land-rental"),("legacy-mode")]
 check_box_frames = []
@@ -360,23 +375,28 @@ toolbarframe2.grid_propagate(False)
 #Info initialisation
 #############################################################################
 info = Info(plt,canvas,graph1,graph2)
-info.animate.updateGraphs()
-info.animate.showGraphs()
+info.pause_play_text = pause_play_text
+info.years_label = years_label
+info.updateGraphs()
+info.showGraphs()
 
+
+#A helper function
+#############################################################################
+def setYearsPassed():
+	info.years_label.set("Years passed: " + str(info.sim.years_passed))
 
 #Mainloop:
 #############################################################################
 current_milli_time = lambda: int(round(time.time() * 1000))
 def mainLoop():
 	time1 = current_milli_time()
-	if (not info.paused): #and not info.sim.done):	#if simulation is not paused
-
+	if (not info.paused and not info.sim.done):	#if simulation is not paused
 		if info.stepping:
 			info.paused = True
 			info.stepping = False
 
 		info.animationEvery = 1
-
 		if not info.stepping:
 			info.animationEvery = int(simulation_speed_scale.get()//10)+1
 
@@ -385,24 +405,24 @@ def mainLoop():
 		info.animationcount += 1
 		if (info.animationcount >= info.animationEvery):
 			info.animationcount = 0
-			info.animate.drawGridSimulation()
+			info.drawGridSimulation()
 
 		info.sim.tick()
-		years_label.set("Years passed: " + str(info.sim.years_passed))
+		setYearsPassed()
 
 		if (len(info.sim.settlements)==0):
 			info.paused = True
-			info.animate.drawGridSimulation()
+			info.drawGridSimulation()
 			tk.after(30,mainLoop)
 			return
 
-		info.animate.plotData()
+		info.plotData()
 	
 		info.graphcount += 1
 		if (info.graphcount >= info.graphEvery):
 			info.graphcount = 0
-			info.animate.updateGraphs()
-			info.animate.showGraphs()
+			info.updateGraphs()
+			info.showGraphs()
 			
 	if info.ending: #user has closed the program 
 		tk.destroy()

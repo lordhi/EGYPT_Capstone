@@ -221,7 +221,7 @@ class Animations:
 		rows,columns = len(overallterrain),len(overallterrain[0])
 		xstep = width/columns - 1
 		ystep = height/rows - 1
-		self.canvas.delete('all')
+		self.clearCanvas()
 		if (len(self.info.sim.all_households)>0):
 			overall_biggest_grain = max([x.grain for x in self.info.sim.all_households])
 		else:
@@ -282,3 +282,6 @@ class Animations:
 		self.info.count_since_last_graph_draw += 1
 		self.graph1.draw()
 		self.graph2.draw() 
+
+	def clearCanvas(self):
+		self.canvas.delete('all')
