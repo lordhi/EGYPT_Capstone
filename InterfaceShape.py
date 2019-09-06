@@ -2,11 +2,8 @@ from tkinter import *
 import tkinter.simpledialog as simpledialog
 import time
 import matplotlib.pyplot as plt
-import numpy
-import random
-import time
-import threading
 from CreateToolTip import CreateToolTip
+import Helper as Hp
 
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
@@ -15,29 +12,7 @@ except:
 
 from Simulation import Simulation
 import sys
-
-from PIL import Image, ImageTk
-
-############################################################################
-#Colors
-bg_slider_color = '#82bcb7'
-trough_color = '#415e5b'
-slider_knob_color = '#c86767'
-top_panel_color = '#f0f0f0'
-button_color = '#bcbce6'
-general_background = '#ffffff'
-circle_border_outline = '#9d6e48'
-PINK = 0
-BLUE = 1
-YELLOW = 2
-GREY = 3
-
-pink_hex = '#a71b6a'
-blue_hex = '#294b89'
-yellow_hex = '#f0f05a'
-grey_hex = '#8d8d8d'
-
-color_hexes = [pink_hex,blue_hex,yellow_hex,grey_hex] 
+from Info import *
 
 ############################################################################
 #Set up root
@@ -45,15 +20,27 @@ tk = Tk()
 tk.title("Egypt simulation")
 tk.configure(background=general_background)
 
-#Imported functions
-#############################################################################
-def resizeImage(img,basewidth):
-	wpercent = (basewidth/float(img.size[0]))
-	hsize = int((float(img.size[1])*float(wpercent)))
-	img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-	return img
+#Parameters:
+############################################################################
+w1 = 2 	#slider frame width
+w2 = 6 	#animation frame + graphs frame width
+w3 = 8	#graphs2 frame width
+h1 = 0.6 	#top frame height
+h2 = 6	#animation frame height
+h3 = 2  #graphs 1 frame height
+		#graphs 2 frame height is h2 + h3
 
-#Button functions
+s = 90 / 864 * tk.winfo_screenheight() #how many pixels is the side of one cell worth
+ 
+padx = int(s/9)
+pady = int(s/18)
+sfHeight = s*0.95 #the heights of the side slider blocks
+sliHeight = sfHeight - 2*pady #slider heights
+sliWidth = w1*s-2*padx-5
+chkHeight = s/2 #the heights of the check boxes
+graphW = 0.8*s
+
+#Responding to user clicks
 #############################################################################
 def button_step_on_click():
 	info.paused = False
@@ -65,12 +52,11 @@ def button_step_on_click():
 	if (info.sim.done):
 			button_run_all['state'] = 'disabled'
 
-
 def button_reset_on_click():
-	button_play_pause['state']='normal'
+	button_play_pause['state'] = 'normal'
 	#button_run_all['state']='normal'
 	if not (info.clicked_once and not info.paused):
-		button_step['state']='normal'
+		button_step['state'] = 'normal'
 
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
@@ -84,28 +70,10 @@ def button_reset_on_click():
 	columns = len(info.sim.terrain[0])
 	xstep = int(width/columns - 1)
 
-	#Barley images
-	info.barley_images = [None,None,None]
-	info.barley_images[PINK] = Image.open("images/pink_background_barley.png")
-	info.barley_images[BLUE] = Image.open("images/blue_background_barley.png")
-	info.barley_images[YELLOW] = Image.open("images/yellow_background_barley.png")
+	info.barley_images = [info.resizeImage(img,int(xstep*4/5.0)) for img in info.barley_images]
+	info.house_images = [info.resizeImage(img,int(2/3.0*xstep)) for img in info.house_images]
 
-	info.barley_images = [ImageTk.PhotoImage(resizeImage(img,int(xstep*4/5.0))) for img in info.barley_images]
 
-	#House images
-	info.house_images = [None,None,None]
-	info.house_images[PINK] = Image.open("images/pink_background_house.png")
-	info.house_images[BLUE] = Image.open("images/blue_background_house.png")
-	info.house_images[YELLOW] = Image.open("images/yellow_background_house.png")
-
-	info.house_images = [ImageTk.PhotoImage(resizeImage(img,int(2/3.0*xstep))) for img in info.house_images]
-
-	options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain Grain-equalityy","%-population","%-wealth"),
-		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
-		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
-		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
-		("Household wealth households 25-29","Years","Wealth")]
 
 	info.graphs_data = [
 					[ [], [[]] ],		[ [], [[]] ],		[ [], [[]] ],
@@ -147,9 +115,6 @@ def button_run_all_on_click():
 	years_label.set("Years passed: " + str(info.sim.years_passed))
 	button_run_all['state'] = 'disabled'
 
-
-
-
 def button_play_pause_on_click():
 	if (not info.clicked_once):
 		button_reset_on_click()
@@ -173,12 +138,6 @@ def button_play_pause_on_click():
 	if (info.sim.done):
 		button_run_all['state'] = 'disabled'
 
-
-
-def popup_window():
-	if check_var[0].get():
-		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
-
 def graphMenuOneClick(selection):
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
@@ -193,41 +152,14 @@ def graphMenuTwoClick(selection):
 	updateGraphs()
 	showGraphs()
 
-#Parameters:
-############################################################################
+def popup_window():
+	if check_var[0].get():
+		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
 
-w1 = 2 	#slider frame width
-w2 = 6 	#animation frame + graphs frame width
-w3 = 8	#graphs2 frame width
-h1 = 0.6 	#top frame height
-h2 = 6	#animation frame height
-h3 = 2  #graphs 1 frame height
-		#graphs 2 frame height is h2 + h3
 
-s = 90 / 864 * tk.winfo_screenheight() #how many pixels is the side of one cell worth
- 
-padx = int(s/9)
-pady = int(s/18)
-sfHeight = s*0.95 #the heights of the side slider blocks
-sliHeight = sfHeight - 2*pady #slider heights
-sliWidth = w1*s-2*padx-5
-chkHeight = s/2 #the heights of the check boxes
-graphW = 0.8*s
 
 #Functions:
 ############################################################################
-def greeness(value):
-	de=("%02x"%0)
-	re=("%02x"%value)
-	we=("%02x"%0)
-	ge="#"
-	return ge+de+re+we
-
-def padListWithZeros(l,length):
-	d = length-len(l)
-	if d > 0:
-		l += [0]*d
-	return l
 
 def plotData():
 	total_grain = info.sim.total_grain
@@ -280,7 +212,7 @@ def plotData():
 	info.graphs_data[4][0]= x
 	info.graphs_data[4][1][0]=lorenz_points
 
-	 #Households holding
+	#Households holding
 	t_pink = 0
 	t_blue = 0
 	t_yellow = 0
@@ -351,8 +283,8 @@ def updateGraphs():
 		if (pointer == 4):
 			plt.clf()
 			if (len(xdata)>1):
-				plt.plot(xdata,ydata[0],label='Wealth',color=info.colors[0])
-				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality',color=info.colors[1])
+				plt.plot(xdata,ydata[0],label='Wealth',color=colors[0])
+				plt.plot([xdata[0],xdata[-1]],[ydata[0][0],ydata[0][-1]],label='Equality',color=colors[1])
 				plt.legend()
 
 		elif (info.changed[fig] or redraw_graph):
@@ -371,9 +303,9 @@ def updateGraphs():
 				plt.legend()
 
 			elif (pointer == 7 or pointer == 8):
-				plt.plot(xdata,ydata[0],label='max',color=info.colors[0])
-				plt.plot(xdata,ydata[1],label='avg',color=info.colors[1])
-				plt.plot(xdata,ydata[2],label='min',color=info.colors[2]) 
+				plt.plot(xdata,ydata[0],label='max',color=colors[0])
+				plt.plot(xdata,ydata[1],label='avg',color=colors[1])
+				plt.plot(xdata,ydata[2],label='min',color=colors[2]) 
 				plt.legend()
 
 			else: #pointer = 0,1,2,3,6,9,10
@@ -381,7 +313,7 @@ def updateGraphs():
 				for i in range(len(ydata)):
 				#for i in range(len(info.sim.all_settlements)):
 					line = ydata[i]
-					color = info.colors[i]
+					color = colors[i]
 					plt.plot(xdata,line,color=color)
 		
 			plt.title(options[pointer][0])
@@ -402,16 +334,16 @@ def updateGraphs():
 				plt.legend()
 
 			elif (pointer == 7 or pointer == 8):
-				plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],color=info.colors[0])
-				plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],color=info.colors[1])
-				plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],color=info.colors[2]) 
+				plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],color=colors[0])
+				plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],color=colors[1])
+				plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],color=colors[2]) 
 				plt.legend()
 
 			else: #pointer = 0,1,2,3,6,9,10
 				for i in range(len(ydata)):
 				#for i in range(len(info.sim.all_settlements)):
 					line = ydata[i]
-					color = info.colors[i]
+					color = colors[i]
 					plt.plot(xdata[-(g+2):-1],line[-(g+2):-1],color=color)
 
 
@@ -462,7 +394,7 @@ def drawGridSimulation(canvas,info):
 			if block.river:
 				color = 'blue'
 			else:
-				color = greeness(int(245-fertility*205))
+				color = info.greeness(int(245-fertility*205))
 			canvas.create_rectangle(row*xstep,col*ystep,(row+1)*xstep,(col+1)*ystep,fill=color,outline="")
 
 	for settlement in info.sim.settlements:
@@ -504,9 +436,6 @@ def drawGridSimulation(canvas,info):
 	#create rectangles at edges to prevent ugly stuff
 	canvas.create_rectangle(xstep*columns,0,xstep*(columns+2),ystep*rows,fill=general_background,outline=general_background)
 	canvas.create_rectangle(0,ystep*rows,xstep*(columns+2),ystep*(rows+2),fill=general_background,outline=general_background)
-
-
-
 
 ############################################################################
 #Close window behaviour
@@ -583,7 +512,7 @@ simulation_speed_scale_tooltip = CreateToolTip(simulation_speed_scale,"Set speed
 graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/2*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
 graph_speed_scale.grid(row=0,column=4,padx=padx*5)
 graph_speed_scale.set(30)	
-simulation_speed_scale_tooltip = CreateToolTip(graph_speed_scale,"How many updates pass between points being added to the graph")
+simulation_speed_scale_tooltip = CreateToolTip(graph_speed_scale,"How many years pass between points being added to the graph")
 
 
 #Slider panel
@@ -663,17 +592,6 @@ slider_canvas.configure(scrollregion=(0,0,int(w1*s),(sliHeight)*len(slider_info)
                  yscrollcommand=yscrollbar.set)
 
 
-#Graph panel
-#############################################################################
-options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain equality","%-population","%-wealth"),
-		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
-		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
-		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
-		("Household wealth households 25-29","Years","Wealth")]
-
-
-
 ###############
 #Graph 1
 graph1frame = Frame(graphsframe,bg=general_background,width=int(w3*s))
@@ -721,56 +639,7 @@ toolbarframe2.grid_propagate(False)
 
 #Info initialisation
 #############################################################################
-class Info:
-	sim = None
-	paused = None
-	animationcount = None
-	xpos = None
-	graphcount = None
-	clicked_once = None
-	ending = None
-	house_images = None
-	barley_images = None
-	seed = None
-	graphs_data = None
-	changed = None
-	pointers = None
-	chosen_households_one = None
-	chosen_households_two = None
-	pause_play_text = None
-	stepping = None
-	animationEvery = None
-	graphEvery = None
-	colors = None
-	count_since_last_graph_draw = None
-	force_draw_every = None
-
-info = Info()
-info.clicked_once = False
-info.paused = True
-info.ending = False
-info.graphs_data = []
-info.pointers = [6,7] #what does each graph point to 
-info.changed = [False,False]
-info.pause_play_text = pause_play_text
-info.stepping = False
-info.graphs_data = [
-					[ [], [[]] ],		[ [], [[]] ],		[ [], [[]] ],
-					[[], [[]] ],		[ [], [[]] ],
-					[ [], [[],[],[]] ],
-					[[],[]],			[[], [[],[],[]] ],
-					[[], [[],[],[]] ],			[[],[[],[],[],[],[]]],
-					[[],[[],[],[],[],[]]]
-					]
-info.seed = ""
-info.colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","red","green",
-				"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown","purple","gold","violet","darkorange"]
-
-
-info.animationEvery = 1
-info.count_since_last_graph_draw = 0
-info.force_draw_every = 10
-
+info = Info(plt)
 updateGraphs()
 showGraphs()
 
@@ -808,8 +677,6 @@ def mainLoop():
 			tk.after(30,mainLoop)
 			return
 
-		
-
 		plotData()
 	
 		info.graphcount += 1
@@ -818,12 +685,10 @@ def mainLoop():
 			updateGraphs()
 			showGraphs()
 			
-				
-
 	if info.ending: #user has closed the program 
 		tk.destroy()
 		sys.exit()
-		return	
+		return
 
 
 	time2 = current_milli_time()
@@ -842,4 +707,3 @@ info.clicked_once = True
 
 mainLoop()
 tk.mainloop()
-
