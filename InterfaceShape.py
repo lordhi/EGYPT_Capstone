@@ -46,6 +46,96 @@ graphW = 0.8*s 							#the width of the graphs
 
 save_figures = 'Saved figures'
 
+############################################################################
+#Helper functions
+
+def destroyDisplayInfo(event=None):
+	if info.tw:
+		info.tw.destroy()
+
+def formatYesNo(val):
+	if val:
+		return "Yes"
+	else:
+		return "No"
+
+def displayInfo(event):
+	#calculate the width and height of each block of the simulation
+	if not info.paused:
+		return 
+
+	xstep,ystep = info.get_x_and_y_step()
+	xpos = int(event.x/xstep)
+	ypos = int(event.y/ystep)
+
+	block = info.sim.terrain[xpos][ypos]
+	text='Error'
+	if block.river:
+		text = "River"
+	elif block.settlement:
+		text = "Settlement\nPopulation: "+str(block.owner.population)+"\nNumber of households: "+str(len(block.owner.households))
+	elif block.field:
+		text = "Field\nHarvested: "+formatYesNo(block.harvested)
+	else:
+		text = "Land\nFertility: "+str(block.fertility)
+
+	destroyDisplayInfo()
+	info.tw = Toplevel(canvas)
+	x, y, cx, cy = animationframe.bbox("insert")
+	x += animationframe.winfo_rootx()
+	y += animationframe.winfo_rooty()
+
+	info.tw.wm_overrideredirect(True)
+	info.tw.wm_geometry("+%d+%d" % (x+xpos*23+3*padx, y+ypos*23-3*pady))
+	label = Label(info.tw, text=text, justify='left',
+					background=general_background, relief='solid', borderwidth=1,
+					font=("times", "10", "normal"))
+	label.pack(ipadx=1)
+
+
+	print(str(xpos)+ " " + str(ypos))	
+def setYearsPassed():
+	#Sets the label in the GUI to the current numver of years which have passed
+	info.years_label.set("Years passed: " + str(info.sim.years_passed))
+
+def onClose():
+	#Sets info.ending to true which ends the main simulation.
+	info.ending = True
+	tk.protocol('WM_DELETE_WINDOW', onClose)
+
+def save_all_figures(directory):
+	# Uses existing methods to loop through all names in the drop down box, change the pointer to them, call updateGraphs() so that
+	# that specific graph is drawn and save the image of the graph. 
+	names = [x[0] for x in options]
+	user_selection = info.pointers[0]
+	for i in range(len(names)):
+		info.pointers[0] = i
+		info.changed[0] = True
+		info.updateGraphs()
+		plt.figure(0)
+		plt.savefig(os.path.join(directory,names[i]+'.jpg'))
+
+	info.pointers[0] = user_selection
+	info.changed[0] = True
+	info.updateGraphs()
+
+
+def makeDir(folder):
+	# Makes a directory with the given name inside the "Saved figures" folder. If a directory with the same name already exists, 
+	# it will add a postscript to the name such as (1)
+	altered_folder = folder
+	finished = False
+	i = 1
+	while not finished:
+		try:
+			os.mkdir(os.path.join(save_figures,altered_folder))
+			finished = True
+		except:
+			altered_folder = folder + '(' + str(i) +')'
+			i+=1
+
+	return os.path.join(save_figures,altered_folder)
+
 #Responding to user clicks
 #############################################################################
 def button_step_on_click():
@@ -61,6 +151,8 @@ def button_step_on_click():
 	if (info.sim.done):
 			button_run_all['state'] = 'disabled'
 			button_play_pause['state'] = 'disabled'
+
+	destroyDisplayInfo()
 			
 
 def button_reset_on_click():
@@ -107,12 +199,12 @@ def button_reset_on_click():
 
 	info.years_label.set("")
 
-	#info.sim.tick()
 	info.drawGridSimulation()
 	info.changed[0] = True
 	info.changed[1] = True
 	info.updateGraphs()
 	info.showGraphs()
+	destroyDisplayInfo()
 
 
 def button_run_all_on_click():
@@ -146,6 +238,7 @@ def button_run_all_on_click():
 	#info.updateGraphs()
 	#info.showGraphs()
 	setYearsPassed()
+	destroyDisplayInfo()
 
 def button_play_pause_on_click():
 	# Called when the Play/Pause button is clicked. Baviour based on what the current value of info.paused is. It first inverts info.paused
@@ -172,44 +265,21 @@ def button_play_pause_on_click():
 		button_run_all['state'] = 'disabled'
 		button_play_pause['state'] = 'disabled'
 
-def save_all_figures(directory):
-	# Uses existing methods to 
-	names = [x[0] for x in options]
-	user_selection = info.pointers[0]
-	for i in range(len(names)):
-		info.pointers[0] = i
-		info.changed[0] = True
-		info.updateGraphs()
-		plt.figure(0)
-		plt.savefig(os.path.join(directory,names[i]+'.jpg'))
-
-	info.pointers[0] = user_selection
-	info.changed[0] = True
-	info.updateGraphs()
-
-
-def makeDir(folder):
-	altered_folder = folder
-	finished = False
-	i = 1
-	while not finished:
-		try:
-			os.mkdir(os.path.join(save_figures,altered_folder))
-			finished = True
-		except:
-			altered_folder = folder + '(' + str(i) +')'
-			i+=1
-
-	return os.path.join(save_figures,altered_folder)
+	destroyDisplayInfo()
 
 def button_save_all_figures_on_click():
+	# Called when the 'Save figures' button is pressed. Calls the save_all_figures() function as well as obtains the destination folder
+	# name from the user and displays confirmation to the user.
 	folder = simpledialog.askstring("Enter the folder name","")
 	altered_folder = makeDir(folder)
 	save_all_figures(altered_folder)
 	messagebox.showinfo('Operation success','Images saved')
+	destroyDisplayInfo()
 	
 
 def graphMenuOneClick(selection):
+	# Called when the user chooses an item from the top drop down menu. Sets the internal pointer to the appropriate graph and then 
+	# calls updateGraphs() and showGraphs()
 	names = [x[0] for x in options]
 	info.pointers[0] = names.index(selection)
 	info.changed[0] = True
@@ -217,6 +287,8 @@ def graphMenuOneClick(selection):
 	info.showGraphs()
 
 def graphMenuTwoClick(selection):
+	# Called when the user chooses an item from the bottom drop down menu. Sets the internal pointer to the appropriate graph and then 
+	# calls updateGraphs() and showGraphs()
 	names = [x[0] for x in options]
 	info.pointers[1] = names.index(selection)
 	info.changed[1] = True
@@ -224,10 +296,14 @@ def graphMenuTwoClick(selection):
 	info.showGraphs()
 
 def popup_window():
+	#Called when the check box for using a seed is changed. Sets the seed if the box has just been checked by asking the user 
+	# for the seed.
 	if check_var[0].get():
 		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
 
 def button_run_multiple_click():
+	#Called when the 'Run multiple' button gets clicked. It asks the user how many times it should run the simulation, it asks for
+	# the folder that the graphs should be saved into and it creates subfolders for each run with which it calls save_all_figures(). 
 	number_of_times = simpledialog.askinteger("Input","How many times?")
 	folder = simpledialog.askstring("Enter the folder name you would like them to be saved into:","")
 	button_reset['state'] = 'disabled'
@@ -249,17 +325,14 @@ def button_run_multiple_click():
 	button_reset['state'] = 'normal'
 	button_save_all_figures['state']='normal'
 	messagebox.showinfo('Operation success','Images saved')
+	destroyDisplayInfo()
 
 
+#Set up the GUI:
+###########################################################################
 
-############################################################################
-#Close window behaviour
-def onClose():
-	info.ending = True
-tk.protocol('WM_DELETE_WINDOW', onClose)
-
-#GUI setup frames:
-############################################################################
+#Create the 5 major sections, the top panel, frame which contains the sliders on the left, the frame which holds the animation in the 
+# middle, the frame under the animation frame and the frame on the right which contains the graphs
 topframe = Frame(tk,bg=top_panel_color,width=int((w1+w2+w3)*s),height=int(h1*s),relief='raised')
 topframe.grid(row=0,column=0,columnspan=7,rowspan=1,sticky=N+S+E+W)
 #topframe.grid_propagate(False)
@@ -290,8 +363,14 @@ tk.grid_rowconfigure(0,weight=1,minsize=int(h1*s))
 
 tk.minsize(int((w1+w2+w3)*s),int((h1+h2+h3)*s))
 
+#Setting up the animationframe and bottomframe
+############################################################################
+#Create the canvas on which the data is drawn and place the year display label below it.
 canvas = Canvas(animationframe,width=int(w2*s),height=int(h2*s),bg=general_background)
 canvas.grid(row=0,column=0)
+canvas.bind("<Button-3>",displayInfo)
+canvas.bind("<Button-1>",destroyDisplayInfo)
+#DisplayInformation(canvas,"Test")
 
 labelFrame = Frame(bottomframe,bg=general_background,width=int(2*s),height=int(s/3))
 labelFrame.grid(row=1,column=0,padx=padx,pady=pady)
@@ -302,8 +381,9 @@ years = Label(labelFrame,textvariable=years_label,bg=general_background,)
 years_label.set("")
 years.grid(row=0,column=0)
 
-#Top panel
+#Setting up the top frame
 ############################################################################
+#add the reset, pause/play,step buttons on the left
 button_reset = Button(topframe,text='Reset',bg=button_color,command = button_reset_on_click)
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
 
@@ -315,15 +395,17 @@ button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
 button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click,state='disabled')
 button_step.grid(row=0,column=2,padx=padx,pady=pady)
 
+#Add the sliders for simulation speed and graph speed in the middle
 simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(0.88*w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
 simulation_speed_scale_tooltip = CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.")
 
 graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/4*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
 graph_speed_scale.grid(row=0,column=4,padx=padx*5)
-graph_speed_scale.set(30)	
+graph_speed_scale.set(30)	 
 simulation_speed_scale_tooltip = CreateToolTip(graph_speed_scale,"How many years pass between points being added to the graph")
 
+#Add the run whole simulation and run multiple buttons on the right
 button_run_all = Button(topframe,text='Run whole simulation',bg=button_color,command = button_run_all_on_click,state='normal')
 button_run_all.grid(row=0,column=5,padx=padx,pady=pady)
 
@@ -333,18 +415,10 @@ button_run_multiple.grid(row=0,column=6,padx=padx,pady=pady)
 button_save_all_figures = Button(graphsframe,text='Save all figures',bg=button_color,command = button_save_all_figures_on_click,state='normal')
 button_save_all_figures.grid(row=2,column=0,padx=padx,pady=pady+s/10)
 
-#Slider panel
+#Setting up the slider frame
 ############################################################################
-
-slider_canvas = Canvas(sliderframe,bg='white smoke',width=int(w1*s),height=int((h2+h3)*s))
-slider_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
-
-yscrollbar = Scrollbar(sliderframe,command=slider_canvas.yview)
-yscrollbar.grid(row=0,column=1,sticky=N+S+E+W)
-
-frame_in_canvas = Frame(slider_canvas,bg='white smoke',width = int(w1*s),height=int((h2+h3)*s))
-frame_in_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
-
+#Declare an array containing all the information to build the sliders as entries of the form 
+# (text,default value,minimum value,maximum value,step)
 slider_info = [("model-time-span",1000,100,1000,50),
 				("starting-settlements",14,5,20,1),
 				("starting-households",7,1,10,1),
@@ -360,6 +434,17 @@ slider_info = [("model-time-span",1000,100,1000,50),
 				("min-fission-chance",0.5,0.5,0.9,0.1),
 				("land-rental-rate",30,30,60,5)]
 
+#Create the canvas to hold the sliders and add a scroll bar so that canvas can be scrolled
+slider_canvas = Canvas(sliderframe,bg='white smoke',width=int(w1*s),height=int((h2+h3)*s))
+slider_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
+
+yscrollbar = Scrollbar(sliderframe,command=slider_canvas.yview)
+yscrollbar.grid(row=0,column=1,sticky=N+S+E+W)
+
+frame_in_canvas = Frame(slider_canvas,bg='white smoke',width = int(w1*s),height=int((h2+h3)*s))
+frame_in_canvas.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
+
+#create all the sliders on the canvas in a loop using slider_info. 
 slider_frames = []
 sliders = []
 currentRow = 0
@@ -377,11 +462,15 @@ for name in slider_info:
 	currentRow += 1
 	pos += 1
 
+
+#Declare an array containing all the information to build the checkboxes which contains each of their names
 check_box_info = [("manual-seed"),("allow-household-fission"),("allow-land-rental"),("legacy-mode")]
+
+
+#create all the check boxes on the canvas in a loop using check_box_info
 check_box_frames = []
 check_boxes = []
 check_var = []
-
 pos = 0
 for name in check_box_info:
 	check_box_frames.append(Frame(frame_in_canvas,bg='white smoke',bd=2,width=int(w1*s-2*padx),height=int(chkHeight)))
@@ -402,14 +491,18 @@ for name in check_box_info:
 	currentRow += 1
 	pos += 1
 
+#Configure the scroll bar
 slider_canvas.create_window(0, 0, anchor='nw', window=frame_in_canvas)
 slider_canvas.update_idletasks()
 slider_canvas.configure(scrollregion=(0,0,int(w1*s),(sliHeight)*len(slider_info)+(chkHeight)*len(check_box_info)), 
                  yscrollcommand=yscrollbar.set)
 
 
-###############
-#Graph 1
+#Setting up the graphs frame
+############################################################################
+#Add two frames to the graphs frame, one to hold each graph.
+
+#Create the for graph 1, place the graph on it
 graph1frame = Frame(graphsframe,bg=general_background,width=int(w3*s))
 graph1frame.grid(row=0,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
@@ -418,20 +511,21 @@ graph1 = FigureCanvasTkAgg(plt.figure(0),graph1frame)
 graph1.get_tk_widget().grid(row=0,column=0,columnspan=2,rowspan=1,padx=padx,pady=pady)
 graph1.get_tk_widget().configure(background = 'BLACK', borderwidth = 1, relief = SUNKEN)
 
+#Create the drop down menu for choosing what goes on graph 1
 graph1var = StringVar(graph1frame)
 graph1menu = OptionMenu(graph1frame,graph1var,*[x[0] for x in options],command=graphMenuOneClick)
 graph1menu.config(width=int(graphW))
 graph1menu.grid(row=2,column=0,columnspan=1,rowspan=1,padx=padx,sticky='W')
 
+#Create the toolbar to control graph 1
 toolbarframe1 = Frame(graph1frame)
 toolbarframe1.grid(row=1,column=0,stick='W',padx=padx)
-
 toolbar1 = NavigationToolbar2Tk(graph1, toolbarframe1)
 toolbar1.update()
 toolbarframe1.grid_propagate(False)
 
-################
-#Graph 2
+
+#Create the for graph 2, place the graph on it
 graph2frame = Frame(graphsframe,bg=general_background,width=int(w3*s))
 graph2frame.grid(row=1,column=0,columnspan=1,rowspan=1,sticky=N+S+E+W)
 
@@ -440,21 +534,22 @@ graph2 = FigureCanvasTkAgg(plt.figure(1),graph2frame)
 graph2.get_tk_widget().grid(row=0,column=0,columnspan=2,rowspan=1,padx=padx,pady=pady)
 graph2.get_tk_widget().configure(background = 'BLACK', borderwidth = 1, relief = SUNKEN)
 
+#Create the drop down menu for choosing what goes on graph 2
 graph2var = StringVar(graph2frame)
 graph2menu = OptionMenu(graph2frame,graph2var,*[x[0] for x in options],command=graphMenuTwoClick)
 graph2menu.config(width=int(graphW))
 graph2menu.grid(row=2,column=0,columnspan=1,rowspan=1,padx=padx,sticky='W')
 
+#Create the toolbar to control graph 1
 toolbarframe2 = Frame(graph2frame,width=int(w3),bg='red')
 toolbarframe2.grid(row=1,column=0,sticky='W',padx=padx)
-
 
 toolbar2 = NavigationToolbar2Tk(graph2, toolbarframe2)
 toolbar2.update()
 toolbarframe2.grid_propagate(False)
 
 
-#Info initialisation
+#Intialise the Info class and update the graphs immediately with the blank simulation
 #############################################################################
 info = Info(plt,canvas,graph1,graph2)
 info.pause_play_text = pause_play_text
@@ -462,11 +557,10 @@ info.years_label = years_label
 info.updateGraphs()
 info.showGraphs()
 
-
-#A helper function
-#############################################################################
-def setYearsPassed():
-	info.years_label.set("Years passed: " + str(info.sim.years_passed))
+#Define what actions will be performed each frame. If the program is in stepping mode, it will set paused and stepping such that the it will not enter
+# the outer if statement until step is pressed again. It will then call tick on the simulation, redraw the grid, plot the new data and display the new data.
+# If the program is not in stepping mode, it will perform these actions automatically at a rate set by the variables info.graphEvery and info.animationEvery which
+# respectively determine how many frames between redraws of the grid and redraws of the graphs.
 
 def performOneStep():
 	info.graphEvery = graph_speed_scale.get()
@@ -503,8 +597,11 @@ def performOneStep():
 
 #Mainloop:
 #############################################################################
+#create a lambda function to get the current time in milliseconds
 current_milli_time = lambda: int(round(time.time() * 1000))
+
 def mainLoop():
+#Calls itself repeatedly, sleeping an appropriate amount of time to achieve the desired frame rate as determined by the simulation speed slider
 	time1 = current_milli_time()
 	
 	performOneStep()
@@ -529,5 +626,8 @@ button_reset_on_click()
 info.clicked_once = True
 info.graphEvery = graph_speed_scale.get()
 
+
+#Start the calls to main loop which continues to call itself
 mainLoop()
+#start the main GUI loop
 tk.mainloop()

@@ -17,6 +17,7 @@ class CreateToolTip(object):
         y += self.widget.winfo_rooty() + 5    
         # creates a toplevel window
         self.tw = tk.Toplevel(self.widget)
+        print("entered")
         # Leaves only the label and removes the app window
         self.tw.wm_overrideredirect(True)
         self.tw.wm_geometry("+%d+%d" % (x, y))

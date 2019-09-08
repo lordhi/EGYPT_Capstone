@@ -20,7 +20,7 @@ colors = ["darkblue","darkred","darkgreen","orange","indigo","yellow","purple","
 						"darkgoldenrod","pink","cyan","magenta","black","violet","maroon","brown","purple","gold","violet","darkorange"]
 
 options = [("Total Grain","Years","Total grain"),("Total Population","Years","Population"),("Total households and settlements","",""),
-		("Gini-index","Time","Gini"),("Grain Grain-equalityy","%-population","%-wealth"),
+		("Gini-index","Time","Gini"),("Grain-equality","%-population","%-wealth"),
 		("Households holding stated as percentage of the wealthiest households grain","Time","no of households"),
 		("Settlement population","Years","Population"),("Max mean min settlement popuplation","Years","No of households"),
 		("Mean min max wealth levels of households","Years","Grain"),("Household wealth households 20-24","Years","Wealth"),
