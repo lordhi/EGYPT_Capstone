@@ -50,17 +50,19 @@ save_figures = 'Saved figures'
 #Helper functions
 
 def destroyDisplayInfo(event=None):
+	#Destroy the pop up that is currently displaying information about one of the grid blocks
 	if info.tw:
 		info.tw.destroy()
 
 def formatYesNo(val):
+	#Return yes for true and no for false
 	if val:
 		return "Yes"
 	else:
 		return "No"
 
 def displayInfo(event):
-	#calculate the width and height of each block of the simulation
+	#Create a pop-up showing information about the household which was clicked by the user
 	if not info.paused:
 		return 
 
@@ -69,6 +71,7 @@ def displayInfo(event):
 	ypos = int(event.y/ystep)
 
 	block = info.sim.terrain[xpos][ypos]
+
 	text='Error'
 	if block.river:
 		text = "River"
@@ -101,7 +104,7 @@ def setYearsPassed():
 def onClose():
 	#Sets info.ending to true which ends the main simulation.
 	info.ending = True
-	tk.protocol('WM_DELETE_WINDOW', onClose)
+	
 
 def save_all_figures(directory):
 	# Uses existing methods to loop through all names in the drop down box, change the pointer to them, call updateGraphs() so that
@@ -271,6 +274,9 @@ def button_save_all_figures_on_click():
 	# Called when the 'Save figures' button is pressed. Calls the save_all_figures() function as well as obtains the destination folder
 	# name from the user and displays confirmation to the user.
 	folder = simpledialog.askstring("Enter the folder name","")
+	if (folder==None):
+		#messagebox.showerror('Missing information','Please enter the name of the folder you would like to store the results in')
+		return
 	altered_folder = makeDir(folder)
 	save_all_figures(altered_folder)
 	messagebox.showinfo('Operation success','Images saved')
@@ -300,12 +306,20 @@ def popup_window():
 	# for the seed.
 	if check_var[0].get():
 		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
-
+		if info.seed == None:
+			check_var[0].set(0)
 def button_run_multiple_click():
 	#Called when the 'Run multiple' button gets clicked. It asks the user how many times it should run the simulation, it asks for
 	# the folder that the graphs should be saved into and it creates subfolders for each run with which it calls save_all_figures(). 
 	number_of_times = simpledialog.askinteger("Input","How many times?")
+	if number_of_times==None:
+		#messagebox.showerror('Missing information','Please enter the number of times you would like to run the simulation')
+		return
 	folder = simpledialog.askstring("Enter the folder name you would like them to be saved into:","")
+	if folder==None:
+		#messagebox.showerror('Missing information','Please enter the name of the folder you would like to store the results in')
+		return
+
 	button_reset['state'] = 'disabled'
 	button_save_all_figures['state']='disabled'
 	altered_folder = makeDir(folder)
@@ -626,7 +640,7 @@ button_reset_on_click()
 info.clicked_once = True
 info.graphEvery = graph_speed_scale.get()
 
-
+tk.protocol('WM_DELETE_WINDOW', onClose)
 #Start the calls to main loop which continues to call itself
 mainLoop()
 #start the main GUI loop
