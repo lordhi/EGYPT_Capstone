@@ -1,5 +1,6 @@
 #External imports
 from tkinter import *
+import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
 import time
 import matplotlib.pyplot as plt
@@ -25,28 +26,31 @@ tk.configure(background=general_background)
 
 #Parameters:
 ############################################################################
-w1 = 2 	#slider frame width
+w1 = 2 		#slider frame width
 w2 = 8.9 	#animation frame + graphs frame width
-w3 = 7	#graphs2 frame width
+w3 = 7		#graphs2 frame width
 h1 = 0.6 	#top frame height
-h2 = w2	#animation frame height
-h3 = 0.4  #graphs 1 frame height
-		#graphs 2 frame height is h2 + h3
+h2 = w2		#animation frame height
+h3 = 0.4  	#graphs 1 frame height
+			#graphs 2 frame height is h2 + h3
 
-s = 80 / 864 * tk.winfo_screenheight() #how many pixels is the side of one cell worth
-padx = int(s/9)
-pady = int(s/18)
-sfHeight = s*0.95 #the heights of the side slider blocks
-sliHeight = sfHeight - 2*pady #slider heights
-sliWidth = w1*s-2*padx-5
-chkHeight = s/2 #the heights of the check boxes
-graphW = 0.8*s
+s = 80 / 864 * tk.winfo_screenheight() 	#The standard variable which sets the scale for the 
+										#entire UI and off of which all other sizes are based
+padx = int(s/9)							#the padding that will be used for each component
+pady = int(s/18)						#the padding that will be used for each component
+sfHeight = s*0.95 						#the heights of the side slider blocks
+sliHeight = sfHeight - 2*pady 			#slider heights
+sliWidth = w1*s-2*padx-5				#slider widths
+chkHeight = s/2 						#the heights of the check boxes
+graphW = 0.8*s 							#the width of the graphs
 
 save_figures = 'Saved figures'
 
 #Responding to user clicks
 #############################################################################
 def button_step_on_click():
+	#Called when the step button is clicked. Set up the variables paused and stepping to allow the mainloop to run only once. After
+	#this the variables are set back to their defaults
 	info.paused = False
 	info.stepping = True
 	info.updateGraphs()
@@ -60,6 +64,8 @@ def button_step_on_click():
 			
 
 def button_reset_on_click():
+	#Called when the Reset button is clicked. It reintialises the images which are used to draw the grid according to the current size of the GUI, 
+	# as well as sets many different parameters contained in Info to their default values.
 	button_play_pause['state'] = 'normal'
 	button_run_multiple['state'] = 'normal'
 	button_run_all['state']='normal'
@@ -110,6 +116,9 @@ def button_reset_on_click():
 
 
 def button_run_all_on_click():
+	#Called when the 'Run entire simulation' button is clicked. It manually calls tick on the simulation until it is done and 
+	# does so without displaying any results other than to update which year the simulation is in to show the user that the simulation
+	# is indeed running.
 	button_run_all['state']='disabled'
 	button_play_pause['state']='disabled'
 	button_reset['state']='disabled'
@@ -139,6 +148,8 @@ def button_run_all_on_click():
 	setYearsPassed()
 
 def button_play_pause_on_click():
+	# Called when the Play/Pause button is clicked. Baviour based on what the current value of info.paused is. It first inverts info.paused
+	# and then changes which buttons are visible accordingly, while mainloop responds to the change in info.paused.
 	if (not info.clicked_once):
 		button_reset_on_click()
 		info.clicked_once = True
@@ -162,13 +173,19 @@ def button_play_pause_on_click():
 		button_play_pause['state'] = 'disabled'
 
 def save_all_figures(directory):
+	# Uses existing methods to 
 	names = [x[0] for x in options]
+	user_selection = info.pointers[0]
 	for i in range(len(names)):
 		info.pointers[0] = i
 		info.changed[0] = True
 		info.updateGraphs()
 		plt.figure(0)
 		plt.savefig(os.path.join(directory,names[i]+'.jpg'))
+
+	info.pointers[0] = user_selection
+	info.changed[0] = True
+	info.updateGraphs()
 
 
 def makeDir(folder):
@@ -189,6 +206,7 @@ def button_save_all_figures_on_click():
 	folder = simpledialog.askstring("Enter the folder name","")
 	altered_folder = makeDir(folder)
 	save_all_figures(altered_folder)
+	messagebox.showinfo('Operation success','Images saved')
 	
 
 def graphMenuOneClick(selection):
@@ -230,6 +248,7 @@ def button_run_multiple_click():
 
 	button_reset['state'] = 'normal'
 	button_save_all_figures['state']='normal'
+	messagebox.showinfo('Operation success','Images saved')
 
 
 
