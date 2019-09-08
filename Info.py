@@ -3,28 +3,28 @@ from Animations import Animations
 from Constants import *
 
 class Info:
-	# sim = None
-	# paused = None
-	# animationcount = None
-	# xpos = None
-	# graphcount = None
-	# clicked_once = None
-	# ending = None
-	# house_images = None
-	# barley_images = None
-	# seed = None
-	# graphs_data = None
-	# changed = None
-	# pointers = None
-	# chosen_households_one = None
-	# chosen_households_two = None
-	# pause_play_text = None
-	# stepping = None
-	# animationEvery = None
-	# graphEvery = None
-	# colors = None
-	# count_since_last_graph_draw = None
-	# force_draw_every = None
+	sim = None
+	paused = None
+	animationcount = None
+	xpos = None
+	graphcount = None
+	clicked_once = None
+	ending = None
+	house_images = None
+	barley_images = None
+	seed = None
+	graphs_data = None
+	changed = None
+	pointers = None
+	chosen_households_one = None
+	chosen_households_two = None
+	pause_play_text = None
+	stepping = None
+	animationEvery = None
+	graphEvery = None
+	colors = None
+	count_since_last_graph_draw = None
+	force_draw_every = None
 
 	def __init__(self,plt,canvas,graph1,graph2):
 		self.clicked_once = False

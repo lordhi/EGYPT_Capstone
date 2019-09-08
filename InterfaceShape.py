@@ -4,6 +4,7 @@ import tkinter.simpledialog as simpledialog
 import time
 import matplotlib.pyplot as plt
 import sys
+import os
 
 try:
 	from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2Tk
@@ -41,6 +42,8 @@ sliWidth = w1*s-2*padx-5
 chkHeight = s/2 #the heights of the check boxes
 graphW = 0.8*s
 
+save_figures = 'Saved figures'
+
 #Responding to user clicks
 #############################################################################
 def button_step_on_click():
@@ -50,13 +53,16 @@ def button_step_on_click():
 	info.showGraphs()
 	info.drawGridSimulation()
 
+	button_run_multiple['state'] = 'disabled'
 	if (info.sim.done):
 			button_run_all['state'] = 'disabled'
 			button_play_pause['state'] = 'disabled'
+			
 
 def button_reset_on_click():
 	button_play_pause['state'] = 'normal'
-	#button_run_all['state']='normal'
+	button_run_multiple['state'] = 'normal'
+	button_run_all['state']='normal'
 	if not (info.clicked_once and not info.paused):
 		button_step['state'] = 'normal'
 
@@ -102,11 +108,13 @@ def button_reset_on_click():
 	info.updateGraphs()
 	info.showGraphs()
 
+
 def button_run_all_on_click():
 	button_run_all['state']='disabled'
 	button_play_pause['state']='disabled'
 	button_reset['state']='disabled'
 	button_step['state']='disabled'
+	button_run_multiple['state'] = 'disabled'
 	
 	count = 0
 	while not info.sim.done:
@@ -126,6 +134,8 @@ def button_run_all_on_click():
 	info.drawGridSimulation()
 	info.updateGraphs()
 	info.showGraphs()
+	#info.updateGraphs()
+	#info.showGraphs()
 	setYearsPassed()
 
 def button_play_pause_on_click():
@@ -133,8 +143,7 @@ def button_play_pause_on_click():
 		button_reset_on_click()
 		info.clicked_once = True
 	info.paused = not info.paused
-	if info.paused:
-		button_run_all['state']='normal'
+	button_run_multiple['state'] = 'disabled'
 
 	if info.paused:
 		info.pause_play_text.set("Play   ")
@@ -151,6 +160,36 @@ def button_play_pause_on_click():
 	if (info.sim.done):
 		button_run_all['state'] = 'disabled'
 		button_play_pause['state'] = 'disabled'
+
+def save_all_figures(directory):
+	names = [x[0] for x in options]
+	for i in range(len(names)):
+		info.pointers[0] = i
+		info.changed[0] = True
+		info.updateGraphs()
+		plt.figure(0)
+		plt.savefig(os.path.join(directory,names[i]+'.jpg'))
+
+
+def makeDir(folder):
+	altered_folder = folder
+	finished = False
+	i = 1
+	while not finished:
+		try:
+			os.mkdir(os.path.join(save_figures,altered_folder))
+			finished = True
+		except:
+			altered_folder = folder + '(' + str(i) +')'
+			i+=1
+
+	return os.path.join(save_figures,altered_folder)
+
+def button_save_all_figures_on_click():
+	folder = simpledialog.askstring("Enter the folder name","")
+	altered_folder = makeDir(folder)
+	save_all_figures(altered_folder)
+	
 
 def graphMenuOneClick(selection):
 	names = [x[0] for x in options]
@@ -169,6 +208,30 @@ def graphMenuTwoClick(selection):
 def popup_window():
 	if check_var[0].get():
 		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
+
+def button_run_multiple_click():
+	number_of_times = simpledialog.askinteger("Input","How many times?")
+	folder = simpledialog.askstring("Enter the folder name you would like them to be saved into:","")
+	button_reset['state'] = 'disabled'
+	button_save_all_figures['state']='disabled'
+	altered_folder = makeDir(folder)
+
+
+	for i in range(number_of_times):
+		button_reset_on_click()
+		button_run_all_on_click()
+		button_reset['state'] = 'disabled'
+		button_save_all_figures['state']='disabled'
+
+		inner_directory = os.path.join(altered_folder,'Run ' + str(i+1))
+		os.mkdir(inner_directory)
+
+		save_all_figures(inner_directory)
+
+	button_reset['state'] = 'normal'
+	button_save_all_figures['state']='normal'
+
+
 
 ############################################################################
 #Close window behaviour
@@ -233,18 +296,23 @@ button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
 button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click,state='disabled')
 button_step.grid(row=0,column=2,padx=padx,pady=pady)
 
-button_run_all = Button(topframe,text='Run whole simulation',bg=button_color,command = button_run_all_on_click,state='disabled')
-button_run_all.grid(row=0,column=5,padx=padx,pady=pady)
-
-simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(0.87*w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
+simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(0.88*w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
 simulation_speed_scale_tooltip = CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.")
 
-graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/2*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
+graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/4*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
 graph_speed_scale.grid(row=0,column=4,padx=padx*5)
 graph_speed_scale.set(30)	
 simulation_speed_scale_tooltip = CreateToolTip(graph_speed_scale,"How many years pass between points being added to the graph")
 
+button_run_all = Button(topframe,text='Run whole simulation',bg=button_color,command = button_run_all_on_click,state='normal')
+button_run_all.grid(row=0,column=5,padx=padx,pady=pady)
+
+button_run_multiple = Button(topframe,text='Run multiple',bg=button_color,command = button_run_multiple_click,state='disabled')
+button_run_multiple.grid(row=0,column=6,padx=padx,pady=pady)
+
+button_save_all_figures = Button(graphsframe,text='Save all figures',bg=button_color,command = button_save_all_figures_on_click,state='normal')
+button_save_all_figures.grid(row=2,column=0,padx=padx,pady=pady+s/10)
 
 #Slider panel
 ############################################################################
@@ -366,6 +434,7 @@ toolbar2 = NavigationToolbar2Tk(graph2, toolbarframe2)
 toolbar2.update()
 toolbarframe2.grid_propagate(False)
 
+
 #Info initialisation
 #############################################################################
 info = Info(plt,canvas,graph1,graph2)
@@ -380,11 +449,8 @@ info.showGraphs()
 def setYearsPassed():
 	info.years_label.set("Years passed: " + str(info.sim.years_passed))
 
-#Mainloop:
-#############################################################################
-current_milli_time = lambda: int(round(time.time() * 1000))
-def mainLoop():
-	time1 = current_milli_time()
+def performOneStep():
+	info.graphEvery = graph_speed_scale.get()
 	if (not info.paused and not info.sim.done):	#if simulation is not paused
 		if info.stepping:
 			info.paused = True
@@ -393,8 +459,6 @@ def mainLoop():
 		info.animationEvery = 1
 		if not info.stepping:
 			info.animationEvery = int(simulation_speed_scale.get()//10)+1
-
-		info.graphEvery = graph_speed_scale.get()
 
 		info.animationcount += 1
 		if (info.animationcount >= info.animationEvery):
@@ -417,12 +481,19 @@ def mainLoop():
 			info.graphcount = 0
 			info.updateGraphs()
 			info.showGraphs()
+
+#Mainloop:
+#############################################################################
+current_milli_time = lambda: int(round(time.time() * 1000))
+def mainLoop():
+	time1 = current_milli_time()
+	
+	performOneStep()
 			
 	if info.ending: #user has closed the program 
 		tk.destroy()
 		sys.exit()
 		return
-
 
 	time2 = current_milli_time()
 
@@ -437,6 +508,7 @@ graph2var.set(options[info.pointers[1]][0])
 
 button_reset_on_click()
 info.clicked_once = True
+info.graphEvery = graph_speed_scale.get()
 
 mainLoop()
 tk.mainloop()
