@@ -24,8 +24,6 @@ tk = Tk()
 tk.title("Egypt simulation")
 tk.configure(background=general_background)
 
-
-
 #Parameters:
 ############################################################################
 w1 = 2 		#slider frame width
@@ -194,7 +192,7 @@ def button_reset_on_click():
 	info.house_images = [info.resizeImage(img,int(2/3.0*xstep)) for img in info.house_images_permanent]
 
 	info.graphs_data = [
-					[ [], [[]] ],		[ [], [[]] ],		[ [], [[]] ],
+					[ [], [[]] ],		[ [], [[]] ],		[ [], [[],[]] ],
 					[[], [[]] ],		[ [], [[]] ],
 					[ [], [[],[],[]] ],
 					[[],[]],			[[], [[],[],[]] ],
@@ -406,10 +404,10 @@ tk.grid_columnconfigure(1,weight=1,minsize=int(w2*s))
 tk.grid_rowconfigure(1,weight=1,minsize=int(h2*s))
 tk.grid_columnconfigure(4,weight=1,minsize=int(w3*s))
 tk.grid_rowconfigure(4,weight=1,minsize=int(h3*s))
-tk.grid_columnconfigure(0,weight=1,minsize=int(w1*s*1.05))
-tk.grid_rowconfigure(0,weight=1,minsize=int(h1*s))
+tk.grid_columnconfigure(0,weight=2,minsize=int(w1*s*1.05))
+tk.grid_rowconfigure(0,weight=2,minsize=int(h1*s))
 
-tk.minsize(int((w1+w2+w3)*s),int((h1+h2+h3)*s))
+tk.minsize(int((w1+w2+w3)*s),int((h1+h2+h3)*s)) 
 
 #Setting up the animationframe and bottomframe
 ############################################################################
@@ -621,8 +619,6 @@ toolbar2 = NavigationToolbar2Tk(graph2, toolbarframe2)
 toolbar2.update()
 toolbarframe2.grid_propagate(False)
 CreateToolTip(toolbar2,"Allows interaction with the graph as described the hints. Note that the user should first click the pan axes button before attempting to move the graph",bottomframe)
-
-
 
 #Intialise the Info class and update the graphs immediately with the blank simulation
 #############################################################################

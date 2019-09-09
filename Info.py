@@ -14,10 +14,10 @@ class Info:
 		self.pause_play_text = "Play   "
 		self.stepping = False
 		self.graphs_data = [
-							[ [], [[]] ],		[ [], [[]] ],		[ [], [[]] ],
-							[[], [[]] ],		[ [], [[]] ],
+							[ [], [[]] ],				[ [], [[]] ],				[ [], [[],[]] ],	
+							[[], [[]] ],				[ [], [[]] ],
 							[ [], [[],[],[]] ],
-							[[],[]],			[[], [[],[],[]] ],
+							[[],[]],					[[], [[],[],[]] ],
 							[[], [[],[],[]] ],			[[],[[],[],[],[],[]]],
 							[[],[[],[],[],[],[]]]
 							]
@@ -38,7 +38,7 @@ class Info:
 		self.house_images_permanent = [None,None,None]
 		self.house_images_permanent[PINK] = Image.open("images/pink_background_house.png")
 		self.house_images_permanent[BLUE] = Image.open("images/blue_background_house.png")
-		self.house_images_permanent[YELLOW] = Image.open("images/yellow_background_house.png")
+		self.house_images_permanent[YELLOW] = Image.open("images/yellow_background_house.png")	
 
 		#Create the animations object to do handle the animations of the graphs and the grid
 		self.animate = Animations(plt,canvas,self,graph1,graph2)
