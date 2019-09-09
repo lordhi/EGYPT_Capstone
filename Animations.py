@@ -55,7 +55,8 @@ class Animations:
 
 		#Store the data point for the Total households and settlements graph
 		self.info.graphs_data[2][0].append(self.info.sim.years_passed)
-		self.info.graphs_data[2][1][0].append(len(self.info.sim.settlements) + len(self.info.sim.all_households))
+		self.info.graphs_data[2][1][0].append(len(self.info.sim.all_households))
+		self.info.graphs_data[2][1][1].append(len(self.info.sim.settlements))
 
 		#Store the data point for the Gini-index graph
 		self.info.graphs_data[3][0].append(self.info.sim.years_passed)
@@ -173,6 +174,11 @@ class Animations:
 					self.plt.plot(xdata,ydata[2],label='min',color=colors[2]) 
 					self.plt.legend()
 
+				elif (pointer == 2):
+					self.plt.plot(xdata,ydata[0],label='No. households',color=colors[0])
+					self.plt.plot(xdata,ydata[1],label='No. settlements',color=colors[1])
+					self.plt.legend()
+
 				else: 
 					for i in range(len(ydata)):	#if drawing any other graph. These graphs just have lots of lines which are plotted
 						line = ydata[i]
@@ -202,6 +208,10 @@ class Animations:
 						self.plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],color=colors[1])
 						self.plt.plot(xdata[-(g+2):-1],ydata[2][-(g+2):-1],color=colors[2]) 
 						self.plt.legend()
+
+					elif (pointer == 2):
+						self.plt.plot(xdata[-(g+2):-1],ydata[0][-(g+2):-1],color=colors[0])
+						self.plt.plot(xdata[-(g+2):-1],ydata[1][-(g+2):-1],color=colors[1])
 
 					else: #if drawing any other graph. These graphs just have lots of lines which are plotted
 						for i in range(len(ydata)):
