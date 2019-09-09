@@ -61,6 +61,12 @@ def formatYesNo(val):
 	else:
 		return "No"
 
+def get_x_y_of_widget(widget):
+	x, y, cx, cy = animationframe.bbox("insert")
+	x += animationframe.winfo_rootx()
+	y += animationframe.winfo_rooty()
+	return (x,y)
+
 def displayInfo(event):
 	#Create a pop-up showing information about the household which was clicked by the user
 	if not info.paused:
@@ -84,9 +90,7 @@ def displayInfo(event):
 
 	destroyDisplayInfo()
 	info.tw = Toplevel(canvas)
-	x, y, cx, cy = animationframe.bbox("insert")
-	x += animationframe.winfo_rootx()
-	y += animationframe.winfo_rooty()
+	x,y = get_x_y_of_widget(animationframe)
 
 	info.tw.wm_overrideredirect(True)
 	info.tw.wm_geometry("+%d+%d" % (x+xpos*23+3*padx, y+ypos*23-3*pady))
@@ -156,6 +160,7 @@ def button_step_on_click():
 			button_play_pause['state'] = 'disabled'
 
 	destroyDisplayInfo()
+	switchParametersState('disabled')
 			
 
 def button_reset_on_click():
@@ -208,6 +213,7 @@ def button_reset_on_click():
 	info.updateGraphs()
 	info.showGraphs()
 	destroyDisplayInfo()
+	switchParametersState('normal')
 
 
 def button_run_all_on_click():
@@ -219,6 +225,7 @@ def button_run_all_on_click():
 	button_reset['state']='disabled'
 	button_step['state']='disabled'
 	button_run_multiple['state'] = 'disabled'
+	switchParametersState('disabled')
 	
 	count = 0
 	while not info.sim.done:
@@ -242,6 +249,40 @@ def button_run_all_on_click():
 	#info.showGraphs()
 	setYearsPassed()
 	destroyDisplayInfo()
+	
+def button_run_multiple_click():
+	#Called when the 'Run multiple' button gets clicked. It asks the user how many times it should run the simulation, it asks for
+	# the folder that the graphs should be saved into and it creates subfolders for each run with which it calls save_all_figures(). 
+	number_of_times = simpledialog.askinteger("Input","How many times?")
+	if number_of_times==None:
+		#messagebox.showerror('Missing information','Please enter the number of times you would like to run the simulation')
+		return
+	folder = simpledialog.askstring("Enter the folder name you would like them to be saved into:","")
+	if folder==None:
+		#messagebox.showerror('Missing information','Please enter the name of the folder you would like to store the results in')
+		return
+	switchParametersState('disabled')
+	button_reset['state'] = 'disabled'
+	button_save_all_figures['state']='disabled'
+	altered_folder = makeDir(folder)
+
+
+	for i in range(number_of_times):
+		button_reset_on_click()
+		button_run_all_on_click()
+		button_reset['state'] = 'disabled'
+		button_save_all_figures['state']='disabled'
+
+		inner_directory = os.path.join(altered_folder,'Run ' + str(i+1))
+		os.mkdir(inner_directory)
+
+		save_all_figures(inner_directory)
+
+	button_reset['state'] = 'normal'
+	button_save_all_figures['state']='normal'
+	messagebox.showinfo('Operation success','Images saved')
+	destroyDisplayInfo()
+	
 
 def button_play_pause_on_click():
 	# Called when the Play/Pause button is clicked. Baviour based on what the current value of info.paused is. It first inverts info.paused
@@ -269,6 +310,7 @@ def button_play_pause_on_click():
 		button_play_pause['state'] = 'disabled'
 
 	destroyDisplayInfo()
+	switchParametersState('disabled')
 
 def button_save_all_figures_on_click():
 	# Called when the 'Save figures' button is pressed. Calls the save_all_figures() function as well as obtains the destination folder
@@ -308,39 +350,21 @@ def popup_window():
 		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
 		if info.seed == None:
 			check_var[0].set(0)
-def button_run_multiple_click():
-	#Called when the 'Run multiple' button gets clicked. It asks the user how many times it should run the simulation, it asks for
-	# the folder that the graphs should be saved into and it creates subfolders for each run with which it calls save_all_figures(). 
-	number_of_times = simpledialog.askinteger("Input","How many times?")
-	if number_of_times==None:
-		#messagebox.showerror('Missing information','Please enter the number of times you would like to run the simulation')
-		return
-	folder = simpledialog.askstring("Enter the folder name you would like them to be saved into:","")
-	if folder==None:
-		#messagebox.showerror('Missing information','Please enter the name of the folder you would like to store the results in')
-		return
-
-	button_reset['state'] = 'disabled'
-	button_save_all_figures['state']='disabled'
-	altered_folder = makeDir(folder)
 
 
-	for i in range(number_of_times):
-		button_reset_on_click()
-		button_run_all_on_click()
-		button_reset['state'] = 'disabled'
-		button_save_all_figures['state']='disabled'
 
-		inner_directory = os.path.join(altered_folder,'Run ' + str(i+1))
-		os.mkdir(inner_directory)
+def switchParametersState(state):
+	if state=='disabled':
+		color = 'lightgrey'
+	else:
+		color=bg_slider_color
 
-		save_all_figures(inner_directory)
-
-	button_reset['state'] = 'normal'
-	button_save_all_figures['state']='normal'
-	messagebox.showinfo('Operation success','Images saved')
-	destroyDisplayInfo()
-
+	for check_box in check_boxes:
+		check_box['state']=state
+		check_box.configure(bg=color)
+	for slider in sliders:
+		slider['state']=state
+		slider.configure(bg=color)
 
 #Set up the GUI:
 ###########################################################################
@@ -384,6 +408,7 @@ canvas = Canvas(animationframe,width=int(w2*s),height=int(h2*s),bg=general_backg
 canvas.grid(row=0,column=0)
 canvas.bind("<Button-3>",displayInfo)
 canvas.bind("<Button-1>",destroyDisplayInfo)
+CreateToolTip(canvas,"Live display of the simulation environment",bottomframe)
 #DisplayInformation(canvas,"Test")
 
 labelFrame = Frame(bottomframe,bg=general_background,width=int(2*s),height=int(s/3))
@@ -400,53 +425,62 @@ years.grid(row=0,column=0)
 #add the reset, pause/play,step buttons on the left
 button_reset = Button(topframe,text='Reset',bg=button_color,command = button_reset_on_click)
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
+CreateToolTip(button_reset,"Restart the simulation with a new layout of settlements using the parameters chosen",bottomframe)
+
 
 pause_play_text = StringVar()
 pause_play_text.set("Play   ")
 button_play_pause = Button(topframe,textvariable=pause_play_text,bg=button_color,command = button_play_pause_on_click,state='disabled')
 button_play_pause.grid(row=0,column=1,padx=padx,pady=pady)
+button_play_pause_tooltip = CreateToolTip(button_play_pause,"Pause the simulation or set it running. If the display reads 'Pause', the the simulation is running and may be paused by clicking.",bottomframe)
 
 button_step = Button(topframe,text='Step',bg=button_color,command = button_step_on_click,state='disabled')
 button_step.grid(row=0,column=2,padx=padx,pady=pady)
+CreateToolTip(button_step,"Advance the simulation one year and update the display and graphs.",bottomframe)
+
 
 #Add the sliders for simulation speed and graph speed in the middle
 simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(0.88*w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
-simulation_speed_scale_tooltip = CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.")
+CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.",bottomframe)
 
 graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/4*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
 graph_speed_scale.grid(row=0,column=4,padx=padx*5)
 graph_speed_scale.set(30)	 
-simulation_speed_scale_tooltip = CreateToolTip(graph_speed_scale,"How many years pass between points being added to the graph")
+CreateToolTip(graph_speed_scale,"How many years pass between points being added to the graph.",bottomframe)
 
 #Add the run whole simulation and run multiple buttons on the right
 button_run_all = Button(topframe,text='Run whole simulation',bg=button_color,command = button_run_all_on_click,state='normal')
 button_run_all.grid(row=0,column=5,padx=padx,pady=pady)
+CreateToolTip(button_run_all,"Run the simulation without animation for all the remaining years in the model time span",bottomframe)
 
 button_run_multiple = Button(topframe,text='Run multiple',bg=button_color,command = button_run_multiple_click,state='disabled')
 button_run_multiple.grid(row=0,column=6,padx=padx,pady=pady)
+CreateToolTip(button_run_multiple,"Run the entire simulation, without animation, any number of times while saving all the graphs each time.",bottomframe)
 
 button_save_all_figures = Button(graphsframe,text='Save all figures',bg=button_color,command = button_save_all_figures_on_click,state='normal')
 button_save_all_figures.grid(row=2,column=0,padx=padx,pady=pady+s/10)
+CreateToolTip(button_save_all_figures,"Save each of the 11 avaliable figures as a .jpg file to a folder of your choosing",bottomframe)
+
 
 #Setting up the slider frame
 ############################################################################
 #Declare an array containing all the information to build the sliders as entries of the form 
 # (text,default value,minimum value,maximum value,step)
-slider_info = [("model-time-span",1000,100,1000,50),
-				("starting-settlements",14,5,20,1),
-				("starting-households",7,1,10,1),
-				("starting-household-size",5,2,10,1),
-				("starting-grain",3000,100,8000,100),
-				("min-ambition",0.1,0,1,0.1),
-				("min-competency",0.5,0,1,0.1),
-				("generational-variation",0.9,0,1,0.1),
-				("knowledge-radius",5,3,40,1),
-				("distance-cost",10,1,15,1),
-				("fallow-limit",4,0,10,1),
-				("pop-growth-rate",0.1,0,0.5,0.01),
-				("min-fission-chance",0.5,0.5,0.9,0.1),
-				("land-rental-rate",30,30,60,5)]
+slider_info = [("model-time-span",1000,100,1000,50,"The length of time in years for which the model will run"),
+				("starting-settlements",14,5,20,1,"The number of settlements which will be present at the start of the simulation"),
+				("starting-households",7,1,10,1,"The number of households which each settlement will start with"),
+				("starting-household-size",5,2,10,1,"The number of members each household will have to start"),
+				("starting-grain",3000,100,8000,100,"The amount of grain each settlement will start with"),
+				("min-ambition",0.1,0,1,0.1,"Sets the minimum level of ambitiousness which influences ..."),
+				("min-competency",0.5,0,1,0.1,"Sets the minimum level of competence which influences ..."),
+				("generational-variation",0.9,0,1,0.1,"Influences how much the level of skill can change from one generation to the next"),
+				("knowledge-radius",5,3,40,1,"Sets how far each settlement can see land and make purchases of that land"),
+				("distance-cost",10,1,15,1,"Sets the cost to travel to reach land that is further away"),
+				("fallow-limit",4,0,10,1,"..."),
+				("pop-growth-rate",0.1,0,0.5,0.01,"Sets the rate at which the total population is forced to grow each year"),
+				("min-fission-chance",0.5,0.5,0.9,0.1,"Controls the likelyhood that households will split"),
+				("land-rental-rate",30,30,60,5,"Sets the rate at which households will charge for land rental")]
 
 #Create the canvas to hold the sliders and add a scroll bar so that canvas can be scrolled
 slider_canvas = Canvas(sliderframe,bg='white smoke',width=int(w1*s),height=int((h2+h3)*s))
@@ -473,12 +507,18 @@ for name in slider_info:
 		label=slider_info[pos][0],bg=bg_slider_color,troughcolor=trough_color))
 	sliders[-1].grid(row=0,column=0,padx=1)
 	sliders[-1].set(slider_info[pos][1])
+	CreateToolTip(sliders[-1],slider_info[pos][5],bottomframe)
+
 	currentRow += 1
 	pos += 1
 
 
 #Declare an array containing all the information to build the checkboxes which contains each of their names
-check_box_info = [("manual-seed"),("allow-household-fission"),("allow-land-rental"),("legacy-mode")]
+check_box_info = [	("manual-seed","By providing a seed, one can ensure the same starting positions each run"),
+					("allow-household-fission","Sets whether households are allowed to split into more households"),
+					("allow-land-rental","Sets whether households may rent land from one another"),
+					("legacy-mode","...")
+				 ]
 
 
 #create all the check boxes on the canvas in a loop using check_box_info
@@ -493,14 +533,15 @@ for name in check_box_info:
 
 	var = IntVar()
 
-	check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos],bg=bg_slider_color))
+	check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos][0],bg=bg_slider_color))
 	if pos == 0:
-		check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos],bg=bg_slider_color,command=popup_window,variable=var))
+		check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos][0],bg=bg_slider_color,command=popup_window,variable=var))
 	else:
-		check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos],bg=bg_slider_color,variable=var))
+		check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos][0],bg=bg_slider_color,variable=var))
 
 	check_var.append(var)
 	check_boxes[-1].grid(row=0,column=0,padx=1)
+	CreateToolTip(check_boxes[-1],check_box_info[pos][1],bottomframe)
 
 	currentRow += 1
 	pos += 1
@@ -524,12 +565,14 @@ plt.figure(num=0,figsize=(2*4,1*4),dpi=graphW)
 graph1 = FigureCanvasTkAgg(plt.figure(0),graph1frame)
 graph1.get_tk_widget().grid(row=0,column=0,columnspan=2,rowspan=1,padx=padx,pady=pady)
 graph1.get_tk_widget().configure(background = 'BLACK', borderwidth = 1, relief = SUNKEN)
+CreateToolTip(graph1.get_tk_widget(),"Live display of the data chosen in the top drop down menu",bottomframe)
 
 #Create the drop down menu for choosing what goes on graph 1
 graph1var = StringVar(graph1frame)
 graph1menu = OptionMenu(graph1frame,graph1var,*[x[0] for x in options],command=graphMenuOneClick)
 graph1menu.config(width=int(graphW))
 graph1menu.grid(row=2,column=0,columnspan=1,rowspan=1,padx=padx,sticky='W')
+CreateToolTip(graph1menu,"Choose which of the 11 avaliable graphs should be displayed in the top graph",bottomframe)
 
 #Create the toolbar to control graph 1
 toolbarframe1 = Frame(graph1frame)
@@ -537,6 +580,9 @@ toolbarframe1.grid(row=1,column=0,stick='W',padx=padx)
 toolbar1 = NavigationToolbar2Tk(graph1, toolbarframe1)
 toolbar1.update()
 toolbarframe1.grid_propagate(False)
+CreateToolTip(toolbar1,"Allows interaction with the graph as described the hints. Note that the user should first click the pan axes button before attempting to move the graph",bottomframe)
+
+
 
 
 #Create the for graph 2, place the graph on it
@@ -547,12 +593,15 @@ plt.figure(num=1,figsize=(2*4,1*4),dpi=graphW)
 graph2 = FigureCanvasTkAgg(plt.figure(1),graph2frame)
 graph2.get_tk_widget().grid(row=0,column=0,columnspan=2,rowspan=1,padx=padx,pady=pady)
 graph2.get_tk_widget().configure(background = 'BLACK', borderwidth = 1, relief = SUNKEN)
+CreateToolTip(graph2.get_tk_widget(),"Live display of the data chosen in the bottom drop down menu",bottomframe)
+
 
 #Create the drop down menu for choosing what goes on graph 2
 graph2var = StringVar(graph2frame)
 graph2menu = OptionMenu(graph2frame,graph2var,*[x[0] for x in options],command=graphMenuTwoClick)
 graph2menu.config(width=int(graphW))
 graph2menu.grid(row=2,column=0,columnspan=1,rowspan=1,padx=padx,sticky='W')
+CreateToolTip(graph2menu,"Choose which of the 11 avaliable graphs should be displayed in the bottom graph",bottomframe)
 
 #Create the toolbar to control graph 1
 toolbarframe2 = Frame(graph2frame,width=int(w3),bg='red')
@@ -561,6 +610,8 @@ toolbarframe2.grid(row=1,column=0,sticky='W',padx=padx)
 toolbar2 = NavigationToolbar2Tk(graph2, toolbarframe2)
 toolbar2.update()
 toolbarframe2.grid_propagate(False)
+CreateToolTip(toolbar2,"Allows interaction with the graph as described the hints. Note that the user should first click the pan axes button before attempting to move the graph",bottomframe)
+
 
 
 #Intialise the Info class and update the graphs immediately with the blank simulation
