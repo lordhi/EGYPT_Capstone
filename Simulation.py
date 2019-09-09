@@ -5,34 +5,8 @@ import random
 import numpy as np
 
 class Simulation:
-	years_passed = 0
-	total_grain = 0
-	total_population = 0
-	projected_historical_population = 0
-	min_ambition = 0
-	min_competency = 0
-	time_span = 0
-	generational_variation = 0
-	knowledge_radius = 0
-	distance_cost = 0
-	fallow_limit = 0
-	pop_growth_rate = 0
-	min_fission_chance = 0
-	land_rental_rate = 0
-
-	starting_population = 0
-
-	fission_enabled = False
-	rent_enabled = False
-	manual_seed_enabled = False
-	
 	x_size = 30
 	y_size = 30
-
-	settlements = []
-	all_settlements = [] #Used only for data collection purposes
-	all_households = []
-	terrain = []
 
 	def __init__(self, model_time_span, starting_settlements, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, 
 						generational_variation, knowledge_radius, distance_cost, fallow_limit, pop_growth_rate, min_fission_chance, land_rental_rate, 
@@ -54,10 +28,7 @@ class Simulation:
 		self.all_settlements = []
 
 		#values reset
-		self.total_grain = starting_settlements*starting_households*starting_grain
-		self.average_ambition = 0
-		self.average_competency = 0
-		
+		self.total_grain = starting_settlements*starting_households*starting_grain		
 		self.min_ambition = min_ambition
 		self.min_competency = min_competency
 
@@ -123,7 +94,7 @@ class Simulation:
 	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, legacy_mode):
 		for settlement in self.settlements:
 			for i in range(int(starting_households)):
-				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size, legacy_mode)
+				new_household = Household(settlement, starting_grain, starting_household_size, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, settlement.x, settlement.y, self.terrain, self.x_size, self.y_size, self.generational_variation, legacy_mode)
 
 				settlement.households.append(new_household)
 				self.all_households.append(new_household)

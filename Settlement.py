@@ -5,13 +5,8 @@ import random
 # 	Keep track of size of settlement
 
 class Settlement:
-	population = 0
-	households = []
-	terrain = None
 	rent_enabled = False
 	parent = None
-	x = -1
-	y = -1
 
 	def __init__(self, terrain, x, y):
 		self.population = 0
@@ -25,7 +20,7 @@ class Settlement:
 
 	def tick(self):
 		if self.parent.legacy_mode:
-			self.households.sort(key=lambda x: -x.grain)
+			self.households.sort(key=lambda x: x.grain, reverse=True)
 			for house in self.households:
 				house.claimLand()
 			random.shuffle(self.households)

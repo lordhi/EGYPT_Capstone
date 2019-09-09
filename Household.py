@@ -4,39 +4,9 @@ import numpy as np
 import math
 
 class Household:
-	color = None
-	grain = 0
-	workers = 0
-	ambition = 0
-	competency = 0
-	workers_worked = 0
-	generation_countdown = 1
-	generational_variation = 0.2
-	minimum_ambition = 0
-	minimum_competency = 0
-	min_fission_chance = 0
-	fallow_limit = 5
-	fields_owned = []		#list of terrain
-	fields_harvested = 0	
-	
-	known_patches = []
-	knowledge_radius = 0
 
-	distance_cost = 0
-	land_rental_rate = 0
-
-	legacy_mode = False
-
-	all_terrain = None
-	x_size = 0
-	y_size = 0
-
-	x = 0
-	y = 0
-
-	settled_in = None
-
-	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, x, y, all_terrain, x_size, y_size, legacy_mode):
+	__slots__ = "color", "grain", "workers", "ambition", "competency","minimum_ambition", "minimum_competency", "workers_worked", "generation_countdown", "min_fission_chance", "knowledge_radius", "distance_cost", "land_rental_rate", "fallow_limit", "x", "y", "x_size", "y_size", "all_terrain", "settled_in", "fields_owned", "fields_harvested", "known_patches", "legacy_mode", "generational_variation"
+	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, x, y, all_terrain, x_size, y_size, generational_variance, legacy_mode):
 		self.color = None
 		self.grain = grain
 		self.workers = workers
@@ -61,6 +31,7 @@ class Household:
 		self.fields_harvested = 0
 		self.known_patches = []
 		self.legacy_mode = legacy_mode
+		self.generational_variation = generational_variance
 
 		self.settled_in.population += workers
 
@@ -219,7 +190,7 @@ class Household:
 				grain = 1100
 				workers = 5
 
-				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.land_rental_rate, self.fallow_limit, self.x, self.y, self.all_terrain, self.x_size, self.y_size, self.legacy_mode)
+				new_household = Household(self.settled_in, grain, workers, self.minimum_ambition, self.minimum_competency, self.min_fission_chance, self.knowledge_radius, self.distance_cost, self.land_rental_rate, self.fallow_limit, self.x, self.y, self.all_terrain, self.x_size, self.y_size, self.generational_variation, self.legacy_mode)
 
 				self.settled_in.households.append(new_household)
 				self.settled_in.parent.all_households.append(new_household)
