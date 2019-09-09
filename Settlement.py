@@ -5,6 +5,7 @@ import random
 # 	Keep track of size of settlement
 
 class Settlement:
+	__slots__ = "population", "terrain", "households", "x", "y"
 	rent_enabled = False
 	parent = None
 
