@@ -261,7 +261,7 @@ class Animations:
 					color = self.info.greeness(int(245-fertility*205))
 				self.canvas.create_rectangle(row*self.xstep,col*self.ystep,(row+1)*self.xstep,(col+1)*self.ystep,fill=color,outline="")
 
-		#create the house 
+		#draw the lines from the settlements to the fields
 		for settlement in self.info.sim.settlements:
 			row = settlement.x
 			col = settlement.y
@@ -271,12 +271,12 @@ class Animations:
 				for field in household.fields_owned:
 					self.canvas.create_line((row+0.5)*self.xstep,(col+0.5)*self.ystep,(field.x+0.5)*self.xstep,(field.y+0.5)*self.ystep,fill=color_hexes[main_color])		
 
-
+		#draw the settlements and give them their appropriate color. Also draw the circle around them with the appropriate radius
 		for settlement in self.info.sim.settlements:
 			row = settlement.x
 			col = settlement.y
 
-			#draw lines
+			#draw the barleys with the appropriate colors on the blocks
 			for household in settlement.households:
 				main_color = household.color#getColor(overall_biggest_grain,household.grain)
 				for field in household.fields_owned:	
@@ -285,7 +285,7 @@ class Animations:
 					else: 	
 						self.drawCircle(self.canvas,(field.x+0.5)*self.xstep,(field.y+0.5)*self.xstep,self.xstep/5,color_hexes[main_color])
 			
-			#draw settlements
+			#calculate size of circle
 			temp = settlement.population//50
 			if temp > 2:
 				temp = 2

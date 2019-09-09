@@ -4,13 +4,16 @@ class CreateToolTip(object):
     '''
     create a tooltip for a given widget
     '''
-    def __init__(self, widget, text='widget info'):
+    def __init__(self, widget, text='widget info',widget2=None):
         self.widget = widget
         self.text = text
         self.widget.bind("<Enter>", self.enter)
         self.widget.bind("<Leave>", self.close)
+        self.widget2 = widget2
 
     def enter(self, event=None):
+        if not self.widget2==None:
+            self.widget = self.widget2
         x = y = 0
         x, y, cx, cy = self.widget.bbox("insert")
         x += self.widget.winfo_rootx() + 200
