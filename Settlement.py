@@ -24,10 +24,17 @@ class Settlement:
 		self.y = y
 
 	def tick(self):
-		random.shuffle(self.households)
-		self.households.sort(key=lambda x: x.grain)
+		if parent.legacy_mode:
+			self.households.sort(key=lambda x: -x.grain)
+			for house in self.households:
+				house.claimLand()
+			random.shuffle(self.households)
+		else:
+			random.shuffle(self.households)
+			for house in self.households:
+				house.claimLand()
+
 		for house in self.households:
-			house.claimLand()
 			house.farm()
 			house.grainTick() #consume_grain, storage loss
 			house.generationalChange()

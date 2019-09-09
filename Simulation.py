@@ -6,8 +6,6 @@ import numpy as np
 
 class Simulation:
 	years_passed = 0
-
-	flood_level = 0
 	total_grain = 0
 	total_population = 0
 	projected_historical_population = 0
