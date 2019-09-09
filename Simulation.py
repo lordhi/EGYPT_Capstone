@@ -120,7 +120,7 @@ class Simulation:
 							self.terrain[x][y].settlement_territory = True 
 
 				count += 1
-		pass
+		
 
 	def setupHouseholds(self, starting_households, starting_household_size, starting_grain, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, legacy_mode):
 		for settlement in self.settlements:
