@@ -52,18 +52,23 @@ class Household:
 					self.known_patches.append(all_terrain[x][y])
 
 	def clearUp(self):
+		'''Deletes the household'''
 		self.grain = 0
 		while len(self.fields_owned) > 0:
 			self.fields_owned[0].unclaim()
 			del self.fields_owned[0]
 
 	def grainTick(self):
-		#ethnographic data suggests an adult needs an average of 160kg of grain per year to sustain.
+		'''Performs all calculations to do with reduction in grain for the year,
+		based off of ethnographic data which suggests that an adult needs 160kg
+		of grain per year to survive'''
 		self.grain -= self.workers*160
 		if self.grain < 0:
 			if self.legacy_mode:
 				num_not_supported = 1
 			else:
+				# Note that grain is negative, and thus the negative here
+				# serves to ensure that workers are reduced
 				num_not_supported = math.ceil(-self.grain/160)
 				if num_not_supported > self.workers:
 					num_not_supported = self.workers
@@ -77,13 +82,15 @@ class Household:
 		self.settled_in.parent.total_grain += self.grain
 
 	def populationIncrease(self):
+		'''Serves to increase the population if conditions are correct'''
 		populate_chance = random.random()
-		if self.settled_in.parent.total_population <= (self.settled_in.parent.starting_population * (1 + (self.settled_in.parent.pop_growth_rate/100)) ** self.settled_in.parent.years_passed) and populate_chance > 0.5:
+		if self.settled_in.parent.total_population <= (self.settled_in.parent.projected_historical_population) and populate_chance > 0.5:
 			self.workers += 1
 			self.settled_in.population += 1
 			self.settled_in.parent.total_population += 1
 
 	def farm(self):
+		'''Performs all farming for the household for a year, excluding any land rental which may occur'''
 		self.fields_owned.sort(key = lambda x: x.harvest*self.competency - x.house_distance*x.owner.distance_cost)
 		max_fields_to_work = int(self.workers//2)
 
@@ -112,6 +119,7 @@ class Household:
 				total_harvest += field_harvest
 		self.grain += total_harvest
 
+		'''Unclaims fields which have not been harvested'''
 		i = self.fields_harvested
 		if self.fallow_limit > 0:
 			while i < len(self.fields_owned):
@@ -122,8 +130,6 @@ class Household:
 
 	def claimLand(self):
 		claim_chance = random.random()
-		### TODO: Ask Kiara if this is correct. Takes 2 workers to farm field, fields can grow up to worker number?
-		### TODO: Implement known_patches
 		if (claim_chance < self.ambition and self.workers > len(self.fields_owned)) or (len(self.fields_owned) <= 1 and self.workers > 0):
 			best_x = None
 			best_y = None
@@ -171,9 +177,12 @@ class Household:
 		return random.random()*(maximum-minimum) + minimum
 
 	def generationalChange(self):
+		'''Changes ambition and competency every 10-15 years,
+		finding the possible range in which the household can change to,
+		and then generating a value within this range'''
 		self.generation_countdown -= 1
 		if self.generation_countdown <= 0:
-			self.generation_countdown = random.randrange(0,5) + 10
+			self.generation_countdown = random.randrange(0,6) + 10
 
 			self.ambition = self.randomRange(
 				max(self.ambition-self.generational_variation, self.minimum_ambition),

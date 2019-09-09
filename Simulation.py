@@ -102,12 +102,14 @@ class Simulation:
 			self.years_passed += 1 
 
 	def tick(self):
+		'''Performs the simulation for a single year'''
 		self.years_passed += 1
 		random.shuffle(self.settlements)
 
 		self.total_grain = 0
 		self.flood()
-		self.tickSettlements()
+		for settlement in self.settlements:
+			settlement.tick()
 		
 		self.projected_historical_population = self.starting_population * (1.001) ** self.years_passed
 
@@ -124,10 +126,14 @@ class Simulation:
 		if self.rent_enabled:
 			self.rentLand()
 
+		for settlement in self.settlements:
+			settlement.tock()
+
 		if self.years_passed > self.time_span or len(self.settlements) == 0:
 			self.done = True
 
 	def flood(self):
+		'''Sets the fertility and harvest levels for all terrain, based off of the flood levels for the year and the distance of the fields from the nile'''
 		mu= random.randint(0,10) + 5
 		sigma= random.randint(0, 5) + 5
 		alpha= (2 * sigma**2)
@@ -137,12 +143,6 @@ class Simulation:
 			for y in range(self.y_size):
 				self.terrain[x][y].setFertility(beta, alpha, mu)
 
-	def tickSettlements(self):
-		for settlement in self.settlements:
-			settlement.tick()
-		#for settlement in settlements:
-			#recolor
-			#get plot values
 
 	def rentLand(self):
 		self.all_households.sort(key=lambda x: x.ambition, reverse=True)

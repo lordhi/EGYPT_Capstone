@@ -20,6 +20,7 @@ class Settlement:
 		self.y = y
 
 	def tick(self):
+		'''Performs actions in each household which should take place before renting would occur if enabled'''
 		if self.parent.legacy_mode:
 			self.households.sort(key=lambda x: x.grain, reverse=True)
 			for house in self.households:
@@ -32,7 +33,11 @@ class Settlement:
 
 		for house in self.households:
 			house.farm()
-			house.grainTick() #consume_grain, storage loss
+
+	def tock(self):
+		'''Performs actions in each household which should take place after renting would occur if enabled'''
+		for house in self.households:
+			house.grainTick() #consumes grain, kills people who aren't fed, performs storage loss
 			house.generationalChange()
 			house.populationIncrease()
 		
@@ -49,7 +54,7 @@ class Settlement:
 		
 		if self.parent.fission_enabled:
 			self.fission()
-
+			
 	def fission(self):
 		for i in range(len(self.households)):
 			self.households[i].fission()
