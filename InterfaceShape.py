@@ -219,7 +219,10 @@ def button_reset_on_click():
 	info.updateGraphs()
 	info.showGraphs()
 	destroyDisplayInfo()
-	switchParametersState('normal')
+	if info.paused:
+		switchParametersState('normal')
+	else:
+		switchParametersState('disabled')
 
 
 def button_run_all_on_click():
