@@ -24,7 +24,7 @@ class Settlement:
 		self.y = y
 
 	def tick(self):
-		if parent.legacy_mode:
+		if self.parent.legacy_mode:
 			self.households.sort(key=lambda x: -x.grain)
 			for house in self.households:
 				house.claimLand()
