@@ -178,6 +178,8 @@ def button_reset_on_click():
 
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
+	info.previous_slider_values = slider_values
+	info.previous_check_values = check_values
 	info.sim = Simulation(*slider_values,*check_values,info.seed)
 
 	info.animationcount = 0
@@ -288,7 +290,7 @@ def button_run_multiple_click():
 
 	button_reset['state'] = 'normal'
 	button_save_all_figures['state']='normal'
-	messagebox.showinfo('Operation success','Images saved')
+	messagebox.showinfo('Success','Images saved')
 	destroyDisplayInfo()
 	
 
@@ -329,7 +331,7 @@ def button_save_all_figures_on_click():
 		return
 	altered_folder = makeDir(folder)
 	save_all_figures(altered_folder)
-	messagebox.showinfo('Operation success','Images saved')
+	messagebox.showinfo('Success','Images saved')
 	destroyDisplayInfo()
 	
 
@@ -358,6 +360,7 @@ def popup_window():
 		info.seed = simpledialog.askstring("Enter a seed:","e.g. 12341234")
 		if info.seed == None:
 			check_var[0].set(0)
+		button_reset_on_click()
 
 
 
@@ -451,6 +454,7 @@ CreateToolTip(button_step,"Advance the simulation one year and update the displa
 simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(0.88*w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
 CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.",bottomframe)
+simulation_speed_scale.set(100)
 
 graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/4*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
 graph_speed_scale.grid(row=0,column=4,padx=padx*5)
@@ -515,6 +519,7 @@ for name in slider_info:
 		label=slider_info[pos][0],bg=bg_slider_color,troughcolor=trough_color))
 	sliders[-1].grid(row=0,column=0,padx=1)
 	sliders[-1].set(slider_info[pos][1])
+	sliders[-1].bind("<ButtonRelease-1>",lambda x: button_reset_on_click())
 	CreateToolTip(sliders[-1],slider_info[pos][5],bottomframe)
 
 	currentRow += 1
@@ -539,6 +544,7 @@ for name in check_box_info:
 	check_box_frames[-1].grid(row=currentRow,column=0,padx=padx)
 	check_box_frames[-1].grid_propagate(False)
 
+
 	var = IntVar()
 
 	check_boxes.append(Checkbutton(check_box_frames[-1],text=check_box_info[pos][0],bg=bg_slider_color))
@@ -549,6 +555,7 @@ for name in check_box_info:
 
 	check_var.append(var)
 	check_boxes[-1].grid(row=0,column=0,padx=1)
+	check_boxes[-1].bind("<ButtonRelease-1>",lambda x: button_reset_on_click())
 	CreateToolTip(check_boxes[-1],check_box_info[pos][1],bottomframe)
 
 	currentRow += 1
@@ -638,7 +645,11 @@ def performOneStep():
 	if (not info.paused):	#if simulation is not paused
 		if info.sim.done:
 			button_play_pause_on_click()
+
 			button_step['state'] = 'disabled'
+			info.plotData()
+			info.updateGraphs()
+			info.showGraphs()
 
 		if info.stepping:
 			info.paused = True
@@ -669,6 +680,17 @@ def performOneStep():
 			info.graphcount = 0
 			info.updateGraphs()
 			info.showGraphs()
+
+def hasParametersChanged():
+	slider_values = [x.get()*1.0 for x in sliders]
+	check_values = [x.get() for x in check_var]
+	if (slider_values==info.previous_slider_values and check_values==info.previous_check_values):
+		return True
+	else:
+		info.previous_slider_values = slider_values
+		info.previous_check_values = check_values
+		return False
+
 
 #Mainloop:
 #############################################################################
