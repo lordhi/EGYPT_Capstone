@@ -24,6 +24,8 @@ tk = Tk()
 tk.title("Egypt simulation")
 tk.configure(background=general_background)
 
+
+
 #Parameters:
 ############################################################################
 w1 = 2 		#slider frame width
@@ -113,6 +115,9 @@ def onClose():
 def save_all_figures(directory):
 	# Uses existing methods to loop through all names in the drop down box, change the pointer to them, call updateGraphs() so that
 	# that specific graph is drawn and save the image of the graph. 
+
+
+
 	names = [x[0] for x in options]
 	user_selection = info.pointers[0]
 	for i in range(len(names)):
@@ -130,6 +135,9 @@ def save_all_figures(directory):
 def makeDir(folder):
 	# Makes a directory with the given name inside the "Saved figures" folder. If a directory with the same name already exists, 
 	# it will add a postscript to the name such as (1)
+	if not os.path.exists(save_figures):
+		os.mkdir(save_figures)
+
 	altered_folder = folder
 	finished = False
 	i = 1
@@ -472,12 +480,12 @@ slider_info = [("model-time-span",1000,100,1000,50,"The length of time in years 
 				("starting-households",7,1,10,1,"The number of households which each settlement will start with"),
 				("starting-household-size",5,2,10,1,"The number of members each household will have to start"),
 				("starting-grain",3000,100,8000,100,"The amount of grain each settlement will start with"),
-				("min-ambition",0.1,0,1,0.1,"Sets the minimum level of ambitiousness which influences ..."),
-				("min-competency",0.5,0,1,0.1,"Sets the minimum level of competence which influences ..."),
+				("min-ambition",0.1,0,1,0.1,"Sets the minimum level of ambition which controls how likely they are to farm when it's not absolutely needed"),
+				("min-competency",0.5,0,1,0.1,"Sets the minimum level of competence which controls how good they are at farming"),
 				("generational-variation",0.9,0,1,0.1,"Influences how much the level of skill can change from one generation to the next"),
 				("knowledge-radius",5,3,40,1,"Sets how far each settlement can see land and make purchases of that land"),
 				("distance-cost",10,1,15,1,"Sets the cost to travel to reach land that is further away"),
-				("fallow-limit",4,0,10,1,"..."),
+				("fallow-limit",4,0,10,1,"Controls how many years a field can go unharvested without being claimed"),
 				("pop-growth-rate",0.1,0,0.5,0.01,"Sets the rate at which the total population is forced to grow each year"),
 				("min-fission-chance",0.5,0.5,0.9,0.1,"Controls the likelyhood that households will split"),
 				("land-rental-rate",30,30,60,5,"Sets the rate at which households will charge for land rental")]
@@ -664,6 +672,7 @@ def performOneStep():
 #############################################################################
 #create a lambda function to get the current time in milliseconds
 current_milli_time = lambda: int(round(time.time() * 1000))
+tk.bind("<FocusOut>",destroyDisplayInfo)
 
 def mainLoop():
 #Calls itself repeatedly, sleeping an appropriate amount of time to achieve the desired frame rate as determined by the simulation speed slider
