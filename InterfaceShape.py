@@ -454,6 +454,7 @@ CreateToolTip(button_step,"Advance the simulation one year and update the displa
 simulation_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(0.88*w2*s)),label="Simulation speed",bg=top_panel_color,troughcolor=trough_color)
 simulation_speed_scale.grid(row=0,column=3,padx=padx*5)
 CreateToolTip(simulation_speed_scale,"Set speed of simulation in fps. Note that at higher speeds, not all frames are drawn.",bottomframe)
+simulation_speed_scale.set(100)
 
 graph_speed_scale = Scale(topframe,from_=1,to=100,resolution=1,orient=HORIZONTAL,sliderrelief="raised",length=(int(w2/4*s)),label="Graphing speed",bg=top_panel_color,troughcolor=trough_color)
 graph_speed_scale.grid(row=0,column=4,padx=padx*5)
@@ -646,9 +647,9 @@ def performOneStep():
 			button_play_pause_on_click()
 
 			button_step['state'] = 'disabled'
-			plotData()
-			updateGraphs()
-			showGraphs()
+			info.plotData()
+			info.updateGraphs()
+			info.showGraphs()
 
 		if info.stepping:
 			info.paused = True
