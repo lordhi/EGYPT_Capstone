@@ -2,23 +2,7 @@
 import numpy as np
 
 class Terrain:
-	settlement = False
-	was_settlement = False
-	settlement_territory = False
-	field = False
-	river = False
-	harvested = False
-	owned = False
-	owner = None
-	color_stack = 0,0,0
-	fertility = 0
-	harvest = 0
-	max_yield = 2475
-	nile_distance = 0
-	house_distance = 0
-	years_not_harvested = 0
-	x = -1
-	y = -1
+	__slots__ = "settlement", "was_settlement", "settlement_territory", "field", "river", "harvested", "owned", "owner", "fertility", "harvest", "max_yield", "nile_distance", "house_distance", "years_not_harvested", "x", "y"
 
 	def __init__(self, x, y):
 		self.x = x
@@ -26,13 +10,13 @@ class Terrain:
 		self.nile_distance = x
 
 		self.settlement = False
+		self.was_settlement = False
 		self.settlement_territory = False
 		self.field = False
 		self.river = False
 		self.harvested = False
 		self.owned = False
 		self.owner = None
-		self.color_stack = 0,0,0
 		self.fertility = 0
 		self.harvest = 0
 		self.max_yield = 2475

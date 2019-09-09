@@ -4,8 +4,8 @@ import numpy as np
 import math
 
 class Household:
-
 	__slots__ = "color", "grain", "workers", "ambition", "competency","minimum_ambition", "minimum_competency", "workers_worked", "generation_countdown", "min_fission_chance", "knowledge_radius", "distance_cost", "land_rental_rate", "fallow_limit", "x", "y", "x_size", "y_size", "all_terrain", "settled_in", "fields_owned", "fields_harvested", "known_patches", "legacy_mode", "generational_variation"
+	
 	def __init__(self, settled_in, grain, workers, min_ambition, min_competency, min_fission_chance, knowledge_radius, distance_cost, land_rental_rate, fallow_limit, x, y, all_terrain, x_size, y_size, generational_variance, legacy_mode):
 		self.color = None
 		self.grain = grain

@@ -13,13 +13,9 @@ class Simulation:
 						 manual_seed_enabled,fission_enabled, rent_enabled, legacy_mode, seed = ''):
 		self.years_passed = 0
 		self.legacy_mode = legacy_mode
-		self.elevation_dataset = []
 		self.flood_level = 0
 		self.total_population = 0
 		self.projected_historical_population = 0
-		self.lorenz_points = 0
-		self.gini_index_reserve = 0
-		self.house_colours, self.claim_x, self.claim_y = 0,0,0
 		self.time_span = model_time_span
 		self.done = False
 		self.seed = seed
