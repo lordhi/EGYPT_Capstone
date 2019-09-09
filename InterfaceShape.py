@@ -86,9 +86,9 @@ def displayInfo(event):
 	elif block.settlement:
 		text = "Settlement\nPopulation: "+str(block.owner.population)+"\nNumber of households: "+str(len(block.owner.households))
 	elif block.field:
-		text = "Field\nHarvested: "+formatYesNo(block.harvested)
+		text = "Field\nHarvested: "+formatYesNo(block.harvested) + "\nFertility: " + str(round(block.fertility,2)) + "\nPotential harvest: " + str(round(block.harvest,2)) + "\nYears not harvested: " + str(block.years_not_harvested)	
 	else:
-		text = "Land\nFertility: "+str(block.fertility)
+		text = "Land\nFertility: " + str(round(block.fertility,2)) + "\nPotential harvest: " + str(round(block.harvest,2))
 
 	destroyDisplayInfo()
 	info.tw = Toplevel(canvas)
@@ -486,7 +486,7 @@ slider_info = [("model-time-span",1000,100,1000,50,"The length of time in years 
 				("knowledge-radius",5,3,40,1,"Sets how far each settlement can see land and make purchases of that land"),
 				("distance-cost",10,1,15,1,"Sets the cost to travel to reach land that is further away"),
 				("fallow-limit",4,0,10,1,"Controls how many years a field can go unharvested without being claimed"),
-				("pop-growth-rate",0.1,0,0.5,0.01,"Sets the rate at which the total population is forced to grow each year"),
+				("pop-growth-rate",0.1,0,0.5,0.01,"Sets the rate at which the total population can grow each year"),
 				("min-fission-chance",0.5,0.5,0.9,0.1,"Controls the likelyhood that households will split"),
 				("land-rental-rate",30,30,60,5,"Sets the rate at which households will charge for land rental")]
 
