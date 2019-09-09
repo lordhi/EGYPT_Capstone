@@ -97,12 +97,10 @@ def displayInfo(event):
 	info.tw.wm_overrideredirect(True)
 	info.tw.wm_geometry("+%d+%d" % (x+event.x+3*padx, y+event.y-3*pady))
 	label = Label(info.tw, text=text, justify='left',
-					background=general_background, relief='solid', borderwidth=1,
+					background=general_background, relief='solid', borderwidth=1,	
 					font=("times", "10", "normal"))
 	label.pack(ipadx=1)
 
-
-	print(str(xpos)+ " " + str(ypos))	
 def setYearsPassed():
 	#Sets the label in the GUI to the current numver of years which have passed
 	info.years_label.set("Years passed: " + str(info.sim.years_passed))
@@ -247,6 +245,7 @@ def button_run_all_on_click():
 		tk.update_idletasks()
 
 	button_reset['state']='normal'
+
 
 	info.changed[0] = True
 	info.changed[1] = True
@@ -637,7 +636,11 @@ info.showGraphs()
 
 def performOneStep():
 	info.graphEvery = graph_speed_scale.get()
-	if (not info.paused and not info.sim.done):	#if simulation is not paused
+	if (not info.paused):	#if simulation is not paused
+		if info.sim.done:
+			button_play_pause_on_click()
+			button_step['state'] = 'disabled'
+
 		if info.stepping:
 			info.paused = True
 			info.stepping = False

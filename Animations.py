@@ -45,7 +45,6 @@ class Animations:
 				if (total_households>0):
 					gini_index_reserve += (index/total_households) - (wealth_so_far/total_grain)
 
-
 		#Store the data point for the Total Grain graph
 		self.info.graphs_data[0][0].append(self.info.sim.years_passed)
 		self.info.graphs_data[0][1][0].append(self.info.sim.total_grain)
