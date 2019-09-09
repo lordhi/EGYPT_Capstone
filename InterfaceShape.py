@@ -95,7 +95,7 @@ def displayInfo(event):
 	x,y = get_x_y_of_widget(animationframe)
 
 	info.tw.wm_overrideredirect(True)
-	info.tw.wm_geometry("+%d+%d" % (x+xpos*23+3*padx, y+ypos*23-3*pady))
+	info.tw.wm_geometry("+%d+%d" % (x+event.x+3*padx, y+event.y-3*pady))
 	label = Label(info.tw, text=text, justify='left',
 					background=general_background, relief='solid', borderwidth=1,
 					font=("times", "10", "normal"))
