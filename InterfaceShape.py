@@ -249,7 +249,7 @@ def button_run_all_on_click():
 	#info.showGraphs()
 	setYearsPassed()
 	destroyDisplayInfo()
-	
+
 def button_run_multiple_click():
 	#Called when the 'Run multiple' button gets clicked. It asks the user how many times it should run the simulation, it asks for
 	# the folder that the graphs should be saved into and it creates subfolders for each run with which it calls save_all_figures(). 
@@ -425,7 +425,7 @@ years.grid(row=0,column=0)
 #add the reset, pause/play,step buttons on the left
 button_reset = Button(topframe,text='Reset',bg=button_color,command = button_reset_on_click)
 button_reset.grid(row=0,column=0,padx=padx,pady=pady)
-CreateToolTip(button_reset,"Restart the simulation with a new layout of settlements using the parameters chosen",bottomframe)
+CreateToolTip(button_reset,"Restart the simulation with a new layout of settlements using the parameters chosen. Note that this button after changing parameters for the changes to take effect",bottomframe)
 
 
 pause_play_text = StringVar()
