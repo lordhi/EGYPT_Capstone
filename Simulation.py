@@ -51,7 +51,8 @@ class Simulation:
 		self.time_span = model_time_span
 		self.done = False
 		self.seed = seed
-		random.seed(seed)
+		if manual_seed_enabled:
+			random.seed(seed)
 		self.all_settlements = []
 
 		#values reset
