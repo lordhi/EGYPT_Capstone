@@ -2,50 +2,71 @@
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Requirements}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Functional}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.1}The simulation should produce graphs to display state}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.2} The user should be able to change inputs to the system}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.3}The simulation should run for a fixed period}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.4}A window should display the area in which the simulation is taking place, displaying the settlement and field positions}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.1.5}The code base should be easily extensible}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Non-Functional}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Usability}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Use Cases}{2}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Design Overview}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Changes}{2}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Death Due to Lack of Grain}{2}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Population Increases}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Architecture diagram for the system, showing how the UI checks the state of the simulation and passes this to be rendered.}}{3}}
-\newlabel{fig:Architecture}{{1}{3}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.3}Generational Changes in Ambition and Competency}{3}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.4}Order of Field Claimants}{3}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Implementation}{3}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Test Cases}{4}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Diagram showing the relationship between all the classes involved in the programme.}}{5}}
-\newlabel{fig:Packages}{{2}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Manual}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Sliders}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Simulation display}{5}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {A.2.1}Settlement}{5}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {A.2.2}Fields}{6}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {A.2.3}Land}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Graphs of data}{6}}
-\@writefile{toc}{\contentsline {section}{\numberline {B}Technical API Manual}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Simulation}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Settlement}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Household}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Terrain}{7}}
-\@writefile{toc}{\contentsline {section}{\numberline {C}Screenshots}{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Screenshot of the application once opened, without any actions being performed.}}{7}}
-\newlabel{fig:OnOpen}{{3}{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Screenshot of the application once a run has begun, taken at a slow simulation speed to prevent screentearing during a screenshot.}}{8}}
-\newlabel{fig:WhileRunning}{{4}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Screenshot of the application once a run has completed.}}{8}}
-\newlabel{fig:FinishedRunning}{{5}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Screenshot of the application during a run, with the simulation paused and the output of right clicking on a settlement shown.}}{9}}
-\newlabel{fig:ClickOnSettlement}{{6}{9}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Screenshot of the application during a run, with the simulation paused and the output of right clicking on an unharvested field shown.}}{9}}
-\newlabel{fig:ClickOnUnharvested}{{7}{9}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Screenshot of the application during a run, with the simulation paused and the output of right clicking on a harvested field shown.}}{10}}
-\newlabel{fig:ClickOnHarvested}{{8}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Screenshot of the application showing how a manual seed is entered.}}{10}}
-\newlabel{fig:Seed Entry}{{9}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}}{11}}
-\newlabel{fig:SaveAllFolder}{{10}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Screenshot of the application showing output of the "Save all Figures" button once all figures have been saved.}}{11}}
-\newlabel{fig:SaveAllSaved}{{11}{11}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}The system should be able to display at least 1 frame second when running at the highest simulation speed possible}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.2}Code should be structured to allow for easy understanding of functionality and allow functions to be easily swapped out (extensibility)}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.3}Inputs should be controlled by sliders for each of the initial conditions}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Usability}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}Error prevention}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.2}Performance}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.3}Learnability}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Use Cases}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.1}As an Archaeologist/ general user wanting to run the simulation}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.2}As an Archaeologist/ general user wishing to analyse results}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.3}As an Archaeologist/ general interested experimentalist}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.4}As an Archaeologist/ general interested experimentalist}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Design Overview}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Changes}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Death Due to Lack of Grain}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Population Increases}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Architecture diagram for the system, showing how the UI checks the state of the simulation and passes this to be rendered.}}{5}}
+\newlabel{fig:Architecture}{{1}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.3}Generational Changes in Ambition and Competency}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.4}Order of Field Claimants}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Implementation}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Diagram showing the relationship between all the classes involved in the programme.}}{6}}
+\newlabel{fig:Packages}{{2}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Important Functions in the GUI and Rendering}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Important Functions in the Simulation}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Simulation}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Settlement}{8}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}Household}{8}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Terrain}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Test Cases}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Manual}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Sliders}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Simulation display}{9}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {A.2.1}Settlement}{9}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {A.2.2}Fields}{9}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {A.2.3}Land}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Graphs of data}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Technical API Manual}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Simulation}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Settlement}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Household}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Terrain}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Screenshots}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Screenshot of the application once opened, without any actions being performed.}}{11}}
+\newlabel{fig:OnOpen}{{3}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Screenshot of the application once a run has begun, taken at a slow simulation speed to prevent screentearing during a screenshot.}}{11}}
+\newlabel{fig:WhileRunning}{{4}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Screenshot of the application once a run has completed.}}{12}}
+\newlabel{fig:FinishedRunning}{{5}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Screenshot of the application during a run, with the simulation paused and the output of right clicking on a settlement shown.}}{12}}
+\newlabel{fig:ClickOnSettlement}{{6}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Screenshot of the application during a run, with the simulation paused and the output of right clicking on an unharvested field shown.}}{13}}
+\newlabel{fig:ClickOnUnharvested}{{7}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Screenshot of the application during a run, with the simulation paused and the output of right clicking on a harvested field shown.}}{13}}
+\newlabel{fig:ClickOnHarvested}{{8}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Screenshot of the application showing how a manual seed is entered.}}{14}}
+\newlabel{fig:Seed Entry}{{9}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}}{14}}
+\newlabel{fig:SaveAllFolder}{{10}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Screenshot of the application showing output of the "Save all Figures" button once all figures have been saved.}}{15}}
+\newlabel{fig:SaveAllSaved}{{11}{15}}
