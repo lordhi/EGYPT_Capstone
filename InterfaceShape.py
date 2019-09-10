@@ -163,6 +163,10 @@ def button_step_on_click():
 
 	destroyDisplayInfo()
 	switchParametersState('disabled')
+
+def wrapper():
+	if info.paused and (info.sim.years_passed==0):
+		button_reset_on_click()
 			
 
 def button_reset_on_click():
@@ -518,7 +522,7 @@ for name in slider_info:
 		label=slider_info[pos][0],bg=bg_slider_color,troughcolor=trough_color))
 	sliders[-1].grid(row=0,column=0,padx=1)
 	sliders[-1].set(slider_info[pos][1])
-	sliders[-1].bind("<ButtonRelease-1>",lambda x: button_reset_on_click())
+	sliders[-1].bind("<ButtonRelease-1>",lambda x: wrapper())
 	CreateToolTip(sliders[-1],slider_info[pos][5],bottomframe)
 
 	currentRow += 1
