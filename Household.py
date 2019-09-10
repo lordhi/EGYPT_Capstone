@@ -10,8 +10,8 @@ class Household:
 		self.color = None
 		self.grain = grain
 		self.workers = workers
-		self.ambition = self.randomRange(min_ambition, 1) # min_ambition + (random.random()*(1 - min_ambition))
-		self.competency = self.randomRange(min_competency, 1) # min_competency + (random.random()*(1 - min_competency))
+		self.ambition = self.randomRange(min_ambition, 1) 
+		self.competency = self.randomRange(min_competency, 1) 
 		self.minimum_ambition = min_ambition
 		self.minimum_competency = min_competency
 		self.workers_worked = 0
@@ -106,7 +106,7 @@ class Household:
 			field = self.fields_owned[self.fields_harvested]
 
 			farm_chance = random.random()
-			## TODO:
+
 			## Consider better way of performing ambition calculation,
 			## original method was rapid way of getting the code working
 			if self.grain < self.workers*160 or farm_chance < self.ambition*self.competency:

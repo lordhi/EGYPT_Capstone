@@ -1,9 +1,6 @@
 from Household import Household
 import random
 
-##	TO DO
-# 	Keep track of size of settlement
-
 class Settlement:
 	__slots__ = "population", "terrain", "households", "x", "y"
 	parent = None
