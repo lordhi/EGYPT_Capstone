@@ -196,14 +196,14 @@
 					\includegraphics[width=12cm]{Min_ambition_run1_A}\\
 					\includegraphics[width=12cm]{Min_ambition_run1_B}
 					\caption{Graphs generated when running the python reimplementation with the minimum ambition set to 1}
-					\label{fig:Min_Ambition_enabled_ours_1}
+					\label{fig:Min_Ambition_ours_1}
 				\end{figure}
 					
 				\begin{figure}[!htb]
 					\includegraphics[width=6cm]{Min_ambition_run1_C}\\
 					\includegraphics[width=15cm]{Min_ambition_run1_D}
 					\caption{Graphs generated when running the NetLogo implementation with the minimum ambition set to 1}
-					\label{fig:Min_Ambition_enabled_Netlogo_1}
+					\label{fig:Min_Ambition_Netlogo_1}
 				\end{figure}
 				This test was chosen to validate the implementation of ambition. The graphs generated shall be compared with the baseline graphs to see if they show the expected differences, as well as with the competency graphs to see if they show similar results.
 		
@@ -229,6 +229,19 @@
 				The distribution of households between the brackets should be comparable to that of the baseline test, though at lower values of households in each. The gini index will be relatively high and total grain values will be lower in comparison.
 		
 			\subsection{Household fission enabled}
+				\begin{figure}[!htb]
+					\includegraphics[width=12cm]{Fission_run1_A}\\
+					\includegraphics[width=12cm]{Fission_run1_B}
+					\caption{Graphs generated when running the python reimplementation with household fission enabled}
+					\label{fig:Fission_enabled_ours_1}
+				\end{figure}
+				
+				\begin{figure}[!htb]
+					\includegraphics[width=6cm]{Fission_run1_C}\\
+					\includegraphics[width=15cm]{Fission_run1_D}
+					\caption{Graphs generated when running the NetLogo implementation with the household fission enabled}
+					\label{fig:Fission_enabled_Netlogo_1}
+				\end{figure}
 				This test was chosen to validate the implementation of land rental. The graphs generated shall be compared with the baseline graphs to see if they show the expected differences.
 			
 				Since households have a chance to split when they grow large, there will be fewer large households and so fewer households in the higher and middle brackets (since they won’t be able to farm as much grain if their workers keep splitting off). 
