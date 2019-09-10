@@ -15,37 +15,84 @@
 	\end{abstract}
 	
 	\section{Introduction}
-		\subsection{Changes}
-			A number of changes in the implementation were made, some due to what seemed to be implementation errors in the original code and others due to functionality not making sense with what was trying to be achieved. Those which affect functionality have been implemented as explained, however when the Legacy Mode setting is enabled, these changes are reverted back to how they were in the original implementation.
-			\subsubsection{Death Due to Lack of Grain}
-				In the original NetLogo code, if a household did not have enough grain to survive a year then a single person would die and the grain would be set to zero. In reality this doesn't make sense, as if a household has no food, then no one would survive. The reimplementation changed this so that only the family members who can be fed will survive.\\
-			\subsubsection{Population Increases}
-				In the original code, if the total current population is less than or equal to the historical projected population then the population can increase. At first glance this seems to be correct, however this allows the population to always grow slightly faster than the projected historical value, and thus in the reimplementation this is changed so that the population will only increase if it is less than the historical projected population.\\
-			\subsubsection{Generational Changes in Ambition and Competency}
-				In the original code, if the ambition or competency for a household moved out of the bounds set (minimum, up to 1) then a new value would be generated until it fell within the bounds. This means that the computational time for the ambition and competency changes are unbounded. In the reimplementation, a value within the possible range is generated.\\
-			\subsubsection{Order of Field Claimants}
-				In the original code, households claimed fields in ascending order of how much grain they currently have. This seemed inconsistent with every other operation being independant of grain or ordering, in the reimplementation, this ordering is randomised each year.
-	\section{Screenshots}
-		\includegraphics[width=\linewidth]{OnOpen}
 		
-		\includegraphics[width=\linewidth]{WhileRunning}
-		
-		\includegraphics[width=\linewidth]{FinishedRunning}
-		
-		\includegraphics[width=\linewidth]{RightClickOnSettlement}
-		
-		\includegraphics[width=\linewidth]{RightClickOnNotHarvestedField}
-		
-		\includegraphics[width=\linewidth]{RightClickOnHarvestedField}
-		
-		\includegraphics[width=\linewidth]{SeedEntry}
-		
-		\includegraphics[width=\linewidth]{SaveAll1}
-		
-		\includegraphics[width=\linewidth]{SaveAll2}
+	\section{Design Overview}
+		The programme was designed such that the only interactions between the simulation itself and the UI are in instantiation, the increase of years and the current state of the simulation. This was done for encapsulation purposes and to ensure the integrity of the simulation at all times. The display is split up into the UI and the rendering of the simulation, this was performed for ease of upkeep, as combining the two would result in a monolithic structure which is difficult to work with and maintain. The basic structure is shown in Figure \ref{fig:Architecture}.\\
+		Due to this being a reimplementation of work that has already been done, the algorithms and data structures were pre-determined. All changes made to the overall algorithm were due to efficiency concerns, or strange behaviour which was corrected.\\
+		Data was stored almost exclusively in lists, as order needed to be randomised each tick to remove possible biases due to ordering of operations being performed on the households.\\
+		\begin{figure}[!htb]
+		\includegraphics[width=10cm]{ArchitectureDiagram}
+		\caption{Architecture diagram for the system, showing how the UI checks the state of the simulation and passes this to be rendered.}
+		\label{fig:Architecture}
+		\end{figure}
+				\subsection{Changes}
+		A number of changes in the implementation were made, some due to what seemed to be implementation errors in the original code and others due to functionality not making sense with what was trying to be achieved. Those which affect functionality have been implemented as explained, however when the Legacy Mode setting is enabled, these changes are reverted back to how they were in the original implementation.
+		\subsubsection{Death Due to Lack of Grain}
+		In the original NetLogo code, if a household did not have enough grain to survive a year then a single person would die and the grain would be set to zero. In reality this doesn't make sense, as if a household has no food, then no one would survive. The reimplementation changed this so that only the family members who can be fed will survive.\\
+		\subsubsection{Population Increases}
+		In the original code, if the total current population is less than or equal to the historical projected population then the population can increase. At first glance this seems to be correct, however this allows the population to always grow slightly faster than the projected historical value, and thus in the reimplementation this is changed so that the population will only increase if it is less than the historical projected population.\\
+		\subsubsection{Generational Changes in Ambition and Competency}
+		In the original code, if the ambition or competency for a household moved out of the bounds set (minimum, up to 1) then a new value would be generated until it fell within the bounds. This means that the computational time for the ambition and competency changes are unbounded. In the reimplementation, a value within the possible range is generated.\\
+		\subsubsection{Order of Field Claimants}
+		In the original code, households claimed fields in ascending order of how much grain they currently have. This seemed inconsistent with every other operation being independant of grain or ordering, in the reimplementation, this ordering is randomised each year.
 	\section{Test Cases}
 
 	\section{Conclusions}
+	
+		\section{Screenshots}
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{OnOpen}
+		\caption{Screenshot of the application once opened, without any actions being performed.}
+		\label{fig:OnOpen}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{WhileRunning}
+		\caption{Screenshot of the application once a run has begun, taken at a slow simulation speed to prevent screentearing during a screenshot.}
+		\label{fig:WhileRunning}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{FinishedRunning}
+		\caption{Screenshot of the application once a run has completed.}
+		\label{fig:FinishedRunning}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{RightClickOnSettlement}
+		\caption{Screenshot of the application during a run, with the simulation paused and the output of right clicking on a settlement shown.}
+		\label{fig:ClickOnSettlement}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{RightClickOnNotHarvestedField}
+		\caption{Screenshot of the application during a run, with the simulation paused and the output of right clicking on an unharvested field shown.}
+		\label{fig:ClickOnUnharvested}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{RightClickOnHarvestedField}
+		\caption{Screenshot of the application during a run, with the simulation paused and the output of right clicking on a harvested field shown.}
+		\label{fig:ClickOnHarvested}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{SeedEntry}
+		\caption{Screenshot of the application showing how a manual seed is entered.}
+		\label{fig:Seed Entry}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{SaveAll1}
+		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
+		\label{fig:SaveAllFolder}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+		\includegraphics[width=15cm]{SaveAll2}
+		\caption{Screenshot of the application showing output of the "Save all Figures" button once all figures have been saved.}
+		\label{fig:SaveAllSaved}
+	\end{figure}
 	
 	\begin{thebibliography}{9}
 
