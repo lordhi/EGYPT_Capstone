@@ -10,7 +10,7 @@
 \begin{document}
 	\maketitle
 	\begin{abstract}
-			
+		Reimplementing a simulation for Ancient Egyptian Farming Communities in Python with a focus on speed and extensibility, from code originally written in Netlogo, with minor changes for cohesion and ease of use as well as quality of life improvements. Testing showed that there were differences between the original simulation and the reimplementation, even when the reimplementation was run in legacy mode.
 	\end{abstract}
 	
 	\section{Introduction}
@@ -127,6 +127,87 @@
 				The important functions in the Terrain class are the setFertility(), claim() and unclaim() functions. These are all self-explanatory from the names.
 	
 	\section{Test Cases}
+		To validate the correctness of our simulation we ran it using a variety of different initial conditions and then compared the graphs produced to those of the original simulation. The multiple run feature was used extensively to significantly shorten time spent gathering data. The test cases were all run with legacy mode enabled and so included the bugs of the original. Test initial conditions are set to the defaults unless otherwise specified. The following values constitute the defaults:\\
+		\begin{itemize}
+			\itemsep-0.5em 
+			\item Model time span - 500
+			\item Starting settlements - 14
+			\item Starting households - 7
+			\item Starting household size  - 5
+			\item Starting grain - 3000
+			\item Min ambition - 0.1
+			\item Min competency - 0.5
+			\item Generational variation - 0.9
+			\item Knowledge radius - 20
+			\item Distance cost - 10
+			\item Fallow limit - 4
+			\item Population growth rate - 0.1
+			\item Min fission chance - 0.7
+			\item Household fission - disabled
+			\item Land rental rate - 50
+			\item Land rental - disabled
+		\end{itemize}
+		
+		The households are divided up into brackets based on their current grain amount in comparison to the household with the most grain. The brackets are $>66\%$, $33\%$ to $66\%$ and $<33\%$.
+		
+		
+		\subsection{Test cases considered}
+			\subsection{All values are left at the default}
+				This test was chosen to give a baseline set of graphs to compare all subsequent ones to to give an indication as to whether the desired functionality was achieved, relatively speaking. These will also be compared to ones taken from the original simulation to ascertain correctness.
+			
+				Expected behaviour is for the households in the upper bracket to be the fewest, the middle brackets the second most and the lower bracket the least. Few settlements should have all their population reduced to 0, if any. 
+		
+			\subsection{Land rental enabled}
+				This test was chosen to validate the implementation of land rental. The graphs generated shall be compared with the baseline graphs to see if they show the expected differences.
+		
+				As households descend into poverty and lose fertile fields, they will start to borrow from their neighbours and so bring themselves back from the bad situation they were in, and so fluctuating between poverty and the middle bracket.
+		
+				The number of households in the lower and middle brackets should fluctuate greatly throughout the simulation, but the number of households in the lower bracket will remain the majority and next will be the households in the middle bracket, though these numbers will be much closer than in the baseline test. 
+		
+		
+			\subsection{Min ambition set to 1}
+				This test was chosen to validate the implementation of ambition. The graphs generated shall be compared with the baseline graphs to see if they show the expected differences, as well as with the competency graphs to see if they show similar results.
+		
+				Since everyone is ambitious, everyone will attempt to farm more and so fewer households will become poor and die out.
+		
+				The majority of households shall be within the middle bracket, next the lower bracket and then the higher bracket. Though, at times, the lower bracket may overtake the middle bracket or be less than the higher bracket.
+		
+		
+			\subsection{Min competency set to 1}
+				This test was chosen to validate the implementation of ambition. The graphs generated shall be compared with the baseline graphs to see if they show the expected differences, as well as with the ambition graphs to see if they show similar results.
+		
+				Since everyone is competent, full value is gotten from each harvest and so it should be difficult for any one household to become too poor and die out.
+		
+				The majority of households shall be within the middle bracket, next the lower bracket and then the higher bracket. Though, at times, the lower bracket may overtake the middle bracket or be less than the higher bracket.
+		
+		
+		
+			\subsection{Min ambition and competency set to 0}
+				This test was chosen to test the other extreme of min ambition and competency. The graphs generated shall be compared with the baseline graphs to see if they show the expected differences.
+				
+				Households will vary greatly and so there should be a large difference in equality. Since the average household won’t be able to farm particularly well and won’t do so incredibly often, grain values will be low and a lot of households will die out.
+				
+				The distribution of households between the brackets should be comparable to that of the baseline test, though at lower values of households in each. The gini index will be relatively high and total grain values will be lower in comparison.
+		
+			\subsection{Household fission enabled}
+				This test was chosen to validate the implementation of land rental. The graphs generated shall be compared with the baseline graphs to see if they show the expected differences.
+			
+				Since households have a chance to split when they grow large, there will be fewer large households and so fewer households in the higher and middle brackets (since they won’t be able to farm as much grain if their workers keep splitting off). 
+			
+				The difference between the graphs of baseline test and this one will not be that different, however, since fission only comes into effect later on in the simulation (since households don’t grow to enough workers to split particularly quickly), and so does not have time to greatly affect the bracket distribution. The one graph that is affected is the number of households and settlements graph, in which the number of households begins to increase towards the end of the simulation.
+		\section{Discussion of Results}
+		
+			\subsection{All values are left at the default}
+				As can be seen, the graphs look quite different. In the graphs from our reimplementation the household numbers drop off very quickly, which does not correctly represent the original NetLogo simulation. The cause of this problem is not known, but possible theories include the claim land functionality stopping certain household from claiming enough fields to sustain themselves, as well as there being an error in the harvest calculation. 
+				While the “Households holding stated percentage of wealthiest household’s grain” graphs do look quite different, they do show the same behaviour of how inequality is distributed between the households when taking into account the error with our households dying off.
+		
+				So overall a good representation of how inequality is distributed, but not a good representation of how households grow and die off.
+		
+			\subsection{Land rental enabled}
+				Interestingly enough, with rent enabled in our simulation it performs the same or possibly worse than our baseline test. Which is due to negative values being harvested a good amount of the time, which impacts the grain of the households and so causes more to die off. This does not follow expected behaviour and so is an error.
+		
+		
+		
 		
 	\section{Conclusions}
 		The application as designed seems to run much faster than its predecessor, while also being written in a more extensible manner. For clients, there are quality of life features that were implemented which were not in the original, for example being able to set up multiple runs of the same settings to automatically continue as well as being able to easily save graphs which are generated. In the original, a single graph could be saved at a time. In the reimplementation, all graphs could be saved at once, or a graph could be zoomed in on before being saved.
