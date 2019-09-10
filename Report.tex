@@ -149,15 +149,40 @@
 		\end{itemize}
 		
 		The households are divided up into brackets based on their current grain amount in comparison to the household with the most grain. The brackets are $>66\%$, $33\%$ to $66\%$ and $<33\%$.
-		
-		
+	
 		\subsection{Test cases considered}
 			\subsection{All values are left at the default}
+				\begin{figure}[!htb]
+					\includegraphics[width=12cm]{Default_values_run1_A}\\
+					\includegraphics[width=12cm]{Default_values_run1_B}
+					\caption{}
+					\label{fig:Default_values_Ours_1}
+				\end{figure}
+				
+				\begin{figure}[!htb]
+					\includegraphics[width=6cm]{Default_values_run1_C}\\
+					\includegraphics[width=15cm]{Default_values_run1_D}
+					\caption{}
+					\label{fig:Default_values_Netlogo_1}
+				\end{figure}
 				This test was chosen to give a baseline set of graphs to compare all subsequent ones to to give an indication as to whether the desired functionality was achieved, relatively speaking. These will also be compared to ones taken from the original simulation to ascertain correctness.
 			
 				Expected behaviour is for the households in the upper bracket to be the fewest, the middle brackets the second most and the lower bracket the least. Few settlements should have all their population reduced to 0, if any. 
 		
 			\subsection{Land rental enabled}
+					\begin{figure}[!htb]
+					\includegraphics[width=12cm]{Land_rental_enabled_run1_A}\\
+					\includegraphics[width=12cm]{Land_rental_enabled_run1_B}
+					\caption{}
+					\label{fig:Land_rental_enabled_ours_1}
+					\end{figure}
+					
+					\begin{figure}[!htb]
+						\includegraphics[width=6cm]{Land_rental_enabled_run1_C}\\
+						\includegraphics[width=15cm]{Land_rental_enabled_run1_D}
+						\caption{}
+						\label{fig:Land_rental_enabled_Netlogo_1}
+					\end{figure}
 				This test was chosen to validate the implementation of land rental. The graphs generated shall be compared with the baseline graphs to see if they show the expected differences.
 		
 				As households descend into poverty and lose fertile fields, they will start to borrow from their neighbours and so bring themselves back from the bad situation they were in, and so fluctuating between poverty and the middle bracket.
@@ -301,59 +326,4 @@
 		\caption{Screenshot of the application showing how a manual seed is entered.}
 		\label{fig:Seed Entry}
 	\end{figure}
-	
-	\begin{figure}[!htb]
-		\includegraphics[width=7cm]{Default_values_run1_A}
-		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
-		\label{fig:Default_values_run_1_A}
-	\end{figure}
-
-	\begin{figure}[!htb]
-		\includegraphics[width=7cm]{Default_values_run1_B}
-		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
-		\label{fig:Default_values_run_1_B}
-	\end{figure}
-
-	\begin{figure}[!htb]
-		\includegraphics[width=7cm]{Default_values_run1_C}
-		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
-		\label{fig:Default_values_run_1_C}
-	\end{figure}
-
-	\begin{figure}[!htb]
-		\includegraphics[width=7cm]{Default_values_run1_D}
-		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
-		\label{fig:Default_values_run_1_D}
-	\end{figure}
-
-	\begin{figure}[!htb]
-		\includegraphics[width=7cm]{Land_rental_enabled_run1_A}
-		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
-		\label{fig:Land_rental_enabled_run1_A}
-	\end{figure}
-
-	\begin{figure}[!htb]
-		\includegraphics[width=7cm]{Land_rental_enabled_run1_B}
-		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
-		\label{fig:Land_rental_enabled_run1_B}
-	\end{figure}
-
-	\begin{figure}[!htb]
-		\includegraphics[width=7cm]{Land_rental_enabled_run1_C}
-		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
-		\label{fig:Land_rental_enabled_run1_C}
-	\end{figure}
-
-	\begin{figure}[!htb]
-		\includegraphics[width=7cm]{Land_rental_enabled_run1_D}
-		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
-		\label{fig:Land_rental_enabled_run1_D}
-	\end{figure}
-
-
-
-
-
-
-
 \end{document}
