@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  10 SEP 2019 08:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  10 SEP 2019 08:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -388,13 +388,81 @@ File: Figures/Min_ambition_run1_D.jpg Graphic file (type jpg)
 Package pdftex.def Info: Figures/Min_ambition_run1_D.jpg  used on input line 20
 4.
 (pdftex.def)             Requested size: 426.79134pt x 116.71022pt.
+<Figures/Min_competency_run1_A.jpg, id=62, 579.4279pt x 290.3479pt>
+File: Figures/Min_competency_run1_A.jpg Graphic file (type jpg)
+<use Figures/Min_competency_run1_A.jpg>
+Package pdftex.def Info: Figures/Min_competency_run1_A.jpg  used on input line 
+217.
+(pdftex.def)             Requested size: 341.43306pt x 171.09554pt.
+<Figures/Min_competency_run1_B.jpg, id=63, 579.4279pt x 290.3479pt>
+File: Figures/Min_competency_run1_B.jpg Graphic file (type jpg)
+<use Figures/Min_competency_run1_B.jpg>
+Package pdftex.def Info: Figures/Min_competency_run1_B.jpg  used on input line 
+218.
+(pdftex.def)             Requested size: 341.43306pt x 171.09554pt.
+<Figures/Min_competency_run1_C.jpg, id=64, 150.5625pt x 112.92188pt>
+File: Figures/Min_competency_run1_C.jpg Graphic file (type jpg)
+<use Figures/Min_competency_run1_C.jpg>
+Package pdftex.def Info: Figures/Min_competency_run1_C.jpg  used on input line 
+224.
+(pdftex.def)             Requested size: 170.71652pt x 128.04993pt.
+<Figures/Min_competency_run1_D.jpg, id=65, 561.59813pt x 153.57375pt>
+File: Figures/Min_competency_run1_D.jpg Graphic file (type jpg)
+<use Figures/Min_competency_run1_D.jpg>
+Package pdftex.def Info: Figures/Min_competency_run1_D.jpg  used on input line 
+225.
+(pdftex.def)             Requested size: 426.79134pt x 116.71022pt.
  [12 <./Figures/Min_ambition_run1_A.jpg> <./Figures/Min_ambition_run1_B.jpg>]
+<Figures/Min_ambition_competency_run1_A.jpg, id=69, 579.4279pt x 290.3479pt>
+File: Figures/Min_ambition_competency_run1_A.jpg Graphic file (type jpg)
+<use Figures/Min_ambition_competency_run1_A.jpg>
+Package pdftex.def Info: Figures/Min_ambition_competency_run1_A.jpg  used on in
+put line 240.
+(pdftex.def)             Requested size: 341.43306pt x 171.09554pt.
+<Figures/Min_ambition_competency_run1_B.jpg, id=70, 579.4279pt x 290.3479pt>
+File: Figures/Min_ambition_competency_run1_B.jpg Graphic file (type jpg)
+<use Figures/Min_ambition_competency_run1_B.jpg>
+Package pdftex.def Info: Figures/Min_ambition_competency_run1_B.jpg  used on in
+put line 241.
+(pdftex.def)             Requested size: 341.43306pt x 171.09554pt.
+<Figures/Min_ambition_competency_run1_C.jpg, id=71, 150.5625pt x 112.92188pt>
+File: Figures/Min_ambition_competency_run1_C.jpg Graphic file (type jpg)
+<use Figures/Min_ambition_competency_run1_C.jpg>
+Package pdftex.def Info: Figures/Min_ambition_competency_run1_C.jpg  used on in
+put line 247.
+(pdftex.def)             Requested size: 170.71652pt x 128.04993pt.
+<Figures/Min_ambition_competency_run1_D.jpg, id=72, 561.59813pt x 153.57375pt>
+File: Figures/Min_ambition_competency_run1_D.jpg Graphic file (type jpg)
+<use Figures/Min_ambition_competency_run1_D.jpg>
+Package pdftex.def Info: Figures/Min_ambition_competency_run1_D.jpg  used on in
+put line 248.
+(pdftex.def)             Requested size: 426.79134pt x 116.71022pt.
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ô in font cmr12!
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ô in font cmr12!
+<Figures/Fission_run1_A.jpg, id=73, 579.4279pt x 290.3479pt>
+File: Figures/Fission_run1_A.jpg Graphic file (type jpg)
+<use Figures/Fission_run1_A.jpg>
+Package pdftex.def Info: Figures/Fission_run1_A.jpg  used on input line 260.
+(pdftex.def)             Requested size: 341.43306pt x 171.09554pt.
+<Figures/Fission_run1_B.jpg, id=74, 579.4279pt x 290.3479pt>
+File: Figures/Fission_run1_B.jpg Graphic file (type jpg)
+<use Figures/Fission_run1_B.jpg>
+Package pdftex.def Info: Figures/Fission_run1_B.jpg  used on input line 261.
+(pdftex.def)             Requested size: 341.43306pt x 171.09554pt.
+<Figures/Fission_run1_C.jpg, id=75, 150.5625pt x 112.92188pt>
+File: Figures/Fission_run1_C.jpg Graphic file (type jpg)
+<use Figures/Fission_run1_C.jpg>
+Package pdftex.def Info: Figures/Fission_run1_C.jpg  used on input line 267.
+(pdftex.def)             Requested size: 170.71652pt x 128.04993pt.
+<Figures/Fission_run1_D.jpg, id=76, 561.59813pt x 153.57375pt>
+File: Figures/Fission_run1_D.jpg Graphic file (type jpg)
+<use Figures/Fission_run1_D.jpg>
+Package pdftex.def Info: Figures/Fission_run1_D.jpg  used on input line 268.
+(pdftex.def)             Requested size: 426.79134pt x 116.71022pt.
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ô in font cmr12!
@@ -411,15 +479,17 @@ Missing character: There is no ô in font cmr12!
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
-
-Underfull \hbox (badness 10000) in paragraph at lines 249--251
+ [14 <./Figures/Min_competency_run1_A.jpg> <./Figures/Min_competency_run1_B.jpg
+>]
+Underfull \hbox (badness 10000) in paragraph at lines 289--291
 
  []
 
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ô in font cmr12!
-[14]
+[15 <./Figures/Min_competency_run1_C.jpg> <./Figures/Min_competency_run1_D.jpg>
+]
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ú in font cmr12!
@@ -427,20 +497,32 @@ Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--267
+Underfull \hbox (badness 10000) in paragraph at lines 304--307
+
+ []
+
+[16 <./Figures/Min_ambition_competency_run1_A.jpg> <./Figures/Min_ambition_comp
+etency_run1_B.jpg>]
+
+LaTeX Warning: Empty `thebibliography' environment on input line 310.
+
+[17 <./Figures/Min_ambition_competency_run1_C.jpg> <./Figures/Min_ambition_comp
+etency_run1_D.jpg>]
+
+LaTeX Warning: Text page 18 contains only floats.
+
+
+Overfull \vbox (2.44435pt too high) has occurred while \output is active []
+
+
+[18 <./Figures/Fission_run1_A.jpg> <./Figures/Fission_run1_B.jpg> <./Figures/Fi
+ssion_run1_C.jpg> <./Figures/Fission_run1_D.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 320--322
 
  []
 
 
-LaTeX Warning: Empty `thebibliography' environment on input line 270.
-
-[15]
-Underfull \hbox (badness 10000) in paragraph at lines 280--282
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 283--285
+Underfull \hbox (badness 10000) in paragraph at lines 323--325
 
  []
 
@@ -450,54 +532,54 @@ Missing character: There is no ú in font cmr12!
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
-[16]
-<Figures/OnOpen.png, id=78, 1839.87375pt x 1031.855pt>
+[19]
+<Figures/OnOpen.png, id=100, 1839.87375pt x 1031.855pt>
 File: Figures/OnOpen.png Graphic file (type png)
 <use Figures/OnOpen.png>
-Package pdftex.def Info: Figures/OnOpen.png  used on input line 303.
+Package pdftex.def Info: Figures/OnOpen.png  used on input line 343.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/WhileRunning.png, id=79, 1839.87375pt x 1031.855pt>
+<Figures/WhileRunning.png, id=101, 1839.87375pt x 1031.855pt>
 File: Figures/WhileRunning.png Graphic file (type png)
 <use Figures/WhileRunning.png>
-Package pdftex.def Info: Figures/WhileRunning.png  used on input line 309.
+Package pdftex.def Info: Figures/WhileRunning.png  used on input line 349.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/FinishedRunning.png, id=80, 1839.87375pt x 1031.855pt>
+<Figures/FinishedRunning.png, id=102, 1839.87375pt x 1031.855pt>
 File: Figures/FinishedRunning.png Graphic file (type png)
 <use Figures/FinishedRunning.png>
-Package pdftex.def Info: Figures/FinishedRunning.png  used on input line 315.
+Package pdftex.def Info: Figures/FinishedRunning.png  used on input line 355.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnSettlement.png, id=81, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnSettlement.png, id=103, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnSettlement.png Graphic file (type png)
 <use Figures/RightClickOnSettlement.png>
 Package pdftex.def Info: Figures/RightClickOnSettlement.png  used on input line
- 321.
+ 361.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnNotHarvestedField.png, id=82, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnNotHarvestedField.png, id=104, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnNotHarvestedField.png Graphic file (type png)
 <use Figures/RightClickOnNotHarvestedField.png>
 Package pdftex.def Info: Figures/RightClickOnNotHarvestedField.png  used on inp
-ut line 327.
+ut line 367.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnHarvestedField.png, id=83, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnHarvestedField.png, id=105, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnHarvestedField.png Graphic file (type png)
 <use Figures/RightClickOnHarvestedField.png>
 Package pdftex.def Info: Figures/RightClickOnHarvestedField.png  used on input 
-line 333.
+line 373.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/SeedEntry.png, id=84, 1097.09875pt x 689.57625pt>
+<Figures/SeedEntry.png, id=106, 1097.09875pt x 689.57625pt>
 File: Figures/SeedEntry.png Graphic file (type png)
 <use Figures/SeedEntry.png>
-Package pdftex.def Info: Figures/SeedEntry.png  used on input line 339.
+Package pdftex.def Info: Figures/SeedEntry.png  used on input line 379.
 (pdftex.def)             Requested size: 426.79134pt x 268.24971pt.
- [17] [18 <./Figures/OnOpen.png> <./Figures/WhileRunning.png>] [19 <./Figures/F
-inishedRunning.png> <./Figures/RightClickOnSettlement.png>] [20 <./Figures/Righ
+ [20] [21 <./Figures/OnOpen.png> <./Figures/WhileRunning.png>] [22 <./Figures/F
+inishedRunning.png> <./Figures/RightClickOnSettlement.png>] [23 <./Figures/Righ
 tClickOnNotHarvestedField.png> <./Figures/RightClickOnHarvestedField.png>]
-[21 <./Figures/SeedEntry.png>] (./Report.aux) ) 
+[24 <./Figures/SeedEntry.png>] (./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 2188 strings out of 494923
- 33658 string characters out of 6180741
- 95309 words of memory out of 5000000
- 5465 multiletter control sequences out of 15000+600000
+ 2254 strings out of 494923
+ 35985 string characters out of 6180741
+ 95369 words of memory out of 5000000
+ 5519 multiletter control sequences out of 15000+600000
  9763 words of font info for 34 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  41i,6n,32p,998b,220s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -509,10 +591,10 @@ amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 r17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on Report.pdf (21 pages, 2083708 bytes).
+Output written on Report.pdf (24 pages, 2341360 bytes).
 PDF statistics:
- 135 PDF objects out of 1000 (max. 8388607)
- 73 compressed objects within 1 object stream
+ 156 PDF objects out of 1000 (max. 8388607)
+ 79 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 106 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 166 words of extra memory for PDF output out of 10000 (max. 10000000)
 
