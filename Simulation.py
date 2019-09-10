@@ -147,7 +147,7 @@ class Simulation:
 	def rentLand(self):
 		self.all_households.sort(key=lambda x: x.ambition, reverse=True)
 		for household in self.all_households:
-			household.rentLand() # Move land_rental_rate inside household or not? (Thinking about extensibility)
+			household.rentLand()
 	
 
 					
