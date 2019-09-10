@@ -2,6 +2,7 @@ from Settlement import Settlement
 from Terrain import Terrain
 from Household import Household
 import random
+import numpy as np
 
 class Simulation:
 	x_size = 30
