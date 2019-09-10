@@ -479,7 +479,7 @@ CreateToolTip(button_save_all_figures,"Save each of the 11 avaliable figures as 
 ############################################################################
 #Declare an array containing all the information to build the sliders as entries of the form 
 # (text,default value,minimum value,maximum value,step)
-slider_info = [("model-time-span",1000,100,1000,50,"The length of time in years for which the model will run"),
+slider_info = [("model-time-span",500,100,1000,50,"The length of time in years for which the model will run"),
 				("starting-settlements",14,5,20,1,"The number of settlements which will be present at the start of the simulation"),
 				("starting-households",7,1,10,1,"The number of households which each settlement will start with"),
 				("starting-household-size",5,2,10,1,"The number of members each household will have to start"),
@@ -487,12 +487,12 @@ slider_info = [("model-time-span",1000,100,1000,50,"The length of time in years 
 				("min-ambition",0.1,0,1,0.1,"Sets the minimum level of ambition which controls how likely they are to farm when it's not absolutely needed"),
 				("min-competency",0.5,0,1,0.1,"Sets the minimum level of competence which controls how good they are at farming"),
 				("generational-variation",0.9,0,1,0.1,"Influences how much the level of skill can change from one generation to the next"),
-				("knowledge-radius",5,3,40,1,"Sets how far each settlement can see land and make purchases of that land"),
+				("knowledge-radius",20,3,40,1,"Sets how far each settlement can see land and make purchases of that land"),
 				("distance-cost",10,1,15,1,"Sets the cost to travel to reach land that is further away"),
 				("fallow-limit",4,0,10,1,"Controls how many years a field can go unharvested without being claimed"),
 				("pop-growth-rate",0.1,0,0.5,0.01,"Sets the rate at which the total population can grow each year"),
-				("min-fission-chance",0.5,0.5,0.9,0.1,"Controls the likelyhood that households will split"),
-				("land-rental-rate",30,30,60,5,"Sets the rate at which households will charge for land rental")]
+				("min-fission-chance",0.7,0.5,0.9,0.1,"Controls the likelyhood that households will split"),
+				("land-rental-rate",50,30,60,5,"Sets the rate at which households will charge for land rental")]
 
 #Create the canvas to hold the sliders and add a scroll bar so that canvas can be scrolled
 slider_canvas = Canvas(sliderframe,bg='white smoke',width=int(w1*s),height=int((h2+h3)*s))
