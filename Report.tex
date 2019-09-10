@@ -155,16 +155,17 @@
 				\begin{figure}[!htb]
 					\includegraphics[width=12cm]{Default_values_run1_A}\\
 					\includegraphics[width=12cm]{Default_values_run1_B}
-					\caption{}
+					\caption{Graphs generated when running the Python reimplementation with default values}
 					\label{fig:Default_values_Ours_1}
 				\end{figure}
 				
 				\begin{figure}[!htb]
 					\includegraphics[width=6cm]{Default_values_run1_C}\\
 					\includegraphics[width=15cm]{Default_values_run1_D}
-					\caption{}
+					\caption{Graphs generated when running the NetLogo implementation with default values}
 					\label{fig:Default_values_Netlogo_1}
 				\end{figure}
+				
 				This test was chosen to give a baseline set of graphs to compare all subsequent ones to to give an indication as to whether the desired functionality was achieved, relatively speaking. These will also be compared to ones taken from the original simulation to ascertain correctness.
 			
 				Expected behaviour is for the households in the upper bracket to be the fewest, the middle brackets the second most and the lower bracket the least. Few settlements should have all their population reduced to 0, if any. 
@@ -223,7 +224,7 @@
 		\section{Discussion of Results}
 		
 			\subsection{All values are left at the default}
-				As can be seen, the graphs look quite different. In the graphs from our reimplementation the household numbers drop off very quickly, which does not correctly represent the original NetLogo simulation. The cause of this problem is not known, but possible theories include the claim land functionality stopping certain household from claiming enough fields to sustain themselves, as well as there being an error in the harvest calculation. 
+				As can be seen, the graphs look quite different. As shown in Figure \ref{fig:Default_values_Ours_1} the household numbers drop off very quickly, which does not correctly represent the original NetLogo simulation (Figure \ref{fig:Default_values_Netlogo_1}). The cause of this problem is not known, but possible theories include the claim land functionality stopping certain household from claiming enough fields to sustain themselves, as well as there being an error in the harvest calculation. 
 				While the “Households holding stated percentage of wealthiest household’s grain” graphs do look quite different, they do show the same behaviour of how inequality is distributed between the households when taking into account the error with our households dying off.
 		
 				So overall a good representation of how inequality is distributed, but not a good representation of how households grow and die off.
