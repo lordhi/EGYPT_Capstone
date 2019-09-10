@@ -14,7 +14,7 @@ class Animations:
 
 	def plotData(self):
 		#This method computes each new point of data for this tick of the simulation and adds the data to the appropriate graph
-
+		self.calculateHouseholdColors()
 
 		#Compute the gini index graph according to the algorithm given in the original code
 		total_grain = self.info.sim.total_grain
@@ -237,6 +237,16 @@ class Animations:
 		else:
 			canvas.create_oval(x-r,y-r,x+r,y+r,fill=color,width=0)
 
+	def calculateHouseholdColors(self):
+		#calculate the household which has the biggest grain. Used to determine the color of households
+		if (len(self.info.sim.all_households)>0):
+			self.info.overall_biggest_grain = max([x.grain for x in self.info.sim.all_households])
+		else:
+			self.info.overall_biggest_grain = 0
+
+		for household in self.info.sim.all_households:
+			household.color = self.getColor(self.info.overall_biggest_grain,household.grain)
+
 	def drawGridSimulation(self):
 		#Draws one frame of the simulation to the canvas. 
 
@@ -250,12 +260,6 @@ class Animations:
 		self.xstep = width/columns - 1
 		self.ystep = height/rows - 1
 		self.clearCanvas()
-
-		#calculate the household which has the biggest grain. Used to determine the color of households
-		if (len(self.info.sim.all_households)>0):
-			overall_biggest_grain = max([x.grain for x in self.info.sim.all_households])
-		else:
-			overall_biggest_grain = 0
 
 		#color every block in the grid either as blue for the river or green for normal land
 		for row in range(0,rows):
@@ -275,10 +279,8 @@ class Animations:
 			row = settlement.x
 			col = settlement.y
 			for household in settlement.households:
-				main_color = self.getColor(overall_biggest_grain,household.grain)
-				household.color = main_color
 				for field in household.fields_owned:
-					self.canvas.create_line((row+0.5)*self.xstep,(col+0.5)*self.ystep,(field.x+0.5)*self.xstep,(field.y+0.5)*self.ystep,fill=color_hexes[main_color])		
+					self.canvas.create_line((row+0.5)*self.xstep,(col+0.5)*self.ystep,(field.x+0.5)*self.xstep,(field.y+0.5)*self.ystep,fill=color_hexes[household.color])		
 
 		#draw the settlements and give them their appropriate color. Also draw the circle around them with the appropriate radius
 		for settlement in self.info.sim.settlements:
@@ -299,6 +301,8 @@ class Animations:
 			if temp > 2:
 				temp = 2
 			radius = ((temp+1)*self.xstep)/2
+
+			overall_biggest_grain = self.info.overall_biggest_grain
 
 			if len(settlement.households)>0:
 				biggest_household_grain = max([x.grain for x in settlement.households])
