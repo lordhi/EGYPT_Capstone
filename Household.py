@@ -158,8 +158,6 @@ class Household:
 
 				if best_field.field and best_field not in self.fields_owned and harvest_chance < (self.ambition * self.competency):
 					best_field.harvested = True
-					# shape
-					# color
 					field_harvest = best_field.harvest*self.competency - (((self.x - best_field.x)**2 + (self.y - best_field.y)**2)**0.5)*self.distance_cost
 
 					total_harvest += field_harvest * (1 - (self.land_rental_rate/100)) - 300
@@ -170,7 +168,7 @@ class Household:
 					self.fields_harvested += 1
 
 			self.grain += total_harvest
-
+			
 	def randomRange(self, minimum, maximum):
 		if maximum == minimum:
 			return minimum
