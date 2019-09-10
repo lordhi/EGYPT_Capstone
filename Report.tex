@@ -37,6 +37,8 @@
 				This has been achieved through the majority of functionality which is likely to be changed being placed inside of a single class. This allows for replacing the decision-making of the agent to be replaced simply by replacing a few functions of a single class, which have documented functionality as described in the technical API manual.
 			\subsubsection{Inputs should be controlled by sliders for each of the initial conditions}
 				This has been achieved through the use of Tkinter Scale widgets to provide input to the program.
+			\subsubsection{The interface should be user friendly and easy to use}
+				This has been achieved through displaying a tooltip which describes what each widget on the screen does when the mouse hovers over it as described in the implementation section.	
 			
 		\subsection{Usability}
 			The following factors were considered when designing the user interface:
@@ -104,7 +106,7 @@
 				\item Info.plotData()\\
 				Which reads the necessary data out of the simulation object and appends all the data needed for each graph to a list which stores the lists required for each graph. This outer list consists of 11 inner list, each corresponding to a single graph.
 				\item Info.updateGraphs()\\
-				Which takes the data which has already been stored and adds it to the pyplot.figure objects which the FigureCanvasTkAgg() represent. In order to reduce the time taken to draw all the points, only points which have been added since the last draw are drawn each cycle. This is performed until the user decides to change which graph is being displayed, in which case the entire graph must be redrawn, or many lines have already been drawn, in which case the graph is redrawn as a single line. The second part is a speed optimisation, as plotting many points at once is a slow process, however the fragmentation that is created when many smaller lines have been drawn can cause the process to slow even further.
+				Which takes the data which has already been stored and adds it to the pyplot.figure objects which the FigureCanvasTkAgg() objects represent. In order to reduce the time taken to draw all the points, only points which have been added since the last draw are drawn each cycle. This is performed until the user decides to change which graph is being displayed, in which case the entire graph must be redrawn, or many lines have already been drawn, in which case the graph is redrawn as a single line. The second part is a speed optimisation, as plotting many points at once is a slow process, however the fragmentation that is created when many smaller lines have been drawn can cause the process to slow even further.
 				\item Info.showGraphs()\\
 				Which calls show on both of the FigureCanvasTkAgg() objects to show the data to the user.
 			\end{itemize}
@@ -205,14 +207,12 @@
 	\end{figure}
 	
 	\begin{figure}[!htb]
-		\includegraphics[width=15cm]{SaveAll1}
+		\includegraphics[width=15cm]{Default values run 1 A}
 		\caption{Screenshot of the application showing the dialog asking for a foldername to save multiple figures in for the "Save all Figures" button.}
 		\label{fig:SaveAllFolder}
 	\end{figure}
-	
-	\begin{figure}[!htb]
-		\includegraphics[width=15cm]{SaveAll2}
-		\caption{Screenshot of the application showing output of the "Save all Figures" button once all figures have been saved.}
-		\label{fig:SaveAllSaved}
-	\end{figure}
+
+
+
+
 \end{document}
