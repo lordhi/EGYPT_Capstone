@@ -530,7 +530,7 @@ for name in slider_info:
 check_box_info = [	("manual-seed","By providing a seed, one can ensure the same starting positions each run"),
 					("allow-household-fission","Sets whether households are allowed to split into more households"),
 					("allow-land-rental","Sets whether households may rent land from one another"),
-					("legacy-mode","...")
+					("legacy-mode","Makes the simulation run closer to the original including logical errors")
 				 ]
 
 
@@ -655,9 +655,9 @@ def performOneStep():
 			info.paused = True
 			info.stepping = False
 
-		info.animationEvery = 1
+		info.animationEvery = 	1
 		if not info.stepping:
-			info.animationEvery = int(simulation_speed_scale.get()//10)+1
+			info.animationEvery = int(simulation_speed_scale.get()//10)+1	
 
 		info.animationcount += 1
 		if (info.animationcount >= info.animationEvery):

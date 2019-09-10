@@ -300,7 +300,10 @@ class Animations:
 				temp = 2
 			radius = ((temp+1)*self.xstep)/2
 
-			biggest_household_grain = max([x.grain for x in settlement.households])
+			if len(settlement.households)>0:
+				biggest_household_grain = max([x.grain for x in settlement.households])
+			else:
+				biggest_household_grain = 0
 			main_color = self.getColor(overall_biggest_grain,biggest_household_grain)
 			
 			self.drawCircle(self.canvas,(row+0.5)*self.xstep,(col+0.5)*self.xstep,radius)
