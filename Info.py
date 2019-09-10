@@ -42,6 +42,7 @@ class Info:
 
 		#Create the animations object to do handle the animations of the graphs and the grid
 		self.animate = Animations(plt,canvas,self,graph1,graph2)
+		self.overall_biggest_grain =0
 
 	def resizeImage(self,img,basewidth):
 		#Takes an image and returns an image with the width resized to the parameter basewidth while maintaining the aspect ratio

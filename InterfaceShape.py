@@ -723,6 +723,7 @@ graph2var.set(options[info.pointers[1]][0])
 button_reset_on_click()
 info.clicked_once = True
 info.graphEvery = graph_speed_scale.get()
+info.overall_biggest_grain = 0
 
 tk.protocol('WM_DELETE_WINDOW', onClose)
 #Start the calls to main loop which continues to call itself
