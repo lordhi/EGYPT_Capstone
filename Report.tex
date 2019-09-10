@@ -206,11 +206,26 @@
 			\subsection{Land rental enabled}
 				Interestingly enough, with rent enabled in our simulation it performs the same or possibly worse than our baseline test. Which is due to negative values being harvested a good amount of the time, which impacts the grain of the households and so causes more to die off. This does not follow expected behaviour and so is an error.
 		
-		
-		
-		
+			\subsection{Min ambition set to 1}
+				Similarly to rent, having a high ambition negatively impacts the survival of households. This is counterintuitive since a higher ambition should result in more fields being harvest, it is also counter to the results expected and shown in the NetLogo simulation. This is an error and there is no theorized cause.\\
+				It was expected to behave similarly to how the high competency test did.\\
+
+			\subsection{Min competency set to 1}		
+				As can be seen when comparing these graphs to those of the baseline test, the expected behaviour of their being more households in the middle bracket than before is demonstrated in each and less households die off overall in each. 
+			
+			\subsection{Min ambition and competency set to 0}
+				As expected, since Ambition and Competency are set low (0 in our implementation, 0.1 in NetLogo) the average household has a hard time farming enough to keep themselves fed (since it’s more likely for either competency or ambition to be low) and so a lot more households die off overall. Another thing to note is how similar the NetLogo graphs look to our baseline test graphs and giving rise to the hypothesis that errors in the competency and ambition calculation could be contributing to the problem of households dying off (though it cannot be the whole reason since it persists when competency is set to large values.
+			
+			\subsection{Household fission enabled}			
+				As can be seen from these graphs, the number of households increases as the simulation progresses to the point at which households have enough workers for fission to start to take place (starts sooner in our simulation since having more households die off means that the remaining households get more members). Otherwise the distribution of the households between brackets is quite similar to that of the baseline test, as was expected.
+			
+			
+			
 	\section{Conclusions}
-		The application as designed seems to run much faster than its predecessor, while also being written in a more extensible manner. For clients, there are quality of life features that were implemented which were not in the original, for example being able to set up multiple runs of the same settings to automatically continue as well as being able to easily save graphs which are generated. In the original, a single graph could be saved at a time. In the reimplementation, all graphs could be saved at once, or a graph could be zoomed in on before being saved.
+		The application as designed seems to run much faster than its predecessor, while also being written in a more extensible manner. For clients, there are quality of life features that were implemented which were not in the original, for example being able to view information about an individual settlement easily as well as being able to easily save graphs which are generated. In the original, a single graph could be saved at a time. In the reimplementation, all graphs could be saved at once, or a graph could be zoomed in on before being saved.\\
+		The current implementation of the simulation has many errors that prevent certain functionality from being used in experiments on the model, though it does accurately portray the distribution of inequality between households (if not the life time of a household) and so is useful in a limited manner to test the basic features of the model.\\
+		In terms of usability, the “run multiple simulations” feature was used extensively during the capturing of the test data and saved considerably on time due to automating running the simulation and saving the results. This feature would be incredibly useful to a researcher that wanted to run many experiments consecutively.\\
+		
 	\begin{thebibliography}{9}
 		
 	\end{thebibliography}
