@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  10 SEP 2019 03:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  10 SEP 2019 04:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -242,7 +242,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 11.
 
-Underfull \hbox (badness 10000) in paragraph at lines 22--25
+Underfull \hbox (badness 10000) in paragraph at lines 27--30
 
  []
 
@@ -252,34 +252,53 @@ Underfull \hbox (badness 10000) in paragraph at lines 22--25
 <Figures/ArchitectureDiagram.PNG, id=10, 484.81125pt x 632.3625pt>
 File: Figures/ArchitectureDiagram.PNG Graphic file (type png)
 <use Figures/ArchitectureDiagram.PNG>
-Package pdftex.def Info: Figures/ArchitectureDiagram.PNG  used on input line 27
+Package pdftex.def Info: Figures/ArchitectureDiagram.PNG  used on input line 32
 .
 (pdftex.def)             Requested size: 284.52756pt x 371.14154pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 35--36
-
- []
-
-[2 <./Figures/ArchitectureDiagram.PNG>]
-Underfull \hbox (badness 10000) in paragraph at lines 37--38
+Underfull \hbox (badness 10000) in paragraph at lines 40--41
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--40
+Underfull \hbox (badness 10000) in paragraph at lines 42--43
 
  []
 
 
-LaTeX Warning: Empty `thebibliography' environment on input line 48.
-
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 58--60
+Underfull \hbox (badness 10000) in paragraph at lines 44--45
 
  []
 
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
 
-Underfull \hbox (badness 10000) in paragraph at lines 61--63
+ []
+
+[3 <./Figures/ArchitectureDiagram.PNG>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 53.
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 53.
+<Figures/packages.png, id=19, 420.57124pt x 444.66125pt>
+File: Figures/packages.png Graphic file (type png)
+<use Figures/packages.png>
+Package pdftex.def Info: Figures/packages.png  used on input line 68.
+(pdftex.def)             Requested size: 284.52756pt x 300.82545pt.
+ [4]
+
+LaTeX Warning: Empty `thebibliography' environment on input line 79.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--91
+
+ []
+
+[5 <./Figures/packages.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 92--94
 
  []
 
@@ -289,76 +308,77 @@ Missing character: There is no ú in font cmr12!
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
-[4]
-<Figures/OnOpen.png, id=22, 1839.87375pt x 1031.855pt>
+[6]
+<Figures/OnOpen.png, id=31, 1839.87375pt x 1031.855pt>
 File: Figures/OnOpen.png Graphic file (type png)
 <use Figures/OnOpen.png>
-Package pdftex.def Info: Figures/OnOpen.png  used on input line 81.
+Package pdftex.def Info: Figures/OnOpen.png  used on input line 112.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/WhileRunning.png, id=23, 1839.87375pt x 1031.855pt>
+<Figures/WhileRunning.png, id=32, 1839.87375pt x 1031.855pt>
 File: Figures/WhileRunning.png Graphic file (type png)
 <use Figures/WhileRunning.png>
-Package pdftex.def Info: Figures/WhileRunning.png  used on input line 87.
+Package pdftex.def Info: Figures/WhileRunning.png  used on input line 118.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/FinishedRunning.png, id=24, 1839.87375pt x 1031.855pt>
+<Figures/FinishedRunning.png, id=33, 1839.87375pt x 1031.855pt>
 File: Figures/FinishedRunning.png Graphic file (type png)
 <use Figures/FinishedRunning.png>
-Package pdftex.def Info: Figures/FinishedRunning.png  used on input line 93.
+Package pdftex.def Info: Figures/FinishedRunning.png  used on input line 124.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnSettlement.png, id=25, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnSettlement.png, id=34, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnSettlement.png Graphic file (type png)
 <use Figures/RightClickOnSettlement.png>
 Package pdftex.def Info: Figures/RightClickOnSettlement.png  used on input line
- 99.
+ 130.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnNotHarvestedField.png, id=26, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnNotHarvestedField.png, id=35, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnNotHarvestedField.png Graphic file (type png)
 <use Figures/RightClickOnNotHarvestedField.png>
 Package pdftex.def Info: Figures/RightClickOnNotHarvestedField.png  used on inp
-ut line 105.
+ut line 136.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnHarvestedField.png, id=27, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnHarvestedField.png, id=36, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnHarvestedField.png Graphic file (type png)
 <use Figures/RightClickOnHarvestedField.png>
 Package pdftex.def Info: Figures/RightClickOnHarvestedField.png  used on input 
-line 111.
+line 142.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/SeedEntry.png, id=28, 1097.09875pt x 689.57625pt>
+<Figures/SeedEntry.png, id=37, 1097.09875pt x 689.57625pt>
 File: Figures/SeedEntry.png Graphic file (type png)
 <use Figures/SeedEntry.png>
-Package pdftex.def Info: Figures/SeedEntry.png  used on input line 117.
+Package pdftex.def Info: Figures/SeedEntry.png  used on input line 148.
 (pdftex.def)             Requested size: 426.79134pt x 268.24971pt.
-<Figures/SaveAll1.png, id=29, 1140.26pt x 690.58pt>
+<Figures/SaveAll1.png, id=38, 1140.26pt x 690.58pt>
 File: Figures/SaveAll1.png Graphic file (type png)
 <use Figures/SaveAll1.png>
-Package pdftex.def Info: Figures/SaveAll1.png  used on input line 123.
+Package pdftex.def Info: Figures/SaveAll1.png  used on input line 154.
 (pdftex.def)             Requested size: 426.79134pt x 258.4716pt.
-<Figures/SaveAll2.png, id=30, 949.5475pt x 614.295pt>
+<Figures/SaveAll2.png, id=39, 949.5475pt x 614.295pt>
 File: Figures/SaveAll2.png Graphic file (type png)
 <use Figures/SaveAll2.png>
-Package pdftex.def Info: Figures/SaveAll2.png  used on input line 129.
+Package pdftex.def Info: Figures/SaveAll2.png  used on input line 160.
 (pdftex.def)             Requested size: 426.79134pt x 276.10211pt.
- [5] [6 <./Figures/OnOpen.png> <./Figures/WhileRunning.png>] [7 <./Figures/Fini
-shedRunning.png> <./Figures/RightClickOnSettlement.png>] [8 <./Figures/RightCli
-ckOnNotHarvestedField.png> <./Figures/RightClickOnHarvestedField.png>]
-[9 <./Figures/SeedEntry.png> <./Figures/SaveAll1.png>] [10 <./Figures/SaveAll2.
-png>] (./Report.aux) ) 
+ [7 <./Figures/OnOpen.png>] [8 <./Figures/WhileRunning.png> <./Figures/Finished
+Running.png>] [9 <./Figures/RightClickOnSettlement.png> <./Figures/RightClickOn
+NotHarvestedField.png>] [10 <./Figures/RightClickOnHarvestedField.png> <./Figur
+es/SeedEntry.png>] [11 <./Figures/SaveAll1.png> <./Figures/SaveAll2.png>]
+(./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 2092 strings out of 494923
- 30995 string characters out of 6180741
- 94306 words of memory out of 5000000
- 5390 multiletter control sequences out of 15000+600000
- 6978 words of font info for 25 fonts, out of 8000000 for 9000
+ 2116 strings out of 494923
+ 31427 string characters out of 6180741
+ 94318 words of memory out of 5000000
+ 5410 multiletter control sequences out of 15000+600000
+ 7235 words of font info for 26 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 41i,6n,32p,997b,218s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on Report.pdf (10 pages, 2431286 bytes).
+ 41i,6n,32p,998b,218s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on Report.pdf (11 pages, 2464048 bytes).
 PDF statistics:
- 74 PDF objects out of 1000 (max. 8388607)
- 37 compressed objects within 1 object stream
+ 83 PDF objects out of 1000 (max. 8388607)
+ 42 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
