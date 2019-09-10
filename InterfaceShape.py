@@ -62,6 +62,7 @@ def formatYesNo(val):
 		return "No"
 
 def get_x_y_of_widget(widget):
+	#get x and y co-ordinate of widget on screen
 	x, y, cx, cy = animationframe.bbox("insert")
 	x += animationframe.winfo_rootx()
 	y += animationframe.winfo_rooty()
@@ -111,9 +112,6 @@ def onClose():
 def save_all_figures(directory):
 	# Uses existing methods to loop through all names in the drop down box, change the pointer to them, call updateGraphs() so that
 	# that specific graph is drawn and save the image of the graph. 
-
-
-
 	names = [x[0] for x in options]
 	user_selection = info.pointers[0]
 	for i in range(len(names)):
@@ -365,6 +363,7 @@ def popup_window():
 
 
 def switchParametersState(state):
+	#Switch the sliders from being enabled and not enabled
 	if state=='disabled':
 		color = 'lightgrey'
 	else:
@@ -641,6 +640,7 @@ info.showGraphs()
 # respectively determine how many frames between redraws of the grid and redraws of the graphs.
 
 def performOneStep():
+	#Perform one step of the simulation using the rules defined above
 	info.graphEvery = graph_speed_scale.get()
 	if (not info.paused):	#if simulation is not paused
 		if info.sim.done:
@@ -682,6 +682,7 @@ def performOneStep():
 			info.showGraphs()
 
 def hasParametersChanged():
+	#Returns true if any initial conditions have been changed
 	slider_values = [x.get()*1.0 for x in sliders]
 	check_values = [x.get() for x in check_var]
 	if (slider_values==info.previous_slider_values and check_values==info.previous_check_values):
