@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  10 SEP 2019 07:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  10 SEP 2019 07:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -328,79 +328,85 @@ Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
 
+Underfull \hbox (badness 10000) in paragraph at lines 210--212
 
-LaTeX Warning: Empty `thebibliography' environment on input line 216.
+ []
 
 [11]
-Underfull \hbox (badness 10000) in paragraph at lines 226--228
+
+LaTeX Warning: Empty `thebibliography' environment on input line 221.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 231--233
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 229--231
+Underfull \hbox (badness 10000) in paragraph at lines 234--236
 
  []
 
+[12]
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ú in font cmr12!
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
-[12]
-<Figures/OnOpen.png, id=53, 1839.87375pt x 1031.855pt>
+ [13]
+<Figures/OnOpen.png, id=57, 1839.87375pt x 1031.855pt>
 File: Figures/OnOpen.png Graphic file (type png)
 <use Figures/OnOpen.png>
-Package pdftex.def Info: Figures/OnOpen.png  used on input line 249.
+Package pdftex.def Info: Figures/OnOpen.png  used on input line 254.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/WhileRunning.png, id=54, 1839.87375pt x 1031.855pt>
+<Figures/WhileRunning.png, id=58, 1839.87375pt x 1031.855pt>
 File: Figures/WhileRunning.png Graphic file (type png)
 <use Figures/WhileRunning.png>
-Package pdftex.def Info: Figures/WhileRunning.png  used on input line 255.
+Package pdftex.def Info: Figures/WhileRunning.png  used on input line 260.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/FinishedRunning.png, id=55, 1839.87375pt x 1031.855pt>
+<Figures/FinishedRunning.png, id=59, 1839.87375pt x 1031.855pt>
 File: Figures/FinishedRunning.png Graphic file (type png)
 <use Figures/FinishedRunning.png>
-Package pdftex.def Info: Figures/FinishedRunning.png  used on input line 261.
+Package pdftex.def Info: Figures/FinishedRunning.png  used on input line 266.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnSettlement.png, id=56, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnSettlement.png, id=60, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnSettlement.png Graphic file (type png)
 <use Figures/RightClickOnSettlement.png>
 Package pdftex.def Info: Figures/RightClickOnSettlement.png  used on input line
- 267.
+ 272.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnNotHarvestedField.png, id=57, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnNotHarvestedField.png, id=61, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnNotHarvestedField.png Graphic file (type png)
 <use Figures/RightClickOnNotHarvestedField.png>
 Package pdftex.def Info: Figures/RightClickOnNotHarvestedField.png  used on inp
-ut line 273.
+ut line 278.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/RightClickOnHarvestedField.png, id=58, 1839.87375pt x 1031.855pt>
+<Figures/RightClickOnHarvestedField.png, id=62, 1839.87375pt x 1031.855pt>
 File: Figures/RightClickOnHarvestedField.png Graphic file (type png)
 <use Figures/RightClickOnHarvestedField.png>
 Package pdftex.def Info: Figures/RightClickOnHarvestedField.png  used on input 
-line 279.
+line 284.
 (pdftex.def)             Requested size: 426.79134pt x 239.35274pt.
-<Figures/SeedEntry.png, id=59, 1097.09875pt x 689.57625pt>
+<Figures/SeedEntry.png, id=63, 1097.09875pt x 689.57625pt>
 File: Figures/SeedEntry.png Graphic file (type png)
 <use Figures/SeedEntry.png>
-Package pdftex.def Info: Figures/SeedEntry.png  used on input line 285.
+Package pdftex.def Info: Figures/SeedEntry.png  used on input line 290.
 (pdftex.def)             Requested size: 426.79134pt x 268.24971pt.
-<Figures/Default_values_run_1_A.jpg, id=60, 579.4279pt x 290.3479pt>
+<Figures/Default_values_run_1_A.jpg, id=64, 579.4279pt x 290.3479pt>
 File: Figures/Default_values_run_1_A.jpg Graphic file (type jpg)
 <use Figures/Default_values_run_1_A.jpg>
 Package pdftex.def Info: Figures/Default_values_run_1_A.jpg  used on input line
- 291.
+ 296.
 (pdftex.def)             Requested size: 426.79134pt x 213.8661pt.
- [13] [14 <./Figures/OnOpen.png> <./Figures/WhileRunning.png>] [15 <./Figures/F
-inishedRunning.png> <./Figures/RightClickOnSettlement.png>] [16 <./Figures/Righ
-tClickOnNotHarvestedField.png> <./Figures/RightClickOnHarvestedField.png>]
-[17 <./Figures/SeedEntry.png> <./Figures/Default_values_run_1_A.jpg>]
+ [14 <./Figures/OnOpen.png>] [15 <./Figures/WhileRunning.png> <./Figures/Finish
+edRunning.png>] [16 <./Figures/RightClickOnSettlement.png> <./Figures/RightClic
+kOnNotHarvestedField.png>] [17 <./Figures/RightClickOnHarvestedField.png> <./Fi
+gures/SeedEntry.png>] [18 <./Figures/Default_values_run_1_A.jpg>]
 (./Report.aux) ) 
 Here is how much of TeX's memory you used:
  2128 strings out of 494923
  31557 string characters out of 6180741
- 95259 words of memory out of 5000000
+ 93259 words of memory out of 5000000
  5416 multiletter control sequences out of 15000+600000
  9763 words of font info for 34 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -413,10 +419,10 @@ re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on Report.pdf (17 pages, 1842660 bytes).
+Output written on Report.pdf (18 pages, 1843613 bytes).
 PDF statistics:
- 111 PDF objects out of 1000 (max. 8388607)
- 64 compressed objects within 1 object stream
+ 114 PDF objects out of 1000 (max. 8388607)
+ 66 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  51 words of extra memory for PDF output out of 10000 (max. 10000000)
 
