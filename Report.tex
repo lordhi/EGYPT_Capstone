@@ -30,7 +30,8 @@
 			\subsubsection{As an Archaeologist/ general interested experimentalist}
 				I want to be able to run a large number of simulations, analyse and compare the data from different runs. Resolution: the inclusion of a Run Multiple button which allows the user to run the entire simulation as many times as the user wishes and the output graphs from each run are each saved in their own folder, within a larger containing outer folder.
 			\subsubsection{As an Archaeologist/ general interested experimentalist}
-				I want to be able to view details about the internal state of the system at any time in order to see how parameters change from one year to the next. Resolution: the user may pause the simulation and then right click on any block that they wish to see the parameters of. This will cause a pop-up to appear next to the block displaying information about the block. 
+				I want to be able to view details about the internal state of the system at any time in order to see how parameters change from one year to the next. Resolution: the user may pause the simulation and then right click on any block that they wish to see the parameters of. This will cause a pop-up to appear next to the block displaying information about the block.
+			\subsubsection{As a Archaeologist } 
 		
 	\section{Design Overview}
 		The programme was designed such that the only interactions between the simulation itself and the UI are in instantiation, the increase of years and the current state of the simulation. This was done for encapsulation purposes and to ensure the integrity of the simulation at all times. The display is split up into the UI and the rendering of the simulation, this was performed for ease of upkeep, as combining the two would result in a monolithic structure which is difficult to work with and maintain. The basic structure is shown in Figure \ref{fig:Architecture}.\\
