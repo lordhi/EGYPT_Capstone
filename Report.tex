@@ -270,20 +270,20 @@
 				So overall a good representation of how inequality is distributed, but not a good representation of how households grow and die off.
 		
 			\subsection{Land rental enabled}
-				Interestingly enough, with rent enabled in our simulation it performs the same or possibly worse than our baseline test. Which is due to negative values being harvested a good amount of the time, which impacts the grain of the households and so causes more to die off. This does not follow expected behaviour and so is an error.
+				Interestingly enough, as shown in Figure \ref{fig:Land_rental_enabled_ours_1} it performs the same or possibly worse than our baseline test. Which is due to negative values being harvested a good amount of the time, which impacts the grain of the households and so causes more to die off. This does not follow expected behaviour (Figure \ref{fig:Land_rental_enabled_Netlogo_1}) and so is an error.
 		
 			\subsection{Min ambition set to 1}
-				Similarly to rent, having a high ambition negatively impacts the survival of households. This is counterintuitive since a higher ambition should result in more fields being harvest, it is also counter to the results expected and shown in the NetLogo simulation. This is an error and there is no theorized cause.\\
-				It was expected to behave similarly to how the high competency test did.\\
+				Similarly to rent, having a high ambition negatively impacts the survival of households (as shown in Figure \ref{fig:Min_Ambition_ours_1}). This is counterintuitive since a higher ambition should result in more fields being harvest, it is also counter to the results expected and shown in Figure \ref{fig:Min_Ambition_Netlogo_1}. This is an error and there is no theorized cause.\\
+				It was expected to behave similarly to Figure \ref{fig:Min_competency_ours_1}.\\
 
 			\subsection{Min competency set to 1}		
-				As can be seen when comparing these graphs to those of the baseline test, the expected behaviour of their being more households in the middle bracket than before is demonstrated in each and less households die off overall in each. 
+				As can be seen when comparing Figure \ref{fig:Min_competency_ours_1} to the baseline test (Figure \ref{fig:Default_values_Ours_1}), the expected behaviour of there being more households in the middle bracket than before and less households dying off overall is demonstrated in both Figure \ref{fig:Min_competency_ours_1} and Figure \ref{fig:Min_competency_Netlogo_1}. 
 			
 			\subsection{Min ambition and competency set to 0}
-				As expected, since Ambition and Competency are set low (0 in our implementation, 0.1 in NetLogo) the average household has a hard time farming enough to keep themselves fed (since it’s more likely for either competency or ambition to be low) and so a lot more households die off overall. Another thing to note is how similar the NetLogo graphs look to our baseline test graphs and giving rise to the hypothesis that errors in the competency and ambition calculation could be contributing to the problem of households dying off (though it cannot be the whole reason since it persists when competency is set to large values.
+				As expected, since Ambition and Competency are set low (0 in our implementation, 0.1 in NetLogo) the average household has a hard time farming enough to keep themselves fed (since it’s more likely for either competency or ambition to be low) and so a lot more households die off overall. Another thing to note is how similar look to our baseline test graphs and giving rise to the hypothesis that errors in the competency and ambition calculation could be contributing to the problem of households dying off (though it cannot be the whole reason since it persists when competency is set to large values.
 			
 			\subsection{Household fission enabled}			
-				As can be seen from these graphs, the number of households increases as the simulation progresses to the point at which households have enough workers for fission to start to take place (starts sooner in our simulation since having more households die off means that the remaining households get more members). Otherwise the distribution of the households between brackets is quite similar to that of the baseline test, as was expected.
+				As can be seen from Figure \ref{fig:Fission_enabled_ours_1} and Figure \ref{fig:Fission_enabled_Netlogo_1}, the number of households increases as the simulation progresses to the point at which households have enough workers for fission to start to take place (starts sooner in Figure \ref{fig:Fission_enabled_ours_1} since having more households die off means that the remaining households get more members). Otherwise the distribution of the households between brackets is quite similar to that of the baseline test (Figure \ref{fig:Default_values_Ours_1}), as was expected.
 			
 			
 			
