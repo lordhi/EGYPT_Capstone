@@ -2,7 +2,6 @@ from Settlement import Settlement
 from Terrain import Terrain
 from Household import Household
 import random
-import numpy as np
 
 class Simulation:
 	x_size = 30
@@ -139,7 +138,7 @@ class Simulation:
 		alpha= (2 * sigma**2)
 		beta= 1 / (sigma * np.sqrt(2 * np.pi)) 
 
-		for x in range(self.x_size):		## TO DO: Test speed increase of numpy vs only doing needed calculations
+		for x in range(self.x_size):
 			for y in range(self.y_size):
 				self.terrain[x][y].setFertility(beta, alpha, mu)
 
