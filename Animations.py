@@ -60,7 +60,7 @@ class Animations:
 
 		#Store the data point for the Gini-index graph
 		self.info.graphs_data[3][0].append(self.info.sim.years_passed)
-		self.info.graphs_data[3][1][0].append(gini_index_reserve/total_households/2)
+		self.info.graphs_data[3][1][0].append(gini_index_reserve/total_households/0.5)
 
 		#Store the data point for the Grain-equality graph
 		x = range(len(lorenz_points))
